@@ -93,7 +93,17 @@ footer.site {
   font-size: 0.9rem;
 }
 
-img.shot { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--rule); }
+/* The gameplay capture is a portrait phone recording. Constrain it so it reads as a phone
+   rather than filling the column, and centre it in the card. */
+img.shot {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+}
 
 code {
   background: var(--bg);

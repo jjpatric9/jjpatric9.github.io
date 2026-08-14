@@ -34,7 +34,7 @@ breaks.
 
 ## Before submitting to Google Play
 
-- [ ] Replace the `<!-- SCREENSHOT -->` comment in `index.html` with a gameplay GIF
+- [x] Gameplay GIF added to `index.html`
 - [ ] Replace the `<!-- STORE LINK -->` comment in `index.html` once the listing is live
 - [ ] Open every page signed out, in a private window, on a phone
 - [ ] Check `privacy.html` against the Play Data safety form line by line
