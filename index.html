@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TallmanGames</title>
+<meta name="description" content="Small, carefully-tested Android games by Joshua Patrick. Maker of BoxStacker.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+  <header class="site">
+    <a class="brand" href="index.html">TallmanGames</a>
+    <nav>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </header>
+
+  <h1>Small games, built with care.</h1>
+  <p class="lede">
+    TallmanGames is Joshua Patrick, making Android games in Canada. Offline, no accounts,
+    no tracking — nothing between you and the thing you're playing.
+  </p>
+
+  <div class="card">
+    <h2>BoxStacker</h2>
+    <p>
+      A stacking game about balance. A crane holds the crate you picked from your hand; you slide
+      it sideways and drop it. Complete a row and it sets, becoming the tower's new foundation —
+      but the crates you're dealt rarely let you finish a row cleanly, and every hole and overhang
+      pushes the tower further off centre. Lean too far and the whole thing goes over.
+    </p>
+
+    <!-- SCREENSHOT: <img class="shot" src="boxstacker.gif" alt="BoxStacker gameplay"> -->
+
+    <p class="meta">Android &middot; free &middot; plays entirely offline</p>
+
+    <!-- STORE LINK: <p><a href="">Get it on Google Play</a></p> -->
+    <p class="meta"><em>Coming soon to Google Play.</em></p>
+  </div>
+
+  <h2>How these games are built</h2>
+  <p>
+    Six years of software development, now channelled into games. I build with AI tooling, and I
+    care most about the things players feel but never see:
+  </p>
+  <ul>
+    <li>
+      <strong>Input that never fights you.</strong> The piece hangs from the crane and only ever
+      moves sideways — a whole axis of awkwardness removed rather than worked around.
+    </li>
+    <li>
+      <strong>Difficulty that's measured, not guessed.</strong> Each hand is generated against the
+      board actually in front of you, then played out by bots hundreds of times to check it's
+      survivable before you're dealt it.
+    </li>
+    <li>
+      <strong>Rules that are testable.</strong> The whole ruleset lives in a module with no Android
+      dependencies, so thousands of complete games are played against it before a build ships.
+    </li>
+    <li>
+      <strong>Nothing phones home.</strong> BoxStacker has no network permission at all. It cannot
+      send data anywhere, by construction rather than by promise.
+    </li>
+  </ul>
+
+  <div class="callout">
+    More games are coming, in the same shape: small, offline, and respectful of your attention.
+  </div>
+
+  <h2>Get in touch</h2>
+  <p>
+    Bug reports, feedback and questions all go to
+    <a href="mailto:jjpatric9@gmail.com">jjpatric9@gmail.com</a>.
+    See <a href="support.html">Support</a> for what to include.
+  </p>
+
+  <footer class="site">
+    TallmanGames &mdash; Joshua Patrick, Canada &middot;
+    <a href="mailto:jjpatric9@gmail.com">jjpatric9@gmail.com</a><br>
+    <a href="privacy.html">Privacy policy</a> &middot; <a href="support.html">Support</a>
+  </footer>
+
+</main>
+</body>
+</html>
