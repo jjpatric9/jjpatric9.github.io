@@ -1,0 +1,4 @@
+# Authorized sellers for BoxStacker (com.boxstacker.app), published by Tallman Games.
+# IAB Tech Lab app-ads.txt v1.0 — https://iabtechlab.com/app-ads-txt/
+# Google AdMob is the only ad network in the app, so this is the only record.
+google.com, pub-8543538794258452, DIRECT, f08c47fec0942fa0
