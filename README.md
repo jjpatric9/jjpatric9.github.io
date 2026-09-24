@@ -69,7 +69,8 @@ app had no network access, no advertising and no permissions while the shipping 
 adverts. That is a false public statement about the app and a Play policy violation in its own
 right, and `index.html` and `support.html` were carrying versions of it too.
 
-So the rule is not "update the policy when something changes". It is:
+Tenjin campaign attribution is now the second network use, and that addition was updated here and
+in the app policy together. The same rule applies to every future SDK change:
 
 **`privacy.html` is a rendering of `docs/privacy-policy.md` in the Boxstack repository, which is
 the only copy.** The app build copies that same file into its assets, so the About page inside the
