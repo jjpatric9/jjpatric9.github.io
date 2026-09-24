@@ -10,9 +10,8 @@
 (function () {
   "use strict";
 
-  /** Where the Worker lives. Set once, when it is deployed; see tools/palette-votes/SETUP.md. */
-  var API = window.PALETTE_VOTE_API || "https://palette-votes.REPLACE_ME.workers.dev";
-  var CONFIGURED = API.indexOf("REPLACE_ME") < 0;
+  /** Where the Worker lives; tools/palette-votes/local.mjs points a local copy of the page elsewhere. */
+  var API = window.PALETTE_VOTE_API || "https://palette-votes.joshua-e59.workers.dev";
 
   var BATCH = 20;
   var STORE = "tg-palettes-v1";
@@ -157,7 +156,6 @@
   var flushing = null;
   function flush() {
     if (flushing) return flushing;
-    if (!CONFIGURED) { syncEl.textContent = "Voting opens soon. Your choices are kept on this device until then."; return Promise.resolve(); }
     flushing = (async function () {
       while (memory.outbox.length) {
         var next = memory.outbox[0];
@@ -191,7 +189,6 @@
   addEventListener("online", flush);
 
   async function getJSON(path) {
-    if (!CONFIGURED) return null;
     var ctl = new AbortController();
     var timer = setTimeout(function () { ctl.abort(); }, 8000);
     try {
@@ -546,9 +543,7 @@
     };
     flush().then(function () {
       if (memory.outbox.indexOf(sent) >= 0) {
-        status.textContent = CONFIGURED
-          ? "Saved on this device. It will be added when the vote box is reachable."
-          : "Saved on this device. It will be added when voting opens.";
+        status.textContent = "Saved on this device. It will be added when the vote box is reachable.";
       }
     });
   });
