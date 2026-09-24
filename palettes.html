@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pick BoxStacker's colours</title>
+<meta name="description" content="Vote on the colours BoxStacker's towers climb through, make your own palette, or mark the ones in the game you'd rather lose.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="palettes">
+
+  <header class="site">
+    <a class="brand" href="index.html">TallmanGames</a>
+    <nav>
+      <a href="palettes.html" aria-current="page">Colours</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </header>
+
+  <h1>Pick BoxStacker's colours</h1>
+  <p class="lede">
+    Every tower in BoxStacker climbs through bands of colour. Help decide which ones make the game.
+  </p>
+
+  <noscript><p class="callout">This page needs JavaScript to show the palettes.</p></noscript>
+
+  <div class="tabs" role="tablist" aria-label="Ways to help">
+    <button role="tab" id="tab-vote" aria-controls="panel-vote" aria-selected="true">Vote</button>
+    <button role="tab" id="tab-make" aria-controls="panel-make" aria-selected="false" tabindex="-1">Make one</button>
+    <button role="tab" id="tab-game" aria-controls="panel-game" aria-selected="false" tabindex="-1">In the game</button>
+  </div>
+
+  <!-- ------------------------------------------------------------------ vote -->
+  <section id="panel-vote" role="tabpanel" aria-labelledby="tab-vote">
+    <p class="meta" id="vote-status" aria-live="polite">Loading palettes…</p>
+
+    <div id="vote-deck" hidden>
+      <div class="ask">
+        <h2>Want this in the game?</h2>
+        <span class="meta" id="vote-progress" aria-live="polite"></span>
+      </div>
+      <div class="stage">
+        <div class="swipe" id="vote-swipe">
+          <div class="tower big" id="vote-tower" role="img"></div>
+          <span class="verdict keep" aria-hidden="true">Yes</span>
+          <span class="verdict skip" aria-hidden="true">No</span>
+          <span class="tag" id="vote-tag" hidden>Made by a player</span>
+        </div>
+      </div>
+      <div class="choose">
+        <button class="btn skip" id="vote-skip"><span aria-hidden="true">✕</span> No</button>
+        <button class="btn keep" id="vote-keep"><span aria-hidden="true">✓</span> Yes</button>
+      </div>
+      <div class="minor">
+        <button class="link" id="vote-undo" disabled>Undo</button>
+        <button class="link" id="vote-remix">Tweak this one</button>
+      </div>
+      <p class="meta hint">
+        <span class="by-touch">Or swipe the card: right for yes, left for no</span>
+        <span class="by-keys">Keys work too: → yes, ← no, Z to undo</span>
+      </p>
+    </div>
+
+    <div id="vote-done" hidden>
+      <h2 id="vote-done-text"></h2>
+      <div class="grid" id="vote-kept"></div>
+      <div class="choose">
+        <button class="btn primary" id="vote-more">Next 20</button>
+      </div>
+      <div class="minor">
+        <button class="link" id="vote-undo-last">Undo the last one</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ make -->
+  <section id="panel-make" role="tabpanel" aria-labelledby="tab-make" hidden>
+    <p class="intro">
+      A background and three crate colours. Pick one to change it, or
+      <button class="link inline" id="make-random-all">roll a random palette</button>.
+    </p>
+
+    <div class="tower big pickable" id="make-tower" role="img"></div>
+
+    <div class="slots" role="radiogroup" aria-label="Colour to change" id="make-slots">
+      <div class="slot-group"><div class="slot-row" id="make-slot-field"></div><span class="slot-name" aria-hidden="true">Background</span></div>
+      <div class="slot-group"><div class="slot-row three" id="make-slot-crates"></div><span class="slot-name" aria-hidden="true">Crates</span></div>
+    </div>
+
+    <div class="editor">
+      <div class="editor-row">
+        <label class="swatch-picker">
+          <span class="sr-only">Pick a colour</span>
+          <input type="color" id="make-picker">
+        </label>
+        <label class="hex-field">
+          <span class="sr-only">Hex code</span>
+          <input type="text" id="make-hex" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7">
+        </label>
+      </div>
+      <label class="slider"><span>Hue</span><input type="range" id="make-h" min="0" max="359" step="1"></label>
+      <label class="slider"><span>Saturation</span><input type="range" id="make-s" min="0" max="100" step="1"></label>
+      <label class="slider"><span>Lightness</span><input type="range" id="make-l" min="0" max="100" step="1"></label>
+      <div class="minor">
+        <button class="link" id="make-random-one">Random colour</button>
+        <button class="link" id="make-as-field">Use as background</button>
+      </div>
+    </div>
+
+    <p class="readable" id="make-readable" aria-live="polite"></p>
+
+    <div class="choose">
+      <button class="btn primary" id="make-submit">Add it to the vote</button>
+    </div>
+    <p class="meta status" id="make-status" aria-live="polite"></p>
+  </section>
+
+  <!-- ------------------------------------------------------------------ game -->
+  <section id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
+    <p class="intro">
+      Pick any you'd rather not see in a run, and again to change your mind. The ones marked most
+      are the first to go.
+    </p>
+    <p class="meta" id="game-count" aria-live="polite"></p>
+    <div class="grid" id="game-grid"></div>
+  </section>
+
+  <p class="meta" id="sync" aria-live="polite"></p>
+
+  <div class="privacy-note">
+    <h2>What this page saves</h2>
+    <p class="meta">
+      Your votes, your palettes and the ones you mark, with a random ID your browser makes up so that each person counts
+      once. No name, no account, no cookies, and your IP address isn't stored. It's kept with
+      Cloudflare, used only to choose BoxStacker's colours, and never sold or shared. Your browser
+      also remembers what you've already seen, on your device only, so you aren't shown it twice.
+    </p>
+  </div>
+
+  <footer class="site">
+    TallmanGames &mdash; Joshua Patrick, Canada &middot;
+    <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a><br>
+    <a href="privacy.html">Privacy policy</a> &middot; <a href="support.html">Support</a>
+  </footer>
+
+</main>
+<script src="palettes.js"></script>
+</body>
+</html>
