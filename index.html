@@ -3,101 +3,272 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TallmanGames</title>
-<meta name="description" content="Small, carefully-tested Android games by Joshua Patrick. Maker of BoxStacker.">
+<title>TallmanGames · Home of Box Stack</title>
+<meta name="description" content="Hi, I'm Joshua. I make small Android games in Canada. My first one, Box Stack, is free on Google Play, and you can play a round of it right here.">
+<meta name="theme-color" content="#230d30">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/chakra-petch-bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/chakra-petch-semibold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TallmanGames">
+<meta property="og:title" content="Box Stack · build, balance, repeat">
+<meta property="og:description" content="A little stacking game about balance. Play a round in your browser, or get it free on Google Play.">
+<meta property="og:url" content="https://tallman-games.com/">
+<meta property="og:image" content="https://tallman-games.com/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Box Stack: a crane lowering a box onto a tower of colourful boxes">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Box Stack",
+  "description": "A stacking game about balance. Drag boxes onto a tower, fill rows to lock them in, and keep the whole thing from tipping over.",
+  "genre": "Puzzle",
+  "gamePlatform": "Android",
+  "operatingSystem": "Android",
+  "applicationCategory": "GameApplication",
+  "url": "https://play.google.com/store/apps/details?id=com.boxstacker.app",
+  "image": "https://tallman-games.com/img/og.png",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+  "author": { "@type": "Person", "name": "Joshua Patrick", "url": "https://tallman-games.com/" },
+  "publisher": { "@type": "Organization", "name": "TallmanGames", "url": "https://tallman-games.com/" }
+}
+</script>
+<script>document.documentElement.classList.add("js")</script>
 </head>
-<body>
-<main>
+<body class="home">
+<a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site">
-    <a class="brand" href="index.html">TallmanGames</a>
-    <nav>
+<header class="topbar clear">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="img/mark.svg" alt="" width="28" height="28"><span>TallmanGames</span></a>
+    <nav aria-label="Site">
+      <a href="#play">Play</a>
+      <a href="palettes.html">Colours</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ------------------------------------------------------------------ hero -->
+  <section class="hero" id="hero">
+    <div class="stars" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Hi, I'm Joshua</p>
+        <h1>I make little games and fuss over every detail.</h1>
+        <p>
+          TallmanGames is just me, making Android games in Canada. My first one is Box Stack, and
+          you can play a round of it right here.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="#play">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+            Play it here
+          </a>
+          <a class="btn ghost" href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">
+            Get it on Google Play
+          </a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <canvas id="dock" width="380" height="560" tabindex="0" role="button"
+                aria-label="A crane stacking boxes on a little boat. Tap it to tip the boat over and bring in a new one in new colours"></canvas>
+        <p class="hero-hint" aria-hidden="true">Tap the boat</p>
+      </div>
+    </div>
+    <div class="water" aria-hidden="true">
+      <svg class="back" viewBox="0 0 1600 64" preserveAspectRatio="none"><path fill="#0b2739" d="M0 26 C 100 14 200 14 300 26 S 500 38 600 26 S 700 14 800 26 S 1000 38 1100 26 S 1200 14 1300 26 S 1500 38 1600 26 V64 H0z"/></svg>
+      <svg class="front" viewBox="0 0 1600 64" preserveAspectRatio="none"><path fill="#07172a" d="M0 36 C 133 26 267 26 400 36 S 667 46 800 36 S 1067 26 1200 36 S 1467 46 1600 36 V64 H0z"/><path fill="none" stroke="#76bdc8" stroke-opacity=".55" stroke-width="2" d="M0 36 C 133 26 267 26 400 36 S 667 46 800 36 S 1067 26 1200 36 S 1467 46 1600 36"/></svg>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ the game -->
+  <section class="section" id="box-stack">
+    <div class="wrap two">
+      <div data-reveal>
+        <div class="game-title">
+          <img src="img/box-stack-icon.png" alt="" width="72" height="72">
+          <div>
+            <h2>Box Stack</h2>
+            <p class="tagline">Build. Balance. Repeat.</p>
+          </div>
+        </div>
+        <p>
+          A crane hands you boxes and you stack them on a little boat. Fill a row all the way across
+          and it locks in, giving you solid ground to build on.
+        </p>
+        <p>
+          The catch is balance. Every box pulls the tower toward its own side, and the higher it
+          sits, the harder it pulls. Get too lopsided and the whole thing rolls over into the
+          harbour. It's very much a “just one more tower” kind of game.
+        </p>
+        <p>
+          Every tower you build gets measured against a real landmark, from Stonehenge all the way
+          up to the Burj Khalifa. The CN Tower is in there too, obviously.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6 2.3 13.9 12l-9.3 9.7a1.6 1.6 0 0 1-.6-1.3V3.6c0-.5.2-1 .6-1.3zm10.3 10.7 2.6 2.7-11 6.3 8.4-9zm3.8-4.1 3 1.7c1 .6 1 1.9 0 2.5l-3 1.7-2.9-3 2.9-2.9zM6.5 2l11 6.3-2.6 2.7-8.4-9z"/></svg>
+            Get it free on Google Play
+          </a>
+        </div>
+      </div>
+
+      <ul class="facts" data-reveal>
+        <li>
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
+          <div><strong>No timers, no lives, no energy</strong><span>Play at your own pace. One tower, for as long as you can keep it standing.</span></div>
+        </li>
+        <li>
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16.1a5 5 0 0 1 7 0"/><path d="M12 20h.01M3 3l18 18"/></svg></span>
+          <div><strong>Plays offline</strong><span>No account and no sign-in. If you get interrupted, it remembers your run.</span></div>
+        </li>
+        <li>
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><rect x="8" y="3" width="8" height="8" rx="1.5"/></svg></span>
+          <div><strong>A new look every run</strong><span>Each tower climbs through its own set of colours, and <a href="palettes.html">you can help pick them</a>.</span></div>
+        </li>
+        <li>
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/></svg></span>
+          <div><strong>Something to brag about</strong><span>Badges to earn, landmarks to pass, and a Brag Book that keeps your records.</span></div>
+        </li>
+        <li>
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/></svg></span>
+          <div><strong>Works with TalkBack</strong><span>And there are settings for reduced motion and higher contrast.</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ the demo -->
+  <section class="section tint" id="play">
+    <div class="wrap play-grid">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Try it</p>
+        <h2>Play a round right here</h2>
+        <p>
+          This is the real game running in your browser, trimmed down to a quick round. Nothing to
+          download and nothing to sign up for.
+        </p>
+        <ol class="steps">
+          <li><div><strong>Grab a box</strong>Drag one up from the tray at the bottom.</div></li>
+          <li><div><strong>Drop it on the tower</strong>Complete a row and it locks in.</div></li>
+          <li><div><strong>Watch the bar</strong>The bar at the top shows how close you are to tipping. Red means you're about to go over.</div></li>
+        </ol>
+        <p class="meta" style="margin-top:1.25rem">It has sound once you start. The speaker in the corner mutes it.</p>
+      </div>
+
+      <div class="phone-wrap" data-reveal>
+        <div class="phone">
+          <div class="phone-screen" id="demo-screen">
+            <button class="poster" id="demo-start" type="button">
+              <img src="img/demo-poster.jpg" alt="" width="298" height="600" loading="lazy">
+              <span class="go"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></i>Tap to play</span>
+            </button>
+          </div>
+        </div>
+        <div class="play-after" id="demo-after" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ colours -->
+  <section class="section slim">
+    <div class="wrap narrow">
+      <a class="card promo" href="palettes.html" data-reveal>
+        <span class="promo-art" aria-hidden="true"><span style="background:#360720"><i style="background:#ECA555"></i><i style="background:#95A786"></i><i style="background:#B4BC9F"></i></span><span style="background:#032544"><i style="background:#ABD57B"></i><i style="background:#97CBFA"></i><i style="background:#CEE7FD"></i></span><span style="background:#160512"><i style="background:#B6D945"></i><i style="background:#87D99A"></i><i style="background:#F3C9E9"></i></span></span>
+        <div>
+          <h3>Help pick the colours</h3>
+          <p>I'm choosing the next set of colours for the game, and I'd love your help. Vote on palettes, or make your own.</p>
+        </div>
+        <span class="go" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ how -->
+  <section class="section tint">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How I make games</p>
+        <h2>A little obsessive, in a good way</h2>
+        <p>
+          I've been writing software for six years, and these days I'm putting all of that into
+          games. I use AI tools to help me build, and then I test everything like crazy, because the
+          stuff you never notice is usually what makes a game feel good.
+        </p>
+      </div>
+      <div class="points">
+        <div class="card" data-reveal>
+          <h3>Played by bots first</h3>
+          <p>Before an update goes out, bots play thousands of complete games against the rules to make sure nothing's broken.</p>
+        </div>
+        <div class="card" data-reveal>
+          <h3>Tough, but fair</h3>
+          <p>Every set of boxes is picked by looking at your actual tower and checked to make sure there's a way to survive it. Finding it is up to you.</p>
+        </div>
+        <div class="card" data-reveal>
+          <h3>Your stuff stays yours</h3>
+          <p>
+            No account, no sign-in, and nothing you build ever leaves your phone. Ads from Google
+            AdMob keep the game free, and Tenjin tells me which of my ads are working. The
+            <a href="privacy.html">privacy policy</a> has the details.
+          </p>
+        </div>
+      </div>
+      <p class="callout" data-reveal>Box Stack is my first game. It won't be my last.</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ hello -->
+  <section class="section hello">
+    <div class="wrap narrow" data-reveal>
+      <h2>Say hi</h2>
+      <p>
+        Found a bug, got an idea, or built a tower you're proud of? Send it my way. I read every
+        email myself.
+      </p>
+      <div class="mail">
+        <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a>
+        <button class="copy" type="button" data-copy="joshua@tallman-games.com">Copy</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="made">
+      <img src="img/mark.svg" alt="" width="30" height="30">
+      <div><b>TallmanGames</b><br>Made by Joshua Patrick in Canada · &copy; <span data-year>2026</span></div>
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Box Stack on Google Play</a>
       <a href="palettes.html">Colours</a>
       <a href="support.html">Support</a>
       <a href="privacy.html">Privacy</a>
     </nav>
-  </header>
-
-  <h1>Small games, built with care.</h1>
-  <p class="lede">
-    TallmanGames is Joshua Patrick, making Android games in Canada. No accounts, no sign-in,
-    and nothing you build leaves your phone.
-  </p>
-
-  <a class="promo" href="palettes.html">
-    <span class="promo-art" aria-hidden="true"><span style="background:#360720"><i style="background:#ECA555"></i><i style="background:#95A786"></i><i style="background:#B4BC9F"></i></span><span style="background:#032544"><i style="background:#ABD57B"></i><i style="background:#97CBFA"></i><i style="background:#CEE7FD"></i></span><span style="background:#160512"><i style="background:#B6D945"></i><i style="background:#87D99A"></i><i style="background:#F3C9E9"></i></span></span>
-    <span class="promo-text">
-      <strong>Help pick BoxStacker's colours</strong>
-      <span>Vote on palettes, or make your own</span>
-    </span>
-    <span class="promo-go" aria-hidden="true">&rarr;</span>
-  </a>
-
-  <div class="card">
-    <h2>BoxStacker</h2>
-    <p>
-      A stacking game about balance. A crane holds the crate you picked from your hand; you slide
-      it sideways and drop it. Complete a row and it sets, becoming the tower's new foundation —
-      but the crates you're dealt rarely let you finish a row cleanly, and every hole and overhang
-      pushes the tower further off centre. Lean too far and the whole thing goes over.
-    </p>
-
-    <img class="shot" src="boxstacker.gif" width="240" height="464" loading="lazy"
-         alt="BoxStacker gameplay: a crate is carried sideways by the crane and dropped onto a
-              tower, completing a row that sets into a solid band across the board.">
-
-    <p class="meta">Android &middot; free &middot; supported by adverts</p>
-
-    <!-- STORE LINK: <p><a href="">Get it on Google Play</a></p> -->
-    <p class="meta"><em>Coming soon to Google Play.</em></p>
   </div>
+</footer>
 
-  <h2>How these games are built</h2>
-  <p>
-    Six years of software development, now channelled into games. I build with AI tooling, and I
-    care most about the things players feel but never see:
-  </p>
-  <ul>
-    <li>
-      <strong>Input that never fights you.</strong> The piece hangs from the crane and only ever
-      moves sideways — a whole axis of awkwardness removed rather than worked around.
-    </li>
-    <li>
-      <strong>Difficulty that's measured, not guessed.</strong> Each hand is generated against the
-      board actually in front of you, then played out by bots hundreds of times to check it's
-      survivable before you're dealt it.
-    </li>
-    <li>
-      <strong>Rules that are testable.</strong> The whole ruleset lives in a module with no Android
-      dependencies, so thousands of complete games are played against it before a build ships.
-    </li>
-    <li>
-      <strong>Nothing you build leaves the phone.</strong> The game has no account, no sign-in and no
-      server of mine — your record, your Brag Book and the run in progress are all local, and no
-      code path sends any of it anywhere. The app uses Google AdMob to pay for the free game and
-      Tenjin to measure which advertising campaigns lead to installs; the
-      <a href="privacy.html">privacy policy</a> says exactly what they collect.
-    </li>
-  </ul>
-
-  <div class="callout">
-    More games are coming, in the same shape: small, offline, and respectful of your attention.
+<div class="demo-sheet" id="demo-sheet" hidden role="dialog" aria-modal="true" aria-label="Box Stack demo">
+  <div class="demo-bar">
+    <b>Box Stack</b>
+    <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Get the game</a>
+    <button type="button" id="demo-close" aria-label="Close the demo">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
   </div>
+</div>
 
-  <h2>Get in touch</h2>
-  <p>
-    Bug reports, feedback and questions all go to
-    <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a>.
-    See <a href="support.html">Support</a> for what to include.
-  </p>
-
-  <footer class="site">
-    TallmanGames &mdash; Joshua Patrick, Canada &middot;
-    <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a><br>
-    <a href="privacy.html">Privacy policy</a> &middot; <a href="support.html">Support</a>
-  </footer>
-
-</main>
+<script src="site.js"></script>
+<script src="home.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* BoxStacker palette votes — palettes.html.
+/* Box Stack palette votes: palettes.html.
  *
  * The page reads palettes.json (every harvested palette, and the ones already in the game), and
  * talks to one small Cloudflare Worker for everything that has to be shared between visitors. Its

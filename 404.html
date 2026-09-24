@@ -3,36 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Page not found — TallmanGames</title>
+<title>Page not found · TallmanGames</title>
+<meta name="theme-color" content="#230d30">
+<link rel="icon" href="/img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site">
-    <a class="brand" href="/">TallmanGames</a>
-    <nav>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/img/mark.svg" alt="" width="28" height="28"><span>TallmanGames</span></a>
+    <nav aria-label="Site">
+      <a href="/#play">Play</a>
       <a href="/palettes.html">Colours</a>
+      <a href="/support.html">Support</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="lost">
+  <div class="wrap narrow">
+    <div class="fallen" aria-hidden="true"><i></i><i></i><i></i></div>
+    <h1>This page toppled over</h1>
+    <p class="lede">
+      Whatever was here isn't anymore, or the link has a typo in it. Let's get you back on solid
+      ground.
+    </p>
+    <div class="actions" style="justify-content:center">
+      <a class="btn primary" href="/">Back to the homepage</a>
+      <a class="btn" href="/#play">Play Box Stack</a>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="made">
+      <img src="/img/mark.svg" alt="" width="30" height="30">
+      <div><b>TallmanGames</b><br>Made by Joshua Patrick in Canada</div>
+    </div>
+    <nav aria-label="Footer">
       <a href="/support.html">Support</a>
       <a href="/privacy.html">Privacy</a>
     </nav>
-  </header>
-
-  <h1>That page toppled over.</h1>
-  <p class="lede">
-    There's nothing at this address. It may have moved, or the link may have been mistyped.
-  </p>
-
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/privacy.html">Privacy policy</a></li>
-    <li><a href="/support.html">Support</a></li>
-  </ul>
-
-  <footer class="site">
-    TallmanGames &middot; <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a>
-  </footer>
-
-</main>
+  </div>
+</footer>
 </body>
 </html>

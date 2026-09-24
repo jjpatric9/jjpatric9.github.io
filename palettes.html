@@ -3,25 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pick BoxStacker's colours</title>
-<meta name="description" content="Vote on the colours BoxStacker's towers climb through, make your own palette, or mark the ones in the game you'd rather lose.">
+<title>Pick Box Stack's colours · TallmanGames</title>
+<meta name="description" content="Help pick the colours Box Stack's towers climb through. Vote on palettes, make your own, or mark the ones in the game you'd rather lose.">
+<meta name="theme-color" content="#230d30">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="palettes">
+<a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site">
-    <a class="brand" href="index.html">TallmanGames</a>
-    <nav>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="img/mark.svg" alt="" width="28" height="28"><span>TallmanGames</span></a>
+    <nav aria-label="Site">
+      <a href="index.html#play">Play</a>
       <a href="palettes.html" aria-current="page">Colours</a>
       <a href="support.html">Support</a>
-      <a href="privacy.html">Privacy</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <h1>Pick BoxStacker's colours</h1>
+<main id="main" class="page palettes">
+<div class="wrap narrow">
+
+
+  <h1>Pick Box Stack's colours</h1>
   <p class="lede">
-    Every tower in BoxStacker climbs through bands of colour. Help decide which ones make the game.
+    Every tower in Box Stack climbs through bands of colour, and I'd love your help choosing them.
   </p>
 
   <noscript><p class="callout">This page needs JavaScript to show the palettes.</p></noscript>
@@ -132,20 +141,34 @@
   <div class="privacy-note">
     <h2>What this page saves</h2>
     <p class="meta">
-      Your votes, your palettes and the ones you mark, with a random ID your browser makes up so that each person counts
-      once. No name, no account, no cookies, and your IP address isn't stored. It's kept with
-      Cloudflare, used only to choose BoxStacker's colours, and never sold or shared. Your browser
-      also remembers what you've already seen, on your device only, so you aren't shown it twice.
+      Your votes, the palettes you make and the ones you mark, along with a random ID your browser
+      makes up so each person only counts once. No name, no account, no cookies, and your IP address
+      isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's colours. Your
+      browser also remembers what you've already seen, on your device only, so you don't get the
+      same palette twice.
     </p>
   </div>
 
-  <footer class="site">
-    TallmanGames &mdash; Joshua Patrick, Canada &middot;
-    <a href="mailto:joshua@tallman-games.com">joshua@tallman-games.com</a><br>
-    <a href="privacy.html">Privacy policy</a> &middot; <a href="support.html">Support</a>
-  </footer>
 
+</div>
 </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="made">
+      <img src="img/mark.svg" alt="" width="30" height="30">
+      <div><b>TallmanGames</b><br>Made by Joshua Patrick in Canada · &copy; <span data-year>2026</span></div>
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Box Stack on Google Play</a>
+      <a href="palettes.html">Colours</a>
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="site.js"></script>
 <script src="palettes.js"></script>
 </body>
 </html>
