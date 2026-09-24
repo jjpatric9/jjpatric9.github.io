@@ -105,13 +105,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
   initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
   initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
@@ -8945,7 +8945,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return ResultsAnim_instance.uk(topple);
   };
   protoOf(Engine).vk = function () {
-    return PlayfieldGeometry_instance.wk(this.bi_1.cd_1);
+    return ResultsAnim_instance.wk(this.bi_1.cd_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.bi_1.cd_1;
@@ -9079,29 +9079,6 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var b = (stackHeight + 2 | 0) + 1 | 0;
     var tmp$ret$0 = Math.max(playingRows, b);
     return new ViewCamera(tmp, tmp$ret$0);
-  };
-  protoOf(PlayfieldGeometry).wk = function (board) {
-    var lowest = board.h8_1;
-    var highest = -1;
-    var inductionVariable = 0;
-    var last = board.h8_1;
-    if (inductionVariable < last)
-      do {
-        var x = inductionVariable;
-        inductionVariable = inductionVariable + 1 | 0;
-        if (board.n9(x, 0)) {
-          if (x < lowest)
-            lowest = x;
-          if (x > highest)
-            highest = x;
-        }
-      }
-       while (inductionVariable < last);
-    if (highest < lowest) {
-      lowest = 0;
-      highest = board.h8_1 - 1 | 0;
-    }
-    return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
   var PlayfieldGeometry_instance;
   function PlayfieldGeometry_getInstance() {
@@ -9285,6 +9262,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   protoOf(ResultsAnim).uk = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
+  };
+  protoOf(ResultsAnim).wk = function (board) {
+    var lowest = board.h8_1;
+    var highest = -1;
+    var inductionVariable = 0;
+    var last = board.h8_1;
+    if (inductionVariable < last)
+      do {
+        var x = inductionVariable;
+        inductionVariable = inductionVariable + 1 | 0;
+        if (board.n9(x, 0)) {
+          if (x < lowest)
+            lowest = x;
+          if (x > highest)
+            highest = x;
+        }
+      }
+       while (inductionVariable < last);
+    if (highest < lowest) {
+      lowest = 0;
+      highest = board.h8_1 - 1 | 0;
+    }
+    return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
   protoOf(ResultsAnim).xk = function (input) {
     var startX = input.x7();
@@ -10635,6 +10635,10 @@ function drawPlacementReward() {
 
   var life = p < 0.12 ? p / 0.12 : Math.max(0, (1 - p) / 0.28);
   if (life <= 0) return;
+  // Nothing earned, nothing said: the ring above is the landing's answer. A
+  // crate below the opening tower's height scores nothing, and "+0" read as a
+  // reward that was not one. The phone never floats a zero either.
+  if (r.rows === 0 && r.gain <= 0) return;
   var label = r.rows > 0 ? (r.rows > 1 ? r.rows + " ROWS" : "ROW COMPLETE") : "+" + r.gain;
   var labelX = r.rows > 0 ? L.shaft.x + L.shaft.w / 2 : cx;
   var rise = L.cell * (0.45 + p * 0.75);
@@ -10644,6 +10648,10 @@ function drawPlacementReward() {
   ctx.globalAlpha = life * strength;
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.font = "700 " + fontSize + "px CP, system-ui, sans-serif";
+  // Kept whole inside the shaft, glow and all: centred on a piece against a
+  // wall, the figure hung half over the edge. The app's `CaptionFit` rule.
+  var half = ctx.measureText(label).width / 2 + L.cell * 0.24;
+  labelX = Math.max(L.shaft.x + half, Math.min(L.shaft.x + L.shaft.w - half, labelX));
   ctx.shadowColor = alpha(C.craneLit, 0.85); ctx.shadowBlur = L.cell * 0.24;
   ctx.fillStyle = r.rows > 0 ? C.ink : C.craneLit;
   ctx.fillText(label, labelX, labelY);
