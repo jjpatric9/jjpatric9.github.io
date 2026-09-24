@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TallmanGames · Home of Box Stack</title>
-<meta name="description" content="Hi, I'm Joshua. I make small Android games in Canada. My first one, Box Stack, is free on Google Play, and you can play a round of it right here.">
+<title>TallmanGames · Box Stack, a stacking game about balance</title>
+<meta name="description" content="TallmanGames (Tallman Games) is Joshua Patrick, making small Android games in Canada. Play a round of Box Stack, a free stacking game about balance, right in your browser.">
+<link rel="canonical" href="https://tallman-games.com/">
 <meta name="theme-color" content="#230d30">
 <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
@@ -23,19 +24,90 @@
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "VideoGame",
-  "name": "Box Stack",
-  "description": "A stacking game about balance. Drag boxes onto a tower, fill rows to lock them in, and keep the whole thing from tipping over.",
-  "genre": "Puzzle",
-  "gamePlatform": "Android",
-  "operatingSystem": "Android",
-  "applicationCategory": "GameApplication",
-  "url": "https://play.google.com/store/apps/details?id=com.boxstacker.app",
-  "image": "https://tallman-games.com/img/og.png",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
-  "author": { "@type": "Person", "name": "Joshua Patrick", "url": "https://tallman-games.com/" },
-  "publisher": { "@type": "Organization", "name": "TallmanGames", "url": "https://tallman-games.com/" }
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://tallman-games.com/#org",
+   "name": "TallmanGames",
+   "alternateName": [
+    "Tallman Games",
+    "Tall Man Games"
+   ],
+   "url": "https://tallman-games.com/",
+   "logo": "https://tallman-games.com/img/tallmangames-logo.png",
+   "email": "joshua@tallman-games.com",
+   "founder": {
+    "@id": "https://tallman-games.com/#joshua"
+   },
+   "foundingLocation": {
+    "@type": "Place",
+    "name": "Canada"
+   },
+   "sameAs": [
+    "https://play.google.com/store/apps/developer?id=TallmanGames"
+   ]
+  },
+  {
+   "@type": "Person",
+   "@id": "https://tallman-games.com/#joshua",
+   "name": "Joshua Patrick",
+   "jobTitle": "Game developer",
+   "worksFor": {
+    "@id": "https://tallman-games.com/#org"
+   },
+   "url": "https://tallman-games.com/",
+   "nationality": "Canadian"
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://tallman-games.com/#website",
+   "name": "TallmanGames",
+   "alternateName": [
+    "Tallman Games"
+   ],
+   "url": "https://tallman-games.com/",
+   "publisher": {
+    "@id": "https://tallman-games.com/#org"
+   },
+   "inLanguage": "en"
+  },
+  {
+   "@type": [
+    "VideoGame",
+    "MobileApplication"
+   ],
+   "@id": "https://tallman-games.com/box-stack/#game",
+   "name": "Box Stack",
+   "url": "https://tallman-games.com/box-stack/",
+   "description": "A free stacking game about balance for Android. Drag boxes onto a tower, fill rows to lock them in, and keep the whole thing from tipping over.",
+   "genre": [
+    "Puzzle",
+    "Stacking",
+    "Casual"
+   ],
+   "gamePlatform": "Android",
+   "operatingSystem": "Android 7.0 or later",
+   "applicationCategory": "GameApplication",
+   "isAccessibleForFree": true,
+   "installUrl": "https://play.google.com/store/apps/details?id=com.boxstacker.app",
+   "sameAs": [
+    "https://play.google.com/store/apps/details?id=com.boxstacker.app"
+   ],
+   "image": "https://tallman-games.com/img/box-stack-feature.jpg",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CAD"
+   },
+   "author": {
+    "@id": "https://tallman-games.com/#joshua"
+   },
+   "publisher": {
+    "@id": "https://tallman-games.com/#org"
+   }
+  }
+ ]
 }
 </script>
 <script>document.documentElement.classList.add("js")</script>
@@ -47,6 +119,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><img src="img/mark.svg" alt="" width="28" height="28"><span>TallmanGames</span></a>
     <nav aria-label="Site">
+      <a href="box-stack/">Box Stack</a>
       <a href="#play">Play</a>
       <a href="palettes.html">Colours</a>
       <a href="support.html">Support</a>
@@ -64,8 +137,8 @@
         <p class="eyebrow">Hi, I'm Joshua</p>
         <h1>I make little games and fuss over every detail.</h1>
         <p>
-          TallmanGames is just me, making Android games in Canada. My first one is Box Stack, and
-          you can play a round of it right here.
+          TallmanGames is just me, Joshua Patrick, making Android games in Canada. My first one is
+          Box Stack, and you can play a round of it right here.
         </p>
         <div class="actions">
           <a class="btn primary" href="#play">
@@ -94,7 +167,7 @@
     <div class="wrap two">
       <div data-reveal>
         <div class="game-title">
-          <img src="img/box-stack-icon.png" alt="" width="72" height="72">
+          <img src="img/box-stack-icon.png" alt="Box Stack app icon" width="72" height="72">
           <div>
             <h2>Box Stack</h2>
             <p class="tagline">Build. Balance. Repeat.</p>
@@ -118,6 +191,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6 2.3 13.9 12l-9.3 9.7a1.6 1.6 0 0 1-.6-1.3V3.6c0-.5.2-1 .6-1.3zm10.3 10.7 2.6 2.7-11 6.3 8.4-9zm3.8-4.1 3 1.7c1 .6 1 1.9 0 2.5l-3 1.7-2.9-3 2.9-2.9zM6.5 2l11 6.3-2.6 2.7-8.4-9z"/></svg>
             Get it free on Google Play
           </a>
+          <a class="btn" href="box-stack/">How to play and tips</a>
         </div>
       </div>
 
@@ -250,7 +324,8 @@
       <div><b>TallmanGames</b><br>Made by Joshua Patrick in Canada · &copy; <span data-year>2026</span></div>
     </div>
     <nav aria-label="Footer">
-      <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Box Stack on Google Play</a>
+      <a href="box-stack/">Box Stack</a>
+      <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Get it on Google Play</a>
       <a href="palettes.html">Colours</a>
       <a href="support.html">Support</a>
       <a href="privacy.html">Privacy</a>

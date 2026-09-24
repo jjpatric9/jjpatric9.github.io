@@ -1,0 +1,7 @@
+# TallmanGames. Everything here is for people to find, except the bare demo, which is only
+# meant to be seen inside the homepage.
+User-agent: *
+Allow: /
+Disallow: /demo.html
+
+Sitemap: https://tallman-games.com/sitemap.xml
