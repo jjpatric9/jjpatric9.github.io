@@ -105,20 +105,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -163,7 +163,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -261,8 +261,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForCompanion(Companion_15);
   initMetadataForClass(WaveGenerator, 'WaveGenerator', WaveGenerator);
   initMetadataForObject(Engine, 'Engine');
+  initMetadataForObject(PlayfieldAnim, 'PlayfieldAnim');
   initMetadataForCompanion(Companion_16);
   initMetadataForClass(ViewCamera, 'ViewCamera');
+  initMetadataForCompanion(Companion_17);
+  initMetadataForClass(TowerViewport, 'TowerViewport', TowerViewport);
   initMetadataForObject(PlayfieldGeometry, 'PlayfieldGeometry');
   initMetadataForClass(FragmentInput, 'FragmentInput');
   initMetadataForClass(Fragment, 'Fragment');
@@ -3590,6 +3593,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       }
     }
     return result;
+  }
+  function roundToInt(_this__u8e3s4) {
+    var tmp;
+    if (isNaN_0(_this__u8e3s4)) {
+      throw IllegalArgumentException_init_$Create$_0('Cannot round NaN value.');
+    } else if (_this__u8e3s4 > 2147483647) {
+      tmp = 2147483647;
+    } else if (_this__u8e3s4 < -2147483648) {
+      tmp = -2147483648;
+    } else {
+      tmp = numberToInt(Math.round(_this__u8e3s4));
+    }
+    return tmp;
   }
   function abs(n) {
     return n < 0 ? -n | 0 | 0 : n;
@@ -8422,6 +8438,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     tmp.yh_1 = tmp_0;
     return true;
   }
+  function summitOf($this, summitBottom, visibleRows) {
+    return new ViewCamera(summitBottom, visibleRows);
+  }
   function tilt($this) {
     return $this.yh_1.zd_1.f8();
   }
@@ -8445,18 +8464,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     Engine_instance = this;
     this.xh_1 = new GameEngine();
     this.yh_1 = this.xh_1.cg(new Long(1, 0));
-    this.zh_1 = TowerBands_getInstance().si(this.yh_1.md_1);
+    this.zh_1 = TowerBands_getInstance().ti(this.yh_1.md_1);
     this.ai_1 = 0;
     this.bi_1 = 0;
     this.ci_1 = 0;
     this.di_1 = new Int32Array(0);
     this.ei_1 = 0;
     this.fi_1 = -1;
+    this.gi_1 = new TowerViewport();
   }
   protoOf(Engine).deal = function (seed, minHeight, maxHeight, leanMin, leanMax) {
     this.yh_1 = this.xh_1.cg(toLong(seed)).ge(VOID, VOID, VOID, new Long(182, 0));
-    this.zh_1 = TowerBands_getInstance().si(this.yh_1.md_1);
+    this.zh_1 = TowerBands_getInstance().ti(this.yh_1.md_1);
     this.ai_1 = 0;
+    this.gi_1 = new TowerViewport();
     this.di_1 = new Int32Array(0);
     var guard = 0;
     $l$loop_0: while (true) {
@@ -8545,31 +8566,52 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.ci_1 = this.yh_1.td_1;
     return lean;
   };
-  protoOf(Engine).ti = function () {
+  protoOf(Engine).ui = function () {
     return hasVisibleCompletingMove(this, (2147483647 - this.yh_1.jd_1.k8_1 | 0) - 1 | 0);
   };
-  protoOf(Engine).ui = function () {
+  protoOf(Engine).viewBottom = function (summitBottom, visibleRows) {
+    return this.gi_1.zi(summitOf(this, summitBottom, visibleRows), -1).vi_1;
+  };
+  protoOf(Engine).scrollView = function (rows, summitBottom, visibleRows) {
+    this.gi_1 = this.gi_1.aj(rows, summitOf(this, summitBottom, visibleRows), -1);
+  };
+  protoOf(Engine).bj = function () {
+    return this.gi_1.yi_1;
+  };
+  protoOf(Engine).cj = function () {
+    return 28.0;
+  };
+  protoOf(Engine).carriedCellX = function (anchorCellX, anchorFingerX, fingerX, cell) {
+    return PlayfieldGeometry_instance.pj(anchorCellX, anchorFingerX, fingerX, cell);
+  };
+  protoOf(Engine).qj = function () {
+    return 1.25;
+  };
+  protoOf(Engine).rj = function () {
+    return PlayfieldAnim_getInstance().yj_1;
+  };
+  protoOf(Engine).lk = function () {
     return this.yh_1.jd_1.h8_1;
   };
-  protoOf(Engine).vi = function () {
+  protoOf(Engine).mk = function () {
     return this.yh_1.jd_1.k8_1;
   };
-  protoOf(Engine).wi = function () {
+  protoOf(Engine).nk = function () {
     return 6;
   };
-  protoOf(Engine).xi = function () {
+  protoOf(Engine).ok = function () {
     return this.yh_1.jd_1.n8_1;
   };
   protoOf(Engine).t8 = function () {
     return this.yh_1.jd_1.t8();
   };
-  protoOf(Engine).yi = function () {
+  protoOf(Engine).pk = function () {
     return this.yh_1.jd_1.s8_1;
   };
   protoOf(Engine).ee = function () {
     return this.yh_1.ee();
   };
-  protoOf(Engine).zi = function () {
+  protoOf(Engine).qk = function () {
     return this.yh_1.jd_1.o8_1;
   };
   protoOf(Engine).cellAt = function (x, y) {
@@ -8581,13 +8623,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).shaft = function (view) {
     // Inline function 'kotlin.collections.flatMap' call
     // Inline function 'kotlin.collections.flatMapTo' call
-    var this_0 = this.zh_1.cj(new ViewCamera(view[0], view[1]), this.yh_1.jd_1);
+    var this_0 = this.zh_1.tk(new ViewCamera(view[0], view[1]), this.yh_1.jd_1);
     var destination = ArrayList_init_$Create$();
     var tmp0_iterator = this_0.f();
     while (tmp0_iterator.g()) {
       var element = tmp0_iterator.h();
       // Inline function 'com.boxstack.playable.Engine.shaft.<anonymous>' call
-      var list = listOf_0([element.dj_1, element.ej_1]);
+      var list = listOf_0([element.uk_1, element.vk_1]);
       addAll(destination, list);
     }
     return toDoubleArray(destination);
@@ -8601,18 +8643,18 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var id = tmp;
-    return this.zh_1.fj(id, crateBand(this.yh_1.jd_1, x, y));
+    return this.zh_1.wk(id, crateBand(this.yh_1.jd_1, x, y));
   };
   protoOf(Engine).setRowColor = function (y) {
     var tmp = this.zh_1;
     var tmp0_safe_receiver = this.yh_1.jd_1.p9(y);
-    return tmp.fj(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1, setRowBand(this.yh_1.jd_1, y));
+    return tmp.wk(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1, setRowBand(this.yh_1.jd_1, y));
   };
   protoOf(Engine).handColor = function (shapeOrdinal) {
-    return this.zh_1.hj(shapeOrdinal, TowerBands_getInstance().gj(this.yh_1.jd_1));
+    return this.zh_1.yk(shapeOrdinal, TowerBands_getInstance().xk(this.yh_1.jd_1));
   };
-  protoOf(Engine).ij = function () {
-    return this.zh_1.jj(TowerBands_getInstance().gj(this.yh_1.jd_1));
+  protoOf(Engine).zk = function () {
+    return this.zh_1.al(TowerBands_getInstance().xk(this.yh_1.jd_1));
   };
   protoOf(Engine).completingRows = function (slot, originX) {
     var tmp0_elvis_lhs = this.yh_1.kd_1.le(slot);
@@ -8633,7 +8675,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.ve_1);
   };
-  protoOf(Engine).kj = function () {
+  protoOf(Engine).bl = function () {
     return this.yh_1.zd_1.c8_1;
   };
   protoOf(Engine).d8 = function () {
@@ -8642,22 +8684,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).e8 = function () {
     return this.yh_1.de();
   };
-  protoOf(Engine).lj = function () {
+  protoOf(Engine).cl = function () {
     return this.yh_1.qd_1 - this.bi_1 | 0;
   };
-  protoOf(Engine).mj = function () {
+  protoOf(Engine).dl = function () {
     return this.yh_1.sd_1;
   };
-  protoOf(Engine).nj = function () {
+  protoOf(Engine).el = function () {
     return this.yh_1.td_1 - this.ci_1 | 0;
   };
-  protoOf(Engine).oj = function () {
+  protoOf(Engine).fl = function () {
     return this.yh_1.qd_1;
   };
-  protoOf(Engine).pj = function () {
+  protoOf(Engine).gl = function () {
     return Placement_instance.ug(this.yh_1.jd_1);
   };
-  protoOf(Engine).qj = function () {
+  protoOf(Engine).hl = function () {
     return this.yh_1.kd_1.je_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
@@ -8754,44 +8796,44 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.fi_1 = out.hd_1.ad_1;
     return this.di_1.length;
   };
-  protoOf(Engine).rj = function () {
+  protoOf(Engine).il = function () {
     return this.ai_1;
   };
   protoOf(Engine).rowsJustSet = function () {
     return this.di_1;
   };
-  protoOf(Engine).sj = function () {
+  protoOf(Engine).jl = function () {
     return this.ei_1;
   };
-  protoOf(Engine).tj = function () {
+  protoOf(Engine).kl = function () {
     return this.fi_1;
   };
-  protoOf(Engine).uj = function () {
+  protoOf(Engine).ll = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.jk(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).wj_1;
+    return PlayfieldGeometry_instance.ml(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).wi_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.rk(progress, revealing);
+    return ResultsAnim_instance.ul(progress, revealing);
   };
   protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.sk(revealing);
+    return ResultsAnim_instance.vl(revealing);
   };
   protoOf(Engine).topplePhase = function (progress, revealing) {
-    return ResultsAnim_instance.tk(progress, revealing);
+    return ResultsAnim_instance.wl(progress, revealing);
   };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.uk(topple, tilt(this));
+    return ResultsAnim_instance.xl(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.vk(topple);
+    return ResultsAnim_instance.yl(topple);
   };
-  protoOf(Engine).wk = function () {
-    return ResultsAnim_instance.xk(this.yh_1.jd_1);
+  protoOf(Engine).zl = function () {
+    return ResultsAnim_instance.am(this.yh_1.jd_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.yh_1.jd_1;
@@ -8813,10 +8855,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.q9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.yk(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.zk_1);
-            out.d(piece.al_1);
-            out.d(piece.bl_1);
+            var piece = ResultsAnim_instance.bm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
+            out.d(piece.cm_1);
+            out.d(piece.dm_1);
+            out.d(piece.em_1);
             out.d(board.m9(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8826,15 +8868,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().el(combo, rows, index);
+    return SoundLadder_getInstance().hm(combo, rows, index);
   };
-  protoOf(Engine).fl = function () {
+  protoOf(Engine).im = function () {
     return (new Long(300, 0)).u1();
   };
-  protoOf(Engine).gl = function () {
-    return ResultsAnim_instance.hl(true, false);
+  protoOf(Engine).jm = function () {
+    return ResultsAnim_instance.km(true, false);
   };
-  protoOf(Engine).il = function () {
+  protoOf(Engine).lm = function () {
     return get_entries().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
@@ -8875,6 +8917,40 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       new Engine();
     return Engine_instance;
   }
+  function PlayfieldAnim() {
+    PlayfieldAnim_instance = this;
+    this.sj_1 = 180;
+    this.tj_1 = 260;
+    this.uj_1 = Shapes_getInstance().ob_1 + 0.5;
+    this.vj_1 = 225;
+    this.wj_1 = 260;
+    this.xj_1 = 0.74;
+    var tmp = this;
+    // Inline function 'kotlin.math.roundToInt' call
+    var this_0 = 225 * 0.74;
+    tmp.yj_1 = roundToInt(this_0);
+    this.zj_1 = 0.13;
+    this.ak_1 = 0.28;
+    this.bk_1 = 0.17;
+    this.ck_1 = 770;
+    this.dk_1 = 1.7;
+    this.ek_1 = 0.14;
+    this.fk_1 = 0.42;
+    this.gk_1 = 90;
+    var tmp_0 = this;
+    // Inline function 'kotlin.math.roundToInt' call
+    var this_1 = 60000.0 / 90;
+    tmp_0.hk_1 = roundToInt(this_1);
+    this.ik_1 = 0.3;
+    this.jk_1 = 0.002;
+    this.kk_1 = 620;
+  }
+  var PlayfieldAnim_instance;
+  function PlayfieldAnim_getInstance() {
+    if (PlayfieldAnim_instance == null)
+      new PlayfieldAnim();
+    return PlayfieldAnim_instance;
+  }
   function Companion_16() {
   }
   var Companion_instance_16;
@@ -8882,15 +8958,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_16;
   }
   function ViewCamera(bottomRow, visibleRows) {
-    this.vj_1 = bottomRow;
-    this.wj_1 = visibleRows;
+    this.vi_1 = bottomRow;
+    this.wi_1 = visibleRows;
   }
   protoOf(ViewCamera).toString = function () {
-    return 'ViewCamera(bottomRow=' + this.vj_1 + ', visibleRows=' + this.wj_1 + ')';
+    return 'ViewCamera(bottomRow=' + this.vi_1 + ', visibleRows=' + this.wi_1 + ')';
   };
   protoOf(ViewCamera).hashCode = function () {
-    var result = getNumberHashCode(this.vj_1);
-    result = imul(result, 31) + getNumberHashCode(this.wj_1) | 0;
+    var result = getNumberHashCode(this.vi_1);
+    result = imul(result, 31) + getNumberHashCode(this.wi_1) | 0;
     return result;
   };
   protoOf(ViewCamera).equals = function (other) {
@@ -8899,27 +8975,91 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof ViewCamera))
       return false;
     var tmp0_other_with_cast = other instanceof ViewCamera ? other : THROW_CCE();
-    if (!equals(this.vj_1, tmp0_other_with_cast.vj_1))
+    if (!equals(this.vi_1, tmp0_other_with_cast.vi_1))
       return false;
-    if (!equals(this.wj_1, tmp0_other_with_cast.wj_1))
+    if (!equals(this.wi_1, tmp0_other_with_cast.wi_1))
+      return false;
+    return true;
+  };
+  function Companion_17() {
+    this.mm_1 = 0.001;
+  }
+  var Companion_instance_17;
+  function Companion_getInstance_17() {
+    return Companion_instance_17;
+  }
+  function TowerViewport(bottomRow, followsTop) {
+    bottomRow = bottomRow === VOID ? 0.0 : bottomRow;
+    followsTop = followsTop === VOID ? true : followsTop;
+    this.xi_1 = bottomRow;
+    this.yi_1 = followsTop;
+  }
+  protoOf(TowerViewport).zi = function (summit, minimumBottom) {
+    // Inline function 'kotlin.comparisons.minOf' call
+    var b = summit.vi_1;
+    var minimum = Math.min(minimumBottom, b);
+    var tmp;
+    if (this.yi_1) {
+      tmp = summit.vi_1;
+    } else {
+      tmp = coerceIn(this.xi_1, minimum, summit.vi_1);
+    }
+    var bottom = tmp;
+    return new ViewCamera(bottom, summit.wi_1);
+  };
+  protoOf(TowerViewport).aj = function (rows, summit, minimumBottom) {
+    var current = this.zi(summit, minimumBottom).vi_1;
+    return this.nm(current + rows, summit, minimumBottom);
+  };
+  protoOf(TowerViewport).nm = function (bottomRow, summit, minimumBottom) {
+    // Inline function 'kotlin.comparisons.minOf' call
+    var b = summit.vi_1;
+    var minimum = Math.min(minimumBottom, b);
+    var next = coerceIn(bottomRow, minimum, summit.vi_1);
+    return new TowerViewport(next, next >= summit.vi_1 - 0.001);
+  };
+  protoOf(TowerViewport).toString = function () {
+    return 'TowerViewport(bottomRow=' + this.xi_1 + ', followsTop=' + this.yi_1 + ')';
+  };
+  protoOf(TowerViewport).hashCode = function () {
+    var result = getNumberHashCode(this.xi_1);
+    result = imul(result, 31) + getBooleanHashCode(this.yi_1) | 0;
+    return result;
+  };
+  protoOf(TowerViewport).equals = function (other) {
+    if (this === other)
+      return true;
+    if (!(other instanceof TowerViewport))
+      return false;
+    var tmp0_other_with_cast = other instanceof TowerViewport ? other : THROW_CCE();
+    if (!equals(this.xi_1, tmp0_other_with_cast.xi_1))
+      return false;
+    if (!(this.yi_1 === tmp0_other_with_cast.yi_1))
       return false;
     return true;
   };
   function PlayfieldGeometry() {
-    this.xj_1 = 0.125;
-    this.yj_1 = 9.0;
-    this.zj_1 = 2;
-    this.ak_1 = 1.25;
-    this.bk_1 = 1.0;
-    this.ck_1 = 1.6;
-    this.dk_1 = 0.05;
-    this.ek_1 = 0.875;
-    this.fk_1 = 28.0;
-    this.gk_1 = 0.5;
-    this.hk_1 = 1;
-    this.ik_1 = -1;
+    this.dj_1 = 0.125;
+    this.ej_1 = 9.0;
+    this.fj_1 = 2;
+    this.gj_1 = 1.25;
+    this.hj_1 = 1.0;
+    this.ij_1 = 1.6;
+    this.jj_1 = 0.05;
+    this.kj_1 = 0.875;
+    this.lj_1 = 28.0;
+    this.mj_1 = 0.5;
+    this.nj_1 = 1;
+    this.oj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).jk = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).om = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+    return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
+  };
+  protoOf(PlayfieldGeometry).pj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
+    gain = gain === VOID ? 1.25 : gain;
+    return $super === VOID ? this.om(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.om.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+  };
+  protoOf(PlayfieldGeometry).ml = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -8931,61 +9071,61 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.jl_1 = startX;
-    this.kl_1 = startY;
-    this.ll_1 = pivotX;
-    this.ml_1 = pivotY;
-    this.nl_1 = cellPx;
-    this.ol_1 = groundY;
-    this.pl_1 = cellX;
-    this.ql_1 = cellY;
-    this.rl_1 = impact;
-    this.sl_1 = direction;
+    this.pm_1 = startX;
+    this.qm_1 = startY;
+    this.rm_1 = pivotX;
+    this.sm_1 = pivotY;
+    this.tm_1 = cellPx;
+    this.um_1 = groundY;
+    this.vm_1 = cellX;
+    this.wm_1 = cellY;
+    this.xm_1 = impact;
+    this.ym_1 = direction;
   }
   protoOf(FragmentInput).x7 = function () {
-    return this.jl_1;
+    return this.pm_1;
   };
   protoOf(FragmentInput).y7 = function () {
-    return this.kl_1;
+    return this.qm_1;
   };
-  protoOf(FragmentInput).tl = function () {
-    return this.ll_1;
+  protoOf(FragmentInput).zm = function () {
+    return this.rm_1;
   };
-  protoOf(FragmentInput).ul = function () {
-    return this.ml_1;
+  protoOf(FragmentInput).an = function () {
+    return this.sm_1;
   };
-  protoOf(FragmentInput).vl = function () {
-    return this.nl_1;
+  protoOf(FragmentInput).bn = function () {
+    return this.tm_1;
   };
-  protoOf(FragmentInput).wl = function () {
-    return this.ol_1;
+  protoOf(FragmentInput).cn = function () {
+    return this.um_1;
   };
-  protoOf(FragmentInput).xl = function () {
-    return this.pl_1;
+  protoOf(FragmentInput).dn = function () {
+    return this.vm_1;
   };
-  protoOf(FragmentInput).yl = function () {
-    return this.ql_1;
+  protoOf(FragmentInput).en = function () {
+    return this.wm_1;
   };
-  protoOf(FragmentInput).zl = function () {
-    return this.rl_1;
+  protoOf(FragmentInput).fn = function () {
+    return this.xm_1;
   };
-  protoOf(FragmentInput).am = function () {
-    return this.sl_1;
+  protoOf(FragmentInput).gn = function () {
+    return this.ym_1;
   };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.jl_1 + ', startY=' + this.kl_1 + ', pivotX=' + this.ll_1 + ', pivotY=' + this.ml_1 + ', cellPx=' + this.nl_1 + ', groundY=' + this.ol_1 + ', cellX=' + this.pl_1 + ', cellY=' + this.ql_1 + ', impact=' + this.rl_1 + ', direction=' + this.sl_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.pm_1 + ', startY=' + this.qm_1 + ', pivotX=' + this.rm_1 + ', pivotY=' + this.sm_1 + ', cellPx=' + this.tm_1 + ', groundY=' + this.um_1 + ', cellX=' + this.vm_1 + ', cellY=' + this.wm_1 + ', impact=' + this.xm_1 + ', direction=' + this.ym_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.jl_1);
-    result = imul(result, 31) + getNumberHashCode(this.kl_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.ll_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.ml_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.nl_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.ol_1) | 0;
-    result = imul(result, 31) + this.pl_1 | 0;
-    result = imul(result, 31) + this.ql_1 | 0;
-    result = imul(result, 31) + getNumberHashCode(this.rl_1) | 0;
-    result = imul(result, 31) + this.sl_1.hashCode() | 0;
+    var result = getNumberHashCode(this.pm_1);
+    result = imul(result, 31) + getNumberHashCode(this.qm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.rm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.sm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.tm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.um_1) | 0;
+    result = imul(result, 31) + this.vm_1 | 0;
+    result = imul(result, 31) + this.wm_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.xm_1) | 0;
+    result = imul(result, 31) + this.ym_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
@@ -8994,40 +9134,40 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof FragmentInput))
       return false;
     var tmp0_other_with_cast = other instanceof FragmentInput ? other : THROW_CCE();
-    if (!equals(this.jl_1, tmp0_other_with_cast.jl_1))
+    if (!equals(this.pm_1, tmp0_other_with_cast.pm_1))
       return false;
-    if (!equals(this.kl_1, tmp0_other_with_cast.kl_1))
+    if (!equals(this.qm_1, tmp0_other_with_cast.qm_1))
       return false;
-    if (!equals(this.ll_1, tmp0_other_with_cast.ll_1))
+    if (!equals(this.rm_1, tmp0_other_with_cast.rm_1))
       return false;
-    if (!equals(this.ml_1, tmp0_other_with_cast.ml_1))
+    if (!equals(this.sm_1, tmp0_other_with_cast.sm_1))
       return false;
-    if (!equals(this.nl_1, tmp0_other_with_cast.nl_1))
+    if (!equals(this.tm_1, tmp0_other_with_cast.tm_1))
       return false;
-    if (!equals(this.ol_1, tmp0_other_with_cast.ol_1))
+    if (!equals(this.um_1, tmp0_other_with_cast.um_1))
       return false;
-    if (!(this.pl_1 === tmp0_other_with_cast.pl_1))
+    if (!(this.vm_1 === tmp0_other_with_cast.vm_1))
       return false;
-    if (!(this.ql_1 === tmp0_other_with_cast.ql_1))
+    if (!(this.wm_1 === tmp0_other_with_cast.wm_1))
       return false;
-    if (!equals(this.rl_1, tmp0_other_with_cast.rl_1))
+    if (!equals(this.xm_1, tmp0_other_with_cast.xm_1))
       return false;
-    if (!this.sl_1.equals(tmp0_other_with_cast.sl_1))
+    if (!this.ym_1.equals(tmp0_other_with_cast.ym_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.zk_1 = x;
-    this.al_1 = y;
-    this.bl_1 = degrees;
+    this.cm_1 = x;
+    this.dm_1 = y;
+    this.em_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.zk_1 + ', y=' + this.al_1 + ', degrees=' + this.bl_1 + ')';
+    return 'Fragment(x=' + this.cm_1 + ', y=' + this.dm_1 + ', degrees=' + this.em_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.zk_1);
-    result = imul(result, 31) + getNumberHashCode(this.al_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.bl_1) | 0;
+    var result = getNumberHashCode(this.cm_1);
+    result = imul(result, 31) + getNumberHashCode(this.dm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.em_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -9036,11 +9176,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof Fragment))
       return false;
     var tmp0_other_with_cast = other instanceof Fragment ? other : THROW_CCE();
-    if (!equals(this.zk_1, tmp0_other_with_cast.zk_1))
+    if (!equals(this.cm_1, tmp0_other_with_cast.cm_1))
       return false;
-    if (!equals(this.al_1, tmp0_other_with_cast.al_1))
+    if (!equals(this.dm_1, tmp0_other_with_cast.dm_1))
       return false;
-    if (!equals(this.bl_1, tmp0_other_with_cast.bl_1))
+    if (!equals(this.em_1, tmp0_other_with_cast.em_1))
       return false;
     return true;
   };
@@ -9055,22 +9195,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.kk_1 = 1725;
-    this.lk_1 = 0.42;
-    this.mk_1 = 62.0;
-    this.nk_1 = 620;
-    this.ok_1 = 260;
-    this.pk_1 = 271;
-    this.qk_1 = 0.35;
+    this.nl_1 = 1725;
+    this.ol_1 = 0.42;
+    this.pl_1 = 62.0;
+    this.ql_1 = 620;
+    this.rl_1 = 260;
+    this.sl_1 = 271;
+    this.tl_1 = 0.35;
   }
-  protoOf(ResultsAnim).bm = function (revealing) {
+  protoOf(ResultsAnim).hn = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).hl = function (revealing, reducedMotion) {
-    var impactAt = this.cm((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).km = function (revealing, reducedMotion) {
+    var impactAt = this.in((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).cm = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).in = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -9081,35 +9221,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).rk = function (progress, revealing) {
+  protoOf(ResultsAnim).ul = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.bm(true);
+    var share = 620 / this.hn(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).sk = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.bm(true);
+  protoOf(ResultsAnim).vl = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.hn(true);
   };
-  protoOf(ResultsAnim).tk = function (progress, revealing) {
+  protoOf(ResultsAnim).wl = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.bm(true);
+    var start = 880 / this.hn(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).dm = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).jn = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).uk = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).xl = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.dm(progress, direction, maxDegrees) : $super.dm.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.jn(progress, direction, maxDegrees) : $super.jn.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).vk = function (topple) {
+  protoOf(ResultsAnim).yl = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).xk = function (board) {
+  protoOf(ResultsAnim).am = function (board) {
     var lowest = board.h8_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -9132,17 +9272,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).yk = function (input) {
+  protoOf(ResultsAnim).bm = function (input) {
     var startX = input.x7();
     var startY = input.y7();
-    var pivotX = input.tl();
-    var pivotY = input.ul();
-    var cellPx = input.vl();
-    var groundY = input.wl();
-    var cellX = input.xl();
-    var cellY = input.yl();
-    var impact = input.zl();
-    var direction = input.am();
+    var pivotX = input.zm();
+    var pivotY = input.an();
+    var cellPx = input.bn();
+    var groundY = input.cn();
+    var cellX = input.dn();
+    var cellY = input.en();
+    var impact = input.fn();
+    var direction = input.gn();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -9178,19 +9318,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.cl_1 = 12;
-    this.dl_1 = new Long(300, 0);
+    this.fm_1 = 12;
+    this.gm_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).em = function (combo) {
+  protoOf(SoundLadder).kn = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).fm = function (combo) {
+  protoOf(SoundLadder).ln = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.em(combo) / 12.0;
+    var x = this.kn(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).el = function (combo, rows, index) {
-    return this.fm(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).hm = function (combo, rows, index) {
+    return this.ln(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -9199,16 +9339,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.gm_1 = field;
-    this.hm_1 = crates;
+    this.mn_1 = field;
+    this.nn_1 = crates;
   }
   function Stop(at, color) {
-    this.dj_1 = at;
-    this.ej_1 = color;
+    this.uk_1 = at;
+    this.vk_1 = color;
   }
   function Starts(board, rows) {
-    this.im_1 = board;
-    this.jm_1 = rows;
+    this.on_1 = board;
+    this.pn_1 = rows;
   }
   function blend$mix($from, $to, f, shift) {
     var a = $from >> shift & 255;
@@ -9217,28 +9357,28 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function TowerBands() {
     TowerBands_instance = this;
-    this.gi_1 = new Long(182, 0);
-    this.hi_1 = Medal_SUMMIT_getInstance().pg_1;
-    this.ii_1 = this.hi_1.k() + 1 | 0;
-    this.ji_1 = 3;
-    this.ki_1 = 0;
+    this.hi_1 = new Long(182, 0);
+    this.ii_1 = Medal_SUMMIT_getInstance().pg_1;
+    this.ji_1 = this.ii_1.k() + 1 | 0;
+    this.ki_1 = 3;
+    this.li_1 = 0;
     var tmp = this;
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$0 = new Int32Array([0, 0, 0]);
-    tmp.li_1 = new Band_0(16777215, tmp$ret$0);
-    this.mi_1 = new Long(1284865837, 1481765933);
-    this.ni_1 = new Long(-144211633, 335903614);
-    this.oi_1 = this.si(new Long(0, 0));
-    this.pi_1 = 2.0;
-    this.qi_1 = null;
-    this.ri_1 = 1.0E-4;
+    tmp.mi_1 = new Band_0(16777215, tmp$ret$0);
+    this.ni_1 = new Long(1284865837, 1481765933);
+    this.oi_1 = new Long(-144211633, 335903614);
+    this.pi_1 = this.ti(new Long(0, 0));
+    this.qi_1 = 2.0;
+    this.ri_1 = null;
+    this.si_1 = 1.0E-4;
   }
-  protoOf(TowerBands).si = function (runSeed) {
-    var deck = toMutableList(TowerPaletteBank_getInstance().km_1);
-    var bands = ArrayList_init_$Create$_0(this.ii_1);
+  protoOf(TowerBands).ti = function (runSeed) {
+    var deck = toMutableList(TowerPaletteBank_getInstance().qn_1);
+    var bands = ArrayList_init_$Create$_0(this.ji_1);
     var seed = runSeed;
     // Inline function 'kotlin.repeat' call
-    var times = this.ii_1 - 1 | 0;
+    var times = this.ji_1 - 1 | 0;
     // Inline function 'kotlin.contracts.contract' call
     var inductionVariable = 0;
     if (inductionVariable < times)
@@ -9250,27 +9390,27 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         bands.d(deck.f2((seed.s1(33).t1() & 2147483647) % deck.k() | 0));
       }
        while (inductionVariable < times);
-    bands.d(this.li_1);
+    bands.d(this.mi_1);
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).lm = function (placedOn, platformRows) {
-    return this.mm(placedOn - platformRows | 0);
+  protoOf(TowerBands).rn = function (placedOn, platformRows) {
+    return this.sn(placedOn - platformRows | 0);
   };
-  protoOf(TowerBands).gj = function (board) {
-    return this.lm(board.s8_1, board.k8_1);
+  protoOf(TowerBands).xk = function (board) {
+    return this.rn(board.s8_1, board.k8_1);
   };
-  protoOf(TowerBands).nm = function (board) {
-    var tmp0_safe_receiver = this.qi_1;
+  protoOf(TowerBands).tn = function (board) {
+    var tmp0_safe_receiver = this.ri_1;
     if (tmp0_safe_receiver == null)
       null;
     else {
       // Inline function 'kotlin.let' call
       // Inline function 'kotlin.contracts.contract' call
-      if (tmp0_safe_receiver.im_1 === board)
-        return tmp0_safe_receiver.jm_1;
+      if (tmp0_safe_receiver.on_1 === board)
+        return tmp0_safe_receiver.pn_1;
     }
     var tmp = 0;
-    var tmp_0 = this.hi_1.k();
+    var tmp_0 = this.ii_1.k();
     var tmp_1 = new Int32Array(tmp_0);
     while (tmp < tmp_0) {
       tmp_1[tmp] = 2147483647;
@@ -9290,7 +9430,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var x = inductionVariable_0;
             inductionVariable_0 = inductionVariable_0 + 1 | 0;
             var on = board.r9(x, y);
-            var band = on === 0 ? 0 : this.lm(on, board.k8_1);
+            var band = on === 0 ? 0 : this.rn(on, board.k8_1);
             if (band > 0 && on < rows[band - 1 | 0]) {
               rows[band - 1 | 0] = on;
             }
@@ -9299,7 +9439,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       }
        while (inductionVariable < last);
     var inductionVariable_1 = 1;
-    var last_1 = this.gj(board);
+    var last_1 = this.xk(board);
     if (inductionVariable_1 <= last_1)
       do {
         var band_0 = inductionVariable_1;
@@ -9309,16 +9449,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         }
       }
        while (!(band_0 === last_1));
-    this.qi_1 = new Starts(board, rows);
+    this.ri_1 = new Starts(board, rows);
     return rows;
   };
-  protoOf(TowerBands).om = function (from, to, t) {
+  protoOf(TowerBands).un = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).mm = function (boxes) {
+  protoOf(TowerBands).sn = function (boxes) {
     var band = 0;
-    while (band < this.hi_1.k() && boxes >= this.hi_1.j(band)) {
+    while (band < this.ii_1.k() && boxes >= this.ii_1.j(band)) {
       band = band + 1 | 0;
     }
     return band;
@@ -9330,29 +9470,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().lm(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().rn(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().lm(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().rn(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
   }
   function shaft$positionOf($camera, row) {
-    return 1.0 - (row - $camera.vj_1) / $camera.wj_1;
+    return 1.0 - (row - $camera.vi_1) / $camera.wi_1;
   }
   function TowerPalette(bands) {
-    this.aj_1 = bands;
+    this.rk_1 = bands;
     var tmp = this;
     // Inline function 'kotlin.arrayOfNulls' call
-    var size = TowerBands_getInstance().ii_1;
-    tmp.bj_1 = fillArrayVal(Array(size), null);
+    var size = TowerBands_getInstance().ji_1;
+    tmp.sk_1 = fillArrayVal(Array(size), null);
   }
-  protoOf(TowerPalette).pm = function (camera, board, reached) {
-    return this.qm(camera, TowerBands_getInstance().nm(board), reached);
+  protoOf(TowerPalette).vn = function (camera, board, reached) {
+    return this.wn(camera, TowerBands_getInstance().tn(board), reached);
   };
-  protoOf(TowerPalette).cj = function (camera, board, reached, $super) {
-    reached = reached === VOID ? TowerBands_getInstance().gj(board) : reached;
-    return $super === VOID ? this.pm(camera, board, reached) : $super.pm.call(this, camera, board, reached);
+  protoOf(TowerPalette).tk = function (camera, board, reached, $super) {
+    reached = reached === VOID ? TowerBands_getInstance().xk(board) : reached;
+    return $super === VOID ? this.vn(camera, board, reached) : $super.vn.call(this, camera, board, reached);
   };
-  protoOf(TowerPalette).qm = function (camera, starts, reached) {
+  protoOf(TowerPalette).wn = function (camera, starts, reached) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 1;
     if (inductionVariable <= reached)
@@ -9379,38 +9519,38 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp;
       // Inline function 'kotlin.collections.isNotEmpty' call
       if (!stops.i()) {
-        tmp = at_0 - stops.j(stops.k() - 1 | 0).dj_1 < 1.0E-4;
+        tmp = at_0 - stops.j(stops.k() - 1 | 0).uk_1 < 1.0E-4;
       } else {
         tmp = false;
       }
       if (tmp)
         continue $l$loop_0;
-      var row_0 = camera.vj_1 + (1.0 - at_0) * camera.wj_1;
-      stops.d(new Stop(at_0, this.rm(row_0, starts, reached)));
+      var row_0 = camera.vi_1 + (1.0 - at_0) * camera.wi_1;
+      stops.d(new Stop(at_0, this.xn(row_0, starts, reached)));
     }
     return stops;
   };
-  protoOf(TowerPalette).rm = function (row, starts, reached) {
+  protoOf(TowerPalette).xn = function (row, starts, reached) {
     var band = 0;
     while (band < reached && row >= starts[band]) {
       band = band + 1 | 0;
     }
     if (band === reached)
-      return this.jj(band);
+      return this.al(band);
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
-      return this.jj(band);
-    return TowerBands_getInstance().om(this.jj(band), this.jj(band + 1 | 0), into / 2.0);
+      return this.al(band);
+    return TowerBands_getInstance().un(this.al(band), this.al(band + 1 | 0), into / 2.0);
   };
-  protoOf(TowerPalette).jj = function (band) {
-    return this.aj_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ii_1 - 1 | 0)).gm_1;
+  protoOf(TowerPalette).al = function (band) {
+    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ji_1 - 1 | 0)).mn_1;
   };
-  protoOf(TowerPalette).fj = function (id, band) {
+  protoOf(TowerPalette).wk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
-    return this.hj(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
+    return this.yk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
   };
-  protoOf(TowerPalette).hj = function (slot, band) {
-    return this.aj_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ii_1 - 1 | 0)).hm_1[slot % 3 | 0];
+  protoOf(TowerPalette).yk = function (slot, band) {
+    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ji_1 - 1 | 0)).nn_1[slot % 3 | 0];
   };
   function TowerPaletteBank() {
     TowerPaletteBank_instance = this;
@@ -9804,7 +9944,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_128 = new Band_0(2367277, tmp$ret$128);
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$129 = new Int32Array([14671448, 10975704, 7579609]);
-    tmp.km_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, tmp_44, tmp_45, tmp_46, tmp_47, tmp_48, tmp_49, tmp_50, tmp_51, tmp_52, tmp_53, tmp_54, tmp_55, tmp_56, tmp_57, tmp_58, tmp_59, tmp_60, tmp_61, tmp_62, tmp_63, tmp_64, tmp_65, tmp_66, tmp_67, tmp_68, tmp_69, tmp_70, tmp_71, tmp_72, tmp_73, tmp_74, tmp_75, tmp_76, tmp_77, tmp_78, tmp_79, tmp_80, tmp_81, tmp_82, tmp_83, tmp_84, tmp_85, tmp_86, tmp_87, tmp_88, tmp_89, tmp_90, tmp_91, tmp_92, tmp_93, tmp_94, tmp_95, tmp_96, tmp_97, tmp_98, tmp_99, tmp_100, tmp_101, tmp_102, tmp_103, tmp_104, tmp_105, tmp_106, tmp_107, tmp_108, tmp_109, tmp_110, tmp_111, tmp_112, tmp_113, tmp_114, tmp_115, tmp_116, tmp_117, tmp_118, tmp_119, tmp_120, tmp_121, tmp_122, tmp_123, tmp_124, tmp_125, tmp_126, tmp_127, tmp_128, new Band_0(4522310, tmp$ret$129)]);
+    tmp.qn_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, tmp_44, tmp_45, tmp_46, tmp_47, tmp_48, tmp_49, tmp_50, tmp_51, tmp_52, tmp_53, tmp_54, tmp_55, tmp_56, tmp_57, tmp_58, tmp_59, tmp_60, tmp_61, tmp_62, tmp_63, tmp_64, tmp_65, tmp_66, tmp_67, tmp_68, tmp_69, tmp_70, tmp_71, tmp_72, tmp_73, tmp_74, tmp_75, tmp_76, tmp_77, tmp_78, tmp_79, tmp_80, tmp_81, tmp_82, tmp_83, tmp_84, tmp_85, tmp_86, tmp_87, tmp_88, tmp_89, tmp_90, tmp_91, tmp_92, tmp_93, tmp_94, tmp_95, tmp_96, tmp_97, tmp_98, tmp_99, tmp_100, tmp_101, tmp_102, tmp_103, tmp_104, tmp_105, tmp_106, tmp_107, tmp_108, tmp_109, tmp_110, tmp_111, tmp_112, tmp_113, tmp_114, tmp_115, tmp_116, tmp_117, tmp_118, tmp_119, tmp_120, tmp_121, tmp_122, tmp_123, tmp_124, tmp_125, tmp_126, tmp_127, tmp_128, new Band_0(4522310, tmp$ret$129)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -9814,33 +9954,37 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   //region block: post-declaration
   protoOf(InternalHashMap).w3 = containsAllEntries;
-  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).ti);
-  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).ui);
-  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).vi);
-  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).wi);
-  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).xi);
+  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).ui);
+  defineProp(protoOf(Engine), 'viewFollowsTop', protoOf(Engine).bj);
+  defineProp(protoOf(Engine), 'towerDetachSlop', protoOf(Engine).cj);
+  defineProp(protoOf(Engine), 'dragGain', protoOf(Engine).qj);
+  defineProp(protoOf(Engine), 'contactMs', protoOf(Engine).rj);
+  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).lk);
+  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).mk);
+  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).nk);
+  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).ok);
   defineProp(protoOf(Engine), 'rowCount', protoOf(Engine).t8);
-  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).yi);
+  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).pk);
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).ee);
-  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).zi);
-  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).ij);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).kj);
+  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).qk);
+  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).zk);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).bl);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).d8);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).e8);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).lj);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).mj);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).nj);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).oj);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).pj);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).qj);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).rj);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).sj);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).tj);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).uj);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).wk);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).fl);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).gl);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).il);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).cl);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).dl);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).el);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).fl);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).gl);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).hl);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).il);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).jl);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).kl);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).ll);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).zl);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).im);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).jm);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).lm);
   //endregion
   //region block: init
   Unit_instance = new Unit();
@@ -9867,6 +10011,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   Companion_instance_14 = new Companion_14();
   Companion_instance_15 = new Companion_15();
   Companion_instance_16 = new Companion_16();
+  Companion_instance_17 = new Companion_17();
   PlayfieldGeometry_instance = new PlayfieldGeometry();
   ResultsAnim_instance = new ResultsAnim();
   //endregion
@@ -10119,7 +10264,10 @@ if (isNaN(openLean)) throw new Error("No coached opening found");
 
 var G = {
   t: 0, runT: 0, endT: 0,
-  carried: null,           // { slot, px, py, lift }
+  carried: null,           // { slot, px, py, anchorCellX, anchorFingerX, returning }
+  summitTop: null,         // the automatic camera, eased: see `viewTopRow`
+  scroll: null,            // a drag in the shaft with nothing in hand: see `beginScroll`
+  fling: 0,                // rows a second the view is still coasting after a scroll
   falling: null,
   fall: null,              // the tower going over: see `startFall`
   flash: null,
@@ -10200,8 +10348,8 @@ function bestMimeMove() {
     var sh = handShape(slot); if (!sh) continue;
     for (var col = 0; col <= E.boardWidth - sh.w; col++) {
       var landing = E.landingY(slot, col); if (landing < 0) continue;
-      // The playable has no camera gesture. Never coach a drop whose landed
-      // piece would cross the fixed window even if it scores well.
+      // Never coach a drop whose landed piece would cross the window, even if it
+      // scores well: a stranger has not learned yet that the tower scrolls.
       if (landing + sh.h > cameraTopRow()) continue;
       var lean = E.projectedLean(slot, col); if (isNaN(lean)) continue;
       var rows = E.projectedRows(slot, col);
@@ -10308,19 +10456,20 @@ function layout() {
   }
 }
 
-/* The app can spend six rows on crane headroom because the player can scroll.
-   This advert cannot. Keep one clear row over the summit and spend the rest of
-   the fixed window showing the complete puzzle. While a piece is aimed or
-   falling, include its complete landing plus that clear row: following only the
-   old tower made tall pieces disappear through the top edge until they landed.
+/* **The game's own six rows of air over the summit** (`Camera.HEADROOM`, read
+   from the engine), because the advert scrolls now, the way the game does: a
+   drag in the shaft with nothing in hand moves the view down the tower and back.
+   Six is the piece hanging from the crane, its landing on the summit and air
+   between them, whatever the piece. With one clear row the crane's piece hung
+   over the tower with its landing outline squeezed under it.
 
-   **A website keeps the game's own six rows** (`Camera.HEADROOM`, read from the
-   engine). There the demo is played for as long as someone keeps building
-   rather than for one coached opening, and with one clear row the piece on the
-   crane hung over the summit with its landing outline squeezed under it — no
-   room left to see where it was going. Six is the hanging piece, its landing on
-   the summit and air between them, whatever the piece. */
-function airOverSummit() { return HOST_WEB ? E.headroom : 1; }
+   **Except for the opening, which is framed whole.** Until the first drop the
+   camera keeps one clear row and spends the rest of the window on the complete
+   puzzle, so the coached move and everything it completes are on screen before
+   anybody has learned that the tower scrolls. While a piece is aimed or falling,
+   its complete landing plus that clear row is kept too: following only the old
+   tower made tall pieces disappear through the top edge until they landed. */
+function airOverSummit() { return E.placedCount > 0 ? E.headroom : 1; }
 function placementCameraTop(slot, column) {
   var sh = handShape(slot); if (!sh) return -Infinity;
   var landing = E.landingY(slot, column);
@@ -10336,7 +10485,15 @@ function cameraTopRow() {
   }
   return top;
 }
-function rowY(row) { return L.fieldTop + (cameraTopRow() - row - 1) * L.cell; }
+/* What is drawn: the automatic camera, eased so that a change of rule or an aim
+   that needs more room glides rather than cuts, and then wherever the player
+   has scrolled it — the game's own `TowerViewport`, which follows the summit
+   until it is pulled away from it and stays put until it is brought back. */
+function viewTopRow() {
+  var summit = G.summitTop === null ? cameraTopRow() : G.summitTop;
+  return E.viewBottom(summit - L.rows, L.rows) + L.rows;
+}
+function rowY(row) { return L.fieldTop + (viewTopRow() - row - 1) * L.cell; }
 function colX(col) { return L.shaft.x + col * L.cell; }
 
 /* ------------------------------------------------------------ drawing ------ */
@@ -10467,7 +10624,7 @@ function drawNight() {
 }
 function drawShaftGround() {
   var s = L.shaft;
-  var rows = L.rows, bottom = cameraTopRow() - rows;
+  var rows = L.rows, bottom = viewTopRow() - rows;
   if (G.fall) {
     rows += (E.revealRows(L.rows) - rows) * G.fall.reveal;
     bottom *= 1 - G.fall.reveal;
@@ -10502,7 +10659,7 @@ function waterWave(x, y, w, amp, color, line) {
   ctx.strokeStyle = color; ctx.lineWidth = line; ctx.lineCap = "round"; ctx.stroke();
 }
 function drawWater() {
-  if (cameraTopRow() - L.rows >= E.platformRows) return;
+  if (viewTopRow() - L.rows >= E.platformRows) return;
   var s = L.shaft, y = rowY(Math.max(0, E.deckRow - 1)) + L.cell * 0.54;
   if (y >= s.y + s.h) return;
   var water = ctx.createLinearGradient(0, y, 0, s.y + s.h);
@@ -10515,11 +10672,11 @@ function drawWater() {
    its own inset, gap and light, and the row reads as one thing because they all
    match. `drawBlocks`, which skips the boat — that is drawn on its own. */
 function drawBoard() {
-  var top = cameraTopRow(), W_ = E.boardWidth;
+  var top = viewTopRow(), W_ = E.boardWidth;
   // The window is the playing camera's, except while the scene is pulled back —
   // then the whole tower is on screen by definition and there is nothing to cull.
-  var from = SCENE ? E.platformRows : Math.max(E.platformRows, top - L.rows);
-  var to = SCENE ? E.rowCount : Math.min(E.rowCount, top);
+  var from = SCENE ? E.platformRows : Math.max(E.platformRows, Math.floor(top - L.rows));
+  var to = SCENE ? E.rowCount : Math.min(E.rowCount, Math.ceil(top));
   var closing = closingRows();
   for (var y = from; y < to; y++) {
     var py = rowY(y);
@@ -10654,19 +10811,39 @@ function drawGantry() {
   L.beamTop = top; L.beamThick = thick;
 }
 
-/** The column under the finger, clamped. The crane cannot leave the board. */
+/* The column the crane is over. **The game's own drag**: the piece starts over
+   the berth it was taken from and moves by how far the finger has, at the
+   game's reach (`PlayfieldGeometry.carriedCellX`, `DRAG_GAIN`), rather than
+   jumping to whatever column is under the finger. Clamped: the crane cannot
+   leave the board. */
+function carriedCellX(c) {
+  return E.carriedCellX(c.anchorCellX, c.anchorFingerX, c.px, L.cell);
+}
 function aimedColumn() {
   if (!G.carried) return 0;
   var sh = handShape(G.carried.slot);
   if (!sh) return 0;
-  var raw = (G.carried.px - L.shaft.x) / L.cell - sh.w / 2;
-  return Math.max(0, Math.min(E.boardWidth - sh.w, Math.round(raw)));
+  return Math.max(0, Math.min(E.boardWidth - sh.w, Math.round(carriedCellX(G.carried))));
+}
+/* Where a crate on the mat starts along the crane: over its own berth
+   (`PlayfieldGeometry.cellXOfCenter`), or the nearest the crane can get to it —
+   in landscape the hand stands beside the board. */
+function startCellX(slot) {
+  var s = traySlot(slot), sh = handShape(slot), w = sh ? sh.w : 1;
+  var x = (s.x + s.w / 2 - L.shaft.x) / L.cell - w / 2;
+  return Math.max(0, Math.min(E.boardWidth - w, x));
+}
+/* A finger that has gone back over the hand is putting the crate back. */
+function overHand(p) {
+  var t = L.tray;
+  return p.x >= t.x - 4 && p.x <= t.x + t.w + 4 && p.y >= t.y - 4 && p.y <= t.y + t.h + 4;
 }
 
 /* It hangs from the crane, because that is what the game does: picking a crate
-   out of the tray puts it on the cable at the top of the shaft and the finger
-   moves it along the beam. The lift is animated so the pick-up still reads as
-   the drag it was. */
+   out of the tray puts it on the cable at the top of the shaft **at once** and
+   the finger moves it along the beam. It used to fly up from the tray, which
+   is a picture of the gesture rather than what the game does with it. Over the
+   hand again, it fades: letting go there puts it back. */
 function drawCarried() {
   var c = G.carried; if (!c || G.falling) return;
   var sh = handShape(c.slot); if (!sh) return;
@@ -10696,25 +10873,23 @@ function drawCarried() {
     ctx.restore();
   }
 
-  var slot = traySlot(c.slot), lift = Math.min(1, c.lift);
-  var e = lift < 0.5 ? 2 * lift * lift : 1 - Math.pow(-2 * lift + 2, 2) / 2;
-  var fromX = slot.x + slot.w / 2 - (sh.w * L.cell) / 2, fromY = slot.y;
-  var px = fromX + (colX(col) - fromX) * e, py = fromY + (L.fieldTop - fromY) * e;
+  var px = colX(col), py = L.fieldTop;
   var centre = px + (sh.w * L.cell) / 2;
+  var was = ctx.globalAlpha;
 
-  if (lift > 0.55) {
-    ctx.strokeStyle = C.craneCable; ctx.lineWidth = Math.max(2, L.cell * 0.038);
-    ctx.beginPath();
-    ctx.moveTo(centre, L.beamTop + L.beamThick * 0.85);
-    ctx.lineTo(centre, py); ctx.stroke();
-    ctx.fillStyle = C.crane;
-    ctx.fillRect(centre - L.cell * 0.325, L.beamTop - L.cell * 0.075, L.cell * 0.65, L.cell * 0.30);
-  }
+  ctx.strokeStyle = C.craneCable; ctx.lineWidth = Math.max(2, L.cell * 0.038);
+  ctx.beginPath();
+  ctx.moveTo(centre, L.beamTop + L.beamThick * 0.85);
+  ctx.lineTo(centre, py); ctx.stroke();
+  ctx.fillStyle = C.crane;
+  ctx.fillRect(centre - L.cell * 0.325, L.beamTop - L.cell * 0.075, L.cell * 0.65, L.cell * 0.30);
+  if (c.returning) ctx.globalAlpha = was * 0.35;
   for (var i = 0; i < sh.cells.length; i++) {
     var tint = ly < 0 ? "#FF5A5A" : packedRgb(E.handColor(sh.ord));
     slab(px + sh.cells[i][0] * L.cell, py + (sh.h - 1 - sh.cells[i][1]) * L.cell,
          L.cell, L.cell, tint);
   }
+  ctx.globalAlpha = was;
 }
 
 function drawFalling() {
@@ -10910,7 +11085,11 @@ function drawMime() {
   var move = hint.move, sh = handShape(move.slot); if (!sh) return;
   var s = traySlot(move.slot), a = hint.alpha;
   var fromX = s.x + s.w / 2, fromY = s.y + s.h / 2;
-  var toX = colX(move.column) + sh.w * L.cell / 2;
+  // The finger travels exactly as far as a real drag needs to reach the column —
+  // the game's reach, from where the crate starts on the crane — so the lesson
+  // is the gesture rather than a picture of it.
+  var anchor = startCellX(move.slot);
+  var toX = fromX + (move.column - anchor) * L.cell / E.dragGain;
   var toY = L.fieldTop + L.cell * Math.min(3.0, sh.h + 0.75);
   var x = fromX + (toX - fromX) * hint.travel;
   var y = fromY + (toY - fromY) * hint.travel;
@@ -10922,12 +11101,17 @@ function drawMime() {
   rr(s.x + 2, s.y + 2, s.w - 4, s.h - 4, Math.max(6, L.cell * 0.15)); ctx.stroke();
 
   // Reuse the live carried-piece drawing so the lesson cannot promise a motion,
-  // colour, landing, row completion, or crane position that play does not keep.
-  var real = G.carried;
-  G.carried = { slot: move.slot, px: toX, py: toY, lift: hint.travel };
-  ctx.globalAlpha = a * 0.72;
-  drawCarried();
-  G.carried = real;
+  // colour, landing, row completion, or crane position that play does not keep:
+  // on the crane from the press, sliding as the finger does, faint until the
+  // finger has left the hand.
+  if (hint.travel > 0) {
+    var real = G.carried;
+    G.carried = { slot: move.slot, px: x, py: y, anchorCellX: anchor, anchorFingerX: fromX,
+                  returning: overHand({ x: x, y: y }) };
+    ctx.globalAlpha = a * 0.72;
+    drawCarried();
+    G.carried = real;
+  }
 
   // A simple fingertip and palm reads as touch without the old dotted route or
   // target glyph, both of which looked like annotations instead of a gesture.
@@ -11006,11 +11190,11 @@ function stepFall(dt) {
 function withScene(body) {
   var f = G.fall;
   var rows = L.rows + (E.revealRows(L.rows) - L.rows) * f.reveal;
-  var bottom = (cameraTopRow() - L.rows) * (1 - f.reveal);
+  var bottom = (viewTopRow() - L.rows) * (1 - f.reveal);
   var mid = L.shaft.x + L.shaft.w / 2;
   SCENE = {
     s: L.rows / rows,
-    y0: L.fieldTop + (cameraTopRow() - bottom) * L.cell,
+    y0: L.fieldTop + (viewTopRow() - bottom) * L.cell,
     fy: L.fieldTop + L.shaft.h,
   };
   ctx.save();
@@ -11362,10 +11546,8 @@ function debugCameraAim(slot, column) {
   if (!shape || landing < 0) return null;
   var previous = G.carried;
   G.carried = {
-    slot: slot,
-    px: colX(column) + shape.w * L.cell / 2,
-    py: L.fieldTop,
-    lift: 1
+    slot: slot, px: 0, py: L.fieldTop,
+    anchorCellX: column, anchorFingerX: 0, returning: false
   };
   var top = cameraTopRow();
   G.carried = previous;
@@ -11386,6 +11568,9 @@ globalThis.BoxstackPlayableDebug = {
 function drop() {
   var c = G.carried; if (!c || G.falling) return;
   var sh = handShape(c.slot); if (!sh) { G.carried = null; return; }
+  // Let go over the hand and it goes back, as in the game: a tap on a crate is
+  // not a drop, and a change of mind costs nothing.
+  if (c.returning) { G.carried = null; G.projected = null; return; }
   var col = aimedColumn();
   if (E.landingY(c.slot, col) < 0) { G.carried = null; return; }  // put back, no penalty
   G.falling = { shape: sh, slot: c.slot, x: col, to: E.landingY(c.slot, col),
@@ -11425,8 +11610,11 @@ function frame(now) {
   if (!G.ended) G.runT += dt;
   if (G.ended) G.endT += dt;
   if (!G.carried && !G.falling && !G.ended) G.idle += dt;
-  if (G.carried) G.carried.lift = Math.min(1, G.carried.lift + dt * 6.2);
-  if (G.falling) { G.falling.p += dt * 3.2; if (G.falling.p >= 1) land(); }
+  // The game's own drop: release to touchdown in `PlayfieldAnim.CONTACT_MS`. It
+  // was nearly twice that here, and the next crate cannot be picked up until
+  // this one has landed.
+  if (G.falling) { G.falling.p += dt * 1000 / E.contactMs; if (G.falling.p >= 1) land(); }
+  stepView(dt);
   if (G.flash) { G.flash.p += dt * 1.7; if (G.flash.p >= 1) G.flash = null; }
   if (G.reward) { G.reward.p += dt / 1.25; if (G.reward.p >= 1) G.reward = null; }
   if (G.sweep > 0) G.sweep = Math.max(0, G.sweep - dt * 1.55);
@@ -11522,25 +11710,109 @@ function down(e) {
       if (!G.started) report("first_interaction");
       G.started = true;
       G.idle = 0;
-      G.carried = { slot: i, px: p.x, py: p.y, lift: 0 };
+      G.fling = 0;
+      G.carried = { slot: i, px: p.x, py: p.y, anchorCellX: startCellX(i), anchorFingerX: p.x,
+                    returning: overHand(p) };
       cue("pickup");
       aim();
       return;
     }
   }
+  if (inBox(L.shaft, p) && (!HOST_WEB || towerHidden())) {
+    take();
+    beginScroll(p);
+  }
 }
 function move(e) {
+  if (G.scroll) {
+    e.preventDefault();
+    moveScroll(pointAt(e));
+    return;
+  }
   if (!G.carried) return;
   e.preventDefault();
   var p = pointAt(e);
-  G.carried.px = p.x; G.carried.py = p.y;
+  var c = G.carried, sh = handShape(c.slot);
+  c.px = p.x; c.py = p.y;
+  // Past either end the crane stops, and the grab point moves with the finger,
+  // so turning back moves the crate at once rather than after a dead stretch.
+  // `GameInteraction.carryTo`.
+  if (sh) {
+    var wanted = carriedCellX(c), rightmost = E.boardWidth - sh.w;
+    if (wanted < 0) c.anchorCellX -= wanted;
+    if (wanted > rightmost) c.anchorCellX -= wanted - rightmost;
+  }
+  c.returning = overHand(p);
   G.idle = 0;
   aim();
 }
 function up(e) {
+  if (G.scroll) {
+    e.preventDefault();
+    endScroll();
+    return;
+  }
   if (!G.carried) return;
   e.preventDefault();
   drop();
+}
+
+/* ------------------------------------------------------------- scrolling -----
+   A drag in the shaft with nothing in hand moves the view down the tower and
+   back, as in the game: the finger's pixels are the tower's pixels, and it has
+   to pull a fingertip's width (`TOWER_DETACH_SLOP_DP`) before it lets go of the
+   summit, because a few pixels is what a tap wanders. Let go moving and it
+   coasts. Where the view is kept is the engine's `TowerViewport`.
+
+   **On a website the shaft takes a touch only when there is tower out of view**
+   (or the view is already off the summit): until then a finger on it scrolls the
+   page, which is what someone scrolling past the demo means by it. */
+function towerHidden() {
+  var summit = G.summitTop === null ? cameraTopRow() : G.summitTop;
+  return !E.viewFollowsTop || summit - L.rows > E.platformRows + 0.01;
+}
+function beginScroll(p) {
+  G.fling = 0;
+  G.scroll = { y: p.y, pull: 0, engaged: false, t: performance.now(), v: 0 };
+}
+function moveScroll(p) {
+  var sc = G.scroll, dy = p.y - sc.y;
+  sc.y = p.y;
+  if (!sc.engaged) {
+    sc.pull += dy;
+    var slop = E.towerDetachSlop;
+    if (Math.abs(sc.pull) < slop) return;
+    sc.engaged = true;
+    dy = sc.pull - (sc.pull < 0 ? -slop : slop);
+  }
+  var rows = dy / L.cell;
+  E.scrollView(rows, G.summitTop - L.rows, L.rows);
+  var now = performance.now(), dt = Math.max(0.008, (now - sc.t) / 1000);
+  sc.v = sc.v * 0.6 + (rows / dt) * 0.4;
+  sc.t = now;
+  G.idle = 0;
+}
+function endScroll() {
+  var sc = G.scroll;
+  G.scroll = null;
+  // A finger that stopped before letting go has nothing to coast on.
+  if (sc.engaged && performance.now() - sc.t < 90 && Math.abs(sc.v) > 2) {
+    G.fling = Math.max(-60, Math.min(60, sc.v));
+  }
+}
+/* The automatic camera eases toward where it should be, and a released scroll
+   coasts down to a stop — or to the summit, where the view takes up following
+   it again. */
+function stepView(dt) {
+  var target = cameraTopRow();
+  if (G.summitTop === null) G.summitTop = target;
+  G.summitTop += (target - G.summitTop) * Math.min(1, dt * 10);
+  if (Math.abs(target - G.summitTop) < 0.002) G.summitTop = target;
+  if (G.fling && !G.scroll) {
+    E.scrollView(G.fling * dt, G.summitTop - L.rows, L.rows);
+    G.fling *= Math.exp(-dt * 4.5);
+    if (Math.abs(G.fling) < 0.3 || E.viewFollowsTop) G.fling = 0;
+  }
 }
 // Decoding takes a few milliseconds and the first touch cannot wait for it.
 startAudio();
