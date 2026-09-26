@@ -571,34 +571,32 @@ a.promo:hover .go { transform: translateX(4px); }
 .palettes h2 { margin: 0; font-size: 1.2rem; }
 .palettes .lede { margin-bottom: 0; }
 .palettes .intro { margin: 0 0 1rem; }
-/* The maker is one column the width of its tower, however wide the screen. */
-#panel-make { max-width: 22rem; margin: 0 auto; }
-
-/* Three equal tabs, so none is ever cut off on a narrow phone. */
-.tabs { display: flex; border-bottom: 1px solid var(--rule); margin: 1.5rem 0 1.25rem; }
-.tabs button {
-  flex: 1;
-  font: 600 1rem var(--display);
-  letter-spacing: 0.02em;
-  background: none;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -1px;
-  color: var(--ink-dim);
-  padding: 0.6rem 0.25rem 0.55rem;
-  min-height: 48px;
+/* The ways in: three big buttons, each with a little tower in a palette of its kind. */
+.ways { display: grid; gap: 0.75rem; margin: 1.5rem 0 0; }
+.way {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  text-align: left;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font: inherit;
   cursor: pointer;
-  white-space: nowrap;
+  touch-action: manipulation;
+  transition: transform 0.15s, border-color 0.15s;
 }
-@media (max-width: 22.5rem) { .tabs button { font-size: 0.92rem; } }
-.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--crane); }
-
-.btn.keep { border-color: #2f8a55; color: #1d7a45; background: rgba(47, 138, 85, 0.07); }
-.btn.skip { border-color: #b3475a; color: #a83348; background: rgba(179, 71, 90, 0.06); }
-@media (prefers-color-scheme: dark) {
-  .btn.keep { color: #7fd6a3; background: rgba(47, 138, 85, 0.14); }
-  .btn.skip { color: #f09aaa; background: rgba(179, 71, 90, 0.14); }
-}
+.way:hover { transform: translateY(-2px); border-color: var(--crane); }
+.way-art { display: grid; }
+.way-art.tower { padding: 0.35rem; gap: 1px; border-radius: 8px; }
+.way-art.tower i { border-radius: 1px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }
+.way-text strong { display: block; font: 600 1.1rem/1.25 var(--display); }
+.way-text span { color: var(--ink-dim); font-size: 0.95rem; }
 
 button.link {
   font: inherit;
@@ -615,91 +613,171 @@ button.link {
 }
 button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: none; cursor: default; }
 
-.palettes button:focus-visible, .palettes input:focus-visible {
+.palettes button:focus-visible, .stage button:focus-visible, .stage input:focus-visible {
   outline: 3px solid var(--link);
   outline-offset: 2px;
 }
 
 .choose { display: flex; gap: 0.75rem; margin: 1rem auto 0; max-width: 22rem; }
 .choose .btn { flex: 1; }
-.palettes .btn.keep, .palettes .btn.skip { font-size: 1.05rem; }
 .minor { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; margin-top: 0.25rem; }
-.hint { text-align: center; margin: 0.1rem 0 0; }
-/* Say how to vote in the way this device votes. A device that is both hears both. */
-@media (hover: none) and (pointer: coarse) { .by-keys { display: none; } }
-@media (hover: hover) and (pointer: fine) { .by-touch { display: none; } }
 
-/* The tower: eight columns of crates, square, with the game's bevel. */
+/* A small tower: eight columns of crates, square, with the game's bevel. */
 .tower {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 3px;
-  border-radius: 12px;
-  padding: 1.1rem 1rem 1rem;
-  border: 1px solid var(--rule);
+  gap: 1px;
+  padding: 0.4rem;
+  border-radius: 8px;
 }
 .tower i {
   display: block;
   aspect-ratio: 1;
-  border-radius: 3px;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.22), inset 0 -3px 0 rgba(0, 0, 0, 0.28),
-              0 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 1px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .tower i.gap { visibility: hidden; }
-.tower.big { width: 100%; max-width: 22rem; margin: 0 auto; }
-.tower.mini { gap: 1px; padding: 0.4rem; border-radius: 8px; }
-.tower.mini i { border-radius: 1px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }
-.tower.pickable, .tower.pickable i { cursor: pointer; }
 
-/* Vote */
-.ask h2 { font-size: clamp(1.05rem, 5vw, 1.25rem); }
-.ask { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; max-width: 22rem; margin: 0 auto 0.6rem; }
-.ask .meta { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.stage { position: relative; max-width: 22rem; margin: 0 auto; }
-.swipe {
-  position: relative;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: grab;
-  transition: transform 0.18s ease;
+/* ------------------------------------------------------------------ the stage
+   The whole screen, always at night like the game in it: Box Stack running in the frame, wearing
+   the palette, and the choice about it where the game's banner sits. */
+html.staged, html.staged body { overflow: hidden; }
+.stage {
+  --panel: #151a25;
+  --ink: #eef0f6;
+  --ink-dim: #a6b0c4;
+  --rule: #2b3244;
+  --link: #c9a3f7;
+  --amber: #f0b04a;
+  --bg: #0b0e15;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  background: #07090e;
+  color: var(--ink);
+  color-scheme: dark;
 }
-.swipe.dragging { transition: none; cursor: grabbing; }
-/* The card just decided, flying off over the next one. Fixed to the screen, because a fixed box
-   past its edge does not widen the page and anything else there would scroll it sideways. */
-.swipe.ghost { position: fixed; margin: 0; pointer-events: none; transition: none; z-index: 1; }
-.verdict, .tag {
+.stage[hidden] { display: none; }
+.stage-game { position: relative; min-height: 0; overflow: hidden; }
+.stage-game iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.stage-loading {
+  position: absolute; inset: 0; margin: 0;
+  display: grid; place-items: center;
+  font: 600 1rem var(--display); color: var(--ink-dim);
+}
+.stage-loading[hidden] { display: none; }
+
+/* The corners the game leaves free in this mode: out on the left, the options on the right. */
+.stage-top {
   position: absolute;
-  border-radius: 6px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   pointer-events: none;
+  z-index: 3;
 }
-.verdict {
-  top: 0.9rem;
-  padding: 0.2rem 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 0.1s;
+.stage-top > * { pointer-events: auto; }
+.stage-top .spacer { flex: 1; pointer-events: none; }
+.round {
+  width: 44px; height: 44px; flex: none;
+  display: grid; place-items: center;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(8, 10, 16, 0.72);
+  color: var(--ink);
+  font: 600 1.15rem/1 system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
 }
-.verdict.keep { left: 0.9rem; background: #1d7a45; }
-.verdict.skip { right: 0.9rem; background: #a83348; }
-.swipe[data-lean="keep"] .verdict.keep, .swipe[data-lean="skip"] .verdict.skip { opacity: 1; }
-.tag { left: 0.6rem; bottom: 0.6rem; padding: 0.05rem 0.5rem; font-size: 0.8rem; }
-@media (prefers-reduced-motion: reduce) { .swipe { transition: none; } }
+.round[hidden] { display: none; }
+.count {
+  font: 600 0.95rem var(--display);
+  font-variant-numeric: tabular-nums;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(8, 10, 16, 0.72);
+  white-space: nowrap;
+}
+.count:empty { display: none; }
 
-#vote-done h2 { margin-bottom: 0.25rem; }
+.stage-options {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 60px);
+  right: 10px;
+  z-index: 4;
+  width: min(19rem, calc(100% - 20px));
+  display: grid;
+  justify-items: start;
+  padding: 0.75rem 0.9rem 0.4rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+.stage-options[hidden] { display: none; }
+.toggle { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start; font-size: 0.92rem; color: var(--ink-dim); cursor: pointer; margin-bottom: 0.3rem; }
+.toggle b { color: var(--ink); font-weight: 600; }
+.toggle input { width: 22px; height: 22px; margin: 0.1rem 0 0; accent-color: var(--crane); }
+
+/* Where the game's banner sits: what is being asked, and the two answers. */
+.stage-bar {
+  padding: 0.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: #0b0e15;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.stage-bar[hidden] { display: none; }
+.ask { margin: 0 0 0.45rem; text-align: center; font: 600 0.98rem var(--display); color: var(--ink-dim); }
+.ask .tag {
+  display: inline-block; margin-left: 0.4rem; padding: 0.05rem 0.5rem; border-radius: 6px;
+  font: 600 0.8rem var(--display); color: #16181d; background: var(--crane-lit);
+}
+.ask .tag[hidden] { display: none; }
+.decide { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 30rem; margin: 0 auto; }
+.decide .btn { min-height: 54px; font-size: 1.08rem; }
+.stage .btn.skip { border-color: #b3475a; color: #ffc2cc; background: rgba(179, 71, 90, 0.18); }
+.stage .btn.keep { border-color: #2f8a55; color: #c8f5da; background: rgba(47, 138, 85, 0.28); }
+.stage .btn { background: var(--panel); color: var(--ink); border-color: var(--rule); }
+.stage .btn.primary { color: #16181d; border-color: transparent; background: linear-gradient(180deg, var(--crane-lit), var(--crane) 55%); }
+.stage .btn.small { min-height: 48px; padding: 0.4rem 0.8rem; font-size: 0.92rem; }
+
+/* The summary between batches, over the game. */
+.stage-done {
+  position: absolute; inset: 0; z-index: 5;
+  display: grid; place-items: center;
+  padding: 4.5rem 1rem 1rem;
+  background: rgba(5, 7, 12, 0.86);
+  overflow-y: auto;
+}
+.stage-done[hidden] { display: none; }
+.done-card {
+  width: 100%; max-width: 26rem;
+  padding: 1.25rem 1.1rem 0.6rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  text-align: center;
+}
+.done-card h2 { margin: 0; font-size: 1.25rem; }
+.done-card .meta { margin: 0.4rem 0 0; }
+.done-card .grid:not([hidden]) { margin: 1rem 0 0.25rem; }
+.done-card .minor[hidden] { display: none; }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: 0.5rem;
-  margin: 1rem 0;
 }
+.grid[hidden] { display: none; }
 
-/* In the game: a palette marked "not for me" fades and says so. */
+/* A palette voted out fades and says so; tapping it keeps it after all. */
 .pick {
   position: relative;
   padding: 0;
@@ -709,7 +787,6 @@ button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: non
   cursor: pointer;
   touch-action: manipulation;
 }
-.pick .tower { border: 0; }
 .pick .badge {
   position: absolute;
   inset: 50% 0.25rem auto;
@@ -723,48 +800,67 @@ button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: non
   color: #fff;
   display: none;
 }
+.pick .badge { inset: auto 0.3rem 0.3rem; transform: none; font-size: 0.72rem; }
 .pick[aria-pressed="true"] { border-color: #b3274a; }
-.pick[aria-pressed="true"] .tower { opacity: 0.3; }
+.pick[aria-pressed="true"] .tower { opacity: 0.7; }
 .pick[aria-pressed="true"] .badge { display: block; }
 
-/* Make one: the four colours as swatches, the background apart from the three crates. */
-button.link.inline { padding: 0; min-height: 0; font-size: inherit; }
-/* Four swatches the same width, the background set a little apart from the crates. */
-.slots { display: grid; grid-template-columns: calc((100% - 1rem - 0.9rem) / 4) 1fr; gap: 1rem; margin: 0.9rem 0 0.75rem; }
-.slot-group { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.slot-row { display: grid; gap: 0.45rem; }
-.slot-row.three { grid-template-columns: repeat(3, 1fr); }
-.slot-name { text-align: center; font-size: 0.85rem; color: var(--ink-dim); }
-.slot {
-  position: relative;
-  height: 48px;
+/* The palette cleanser: plain mid-grey, on only when asked for. */
+.cleanser {
+  position: absolute; inset: 0; z-index: 6;
+  display: grid; place-items: center;
+  background: #808080;
+  color: #5c5c5c;
+  font: 600 1rem var(--display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+.cleanser[hidden] { display: none; }
+.cleanser.out { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .cleanser { transition: none; } }
+
+/* The maker's sheet, under the game: the four colours, then what changes the chosen one. */
+.stage-sheet {
+  display: grid;
+  gap: 0.35rem;
+  max-height: 58vh;
+  max-height: 58dvh;
+  overflow-y: auto;
+  padding: 0.6rem 0.9rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  background: #0b0e15;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.stage-sheet[hidden] { display: none; }
+.chips { display: grid; grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.chip-cell { display: grid; gap: 0.2rem; justify-items: stretch; text-align: center; font-size: 0.76rem; color: var(--ink-dim); min-width: 0; }
+.chip-cell span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip {
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 10px;
-  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   cursor: pointer;
   touch-action: manipulation;
 }
-.slot[aria-checked="true"] { outline: 3px solid var(--amber); outline-offset: 2px; }
-.palettes .slot:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
-/* A crate too faint against the background is marked where it is, not only named in the text. */
-.slot.faint::after {
-  content: "!";
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--amber);
-  color: #16181d;
-  font: 700 0.8rem/20px system-ui, sans-serif;
-  text-align: center;
-  box-shadow: 0 0 0 2px var(--bg);
+.chip[aria-checked="true"] { outline: 3px solid var(--amber); outline-offset: 2px; }
+.sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.sheet-hint { margin: 0; font-size: 0.88rem; }
+.sheet-row button.link { flex: none; min-width: 3.5rem; }
+.sheet-body[hidden] { display: none; }
+.sheet-body { display: grid; gap: 0.1rem; }
+/* The action stays in reach however far the editor has been scrolled on a small phone. */
+.sheet-foot {
+  display: grid; gap: 0.2rem;
+  position: sticky; bottom: calc(-0.7rem - env(safe-area-inset-bottom, 0px));
+  padding: 0.35rem 0 calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  margin-bottom: calc(-0.7rem - env(safe-area-inset-bottom, 0px));
+  background: #0b0e15;
 }
-
-.editor { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 0.85rem 1rem 0.35rem; }
-.editor-row { display: flex; gap: 0.6rem; margin-bottom: 0.4rem; }
+.sheet-foot .btn { width: 100%; min-height: 52px; }
+.sheet-foot .status { margin: 0; min-height: 1.4em; font-size: 0.9rem; }
+.editor-row { display: flex; gap: 0.6rem; margin: 0.25rem 0 0.1rem; }
 .swatch-picker input {
   display: block; width: 3.4rem; height: 48px; padding: 0;
   border: 1px solid var(--rule); border-radius: 8px; background: none; cursor: pointer;
@@ -800,11 +896,17 @@ button.link.inline { padding: 0; min-height: 0; font-size: inherit; }
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--thumb, #fff); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.4);
 }
+.status { text-align: center; }
 
-.readable { margin: 0.9rem 0 0; padding: 0.55rem 0.8rem; border-radius: 8px; font-size: 0.94rem; }
-.readable.ok { background: rgba(47, 138, 85, 0.12); }
-.readable.warn { background: rgba(240, 169, 44, 0.18); }
-.status { text-align: center; min-height: 1.5em; margin: 0.6rem 0 0; }
+/* A wide screen gives the maker's sheet a column of its own beside the game. */
+@media (min-width: 56rem) and (min-aspect-ratio: 5/4) {
+  .stage.make { grid-template-columns: minmax(0, 1fr) 24rem; grid-template-rows: minmax(0, 1fr); }
+  .stage.make .stage-sheet {
+    grid-column: 2; grid-row: 1; max-height: none; align-content: start;
+    border-top: 0; border-left: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  }
+}
 
 #sync:empty { display: none; }
 .privacy-note { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }

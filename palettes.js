@@ -4,6 +4,12 @@
  * talks to one small Cloudflare Worker for everything that has to be shared between visitors. Its
  * source and the steps to set it up live in the Boxstack repository, tools/palette-votes/.
  *
+ * **A palette is judged on the game, not on a swatch.** Voting, voting one out and making one all
+ * happen on the stage: the whole screen, with Box Stack itself running in it — the playable, as
+ * demo.html?host=palette — wearing the palette being decided, and the choice where the game's
+ * banner sits. Nothing on the page says which palettes are good or would be used; that is what the
+ * vote is for.
+ *
  * Nothing here depends on the Worker being reachable: a vote made offline waits on this device and
  * is sent when it can be.
  */
@@ -13,8 +19,16 @@
   /** Where the Worker lives; tools/palette-votes/local.mjs points a local copy of the page elsewhere. */
   var API = window.PALETTE_VOTE_API || "https://palette-votes.joshua-e59.workers.dev";
 
+  /** The game, in the mode that takes a palette from this page and says what was tapped. */
+  var GAME_URL = "demo.html?host=palette&pick=1";
+  /** Messages go to this site only; a page opened from a file has no origin to name. */
+  var HERE = location.origin === "null" ? "*" : location.origin;
+
   var BATCH = 20;
   var STORE = "tg-palettes-v1";
+  var CLEANSE_MS = 800;
+
+  function $(id) { return document.getElementById(id); }
 
   // ------------------------------------------------------------------ colour
 
@@ -47,18 +61,6 @@
     var f = function (n) { return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); };
     return toHex(f(0) * 255, f(8) * 255, f(4) * 255);
   }
-  function luminance(hex) {
-    var c = rgb(hex).map(function (v) {
-      v /= 255;
-      return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-    });
-    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-  }
-  /** WCAG contrast. 3:1 is the line the game draws cargo against its background by. */
-  function contrast(a, b) {
-    var x = luminance(a), y = luminance(b);
-    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
-  }
   function randomHex() {
     var b = new Uint8Array(3);
     crypto.getRandomValues(b);
@@ -75,9 +77,17 @@
   function nameOf(p) {
     return [p.field].concat(p.crates).slice().sort().join("-");
   }
+  function shuffled(list) {
+    var out = list.slice();
+    for (var i = out.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = out[i];
+      out[i] = out[j]; out[j] = t;
+    }
+    return out;
+  }
 
   /*
-   * A small tower on the palette's own background, drawn the way the game draws one: loose crates
+   * A small tower on the palette's own background, for the summaries and the ways in: loose crates
    * in their piece's colour, and two finished rows, each entirely the colour of the piece that
    * closed it. Top row first. Digits are crate colours; a, b are finished rows; dots are air.
    */
@@ -98,30 +108,33 @@
         var ch = row[i];
         if (ch === ".") { cells.push('<i class="gap"></i>'); continue; }
         var crate = ch === "a" ? 0 : ch === "b" ? 1 : Number(ch);
-        cells.push('<i data-slot="' + (crate + 1) + '" style="background:#' + p.crates[crate] + '"></i>');
+        cells.push('<i style="background:#' + p.crates[crate] + '"></i>');
       }
     });
     el.innerHTML = cells.join("");
     el.setAttribute("aria-label", "Background #" + p.field + " with crates #" + p.crates.join(", #"));
   }
 
-  function miniTower(p, extraClass) {
+  function miniTower(p) {
     var el = document.createElement("div");
-    el.className = "tower mini" + (extraClass ? " " + extraClass : "");
+    el.className = "tower mini";
+    el.setAttribute("role", "img");
     drawTower(el, p);
     return el;
   }
 
   // ------------------------------------------------------------------ what this browser remembers
 
-  var memory = { visitor: null, votes: {}, dislikes: {}, outbox: [], draft: null };
+  var memory = { visitor: null, votes: {}, dislikes: {}, judged: {}, outbox: [], draft: null, cleanser: false };
   try {
     var saved = JSON.parse(localStorage.getItem(STORE) || "null");
     if (saved && typeof saved === "object") {
       memory.visitor = saved.visitor || null;
       memory.votes = saved.votes || {};
       memory.dislikes = saved.dislikes || {};
+      memory.judged = saved.judged || {};
       memory.outbox = Array.isArray(saved.outbox) ? saved.outbox : [];
+      memory.cleanser = saved.cleanser === true;
       var d = saved.draft;
       memory.draft = Array.isArray(d) && d.length === 4 && d.every(function (c) { return /^[0-9A-F]{6}$/.test(c); }) ? d : null;
     }
@@ -145,7 +158,7 @@
 
   // ------------------------------------------------------------------ talking to the Worker
 
-  var syncEl = document.getElementById("sync");
+  var syncEl = $("sync");
 
   function send(path, body) {
     memory.outbox.push({ path: path, body: body });
@@ -201,47 +214,172 @@
     }
   }
 
-  // ------------------------------------------------------------------ tabs
+  // ------------------------------------------------------------------ the stage
 
-  // A tab's name is its address, #vote, #make or #game. The panels are "panel-" + name rather
-  // than the name itself, or opening the address would scroll the page past the tabs to the panel.
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
-  function nameOfTab(t) { return t.getAttribute("aria-controls").slice(6); }
-  function show(id, focus) {
-    tabs.forEach(function (t) {
-      var on = nameOfTab(t) === id;
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.tabIndex = on ? 0 : -1;
-      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
-      if (on && focus) t.focus();
-    });
-    if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  var stage = $("stage"), frame = $("game");
+  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var loaded = false;
+  var mode = null;          // "vote", "game" (voting ones out) or "make"
+  var lastMode = "vote";    // which way in to hand focus back to
+  var shown = null;         // the palette the game is wearing
+  var gameReady = false;
+  var locked = false;       // while the palette cleanser is up, nothing can be decided
+  var pushed = false;       // whether opening the stage added a history entry to go back over
+
+  /** Dress the game in [p]. It is kept, and sent again whenever the game says it is ready. */
+  function wear(p) {
+    shown = p;
+    if (gameReady && frame.contentWindow) {
+      frame.contentWindow.postMessage({ type: "boxstack:palette", field: p.field, crates: p.crates.slice() }, HERE);
+    }
   }
-  tabs.forEach(function (t, i) {
-    t.addEventListener("click", function () { show(nameOfTab(t)); });
-    t.addEventListener("keydown", function (e) {
-      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-      if (!d) return;
-      e.preventDefault();
-      show(nameOfTab(tabs[(i + d + tabs.length) % tabs.length]), true);
+
+  addEventListener("message", function (e) {
+    if (e.source !== frame.contentWindow || (HERE !== "*" && e.origin !== location.origin)) return;
+    var d = e.data || {};
+    if (d.type === "boxstack:ready") {
+      // Also after BUILD AGAIN, which loads the game afresh.
+      gameReady = true;
+      $("stage-loading").hidden = true;
+      if (shown) wear(shown);
+      try { frame.contentWindow.addEventListener("keydown", onKey); } catch (err) { /* keys stay on the page */ }
+    } else if (d.type === "boxstack:pick" && mode === "make" && d.slot >= 0 && d.slot <= 3) {
+      made.slot = d.slot;
+      fold(false);
+      paintMaker(true);
+    }
+  });
+
+  var TITLES = { vote: "Vote on new palettes", game: "Vote palettes out of the game", make: "Make your own palette" };
+
+  function openStage(next, fromHistory) {
+    if (!loaded) return;
+    mode = next;
+    stage.hidden = false;
+    stage.className = "stage " + next;
+    document.documentElement.classList.add("staged");
+    $("stage-title").textContent = TITLES[next];
+    if (!frame.getAttribute("src")) frame.setAttribute("src", GAME_URL);
+    $("bar-decide").hidden = next === "make";
+    $("bar-make").hidden = next !== "make";
+    $("stage-menu").hidden = next === "make";
+    menu(false);
+    if (next === "vote") {
+      $("ask-text").textContent = "Want this in the game?";
+      $("no-text").textContent = "No";
+      $("yes-text").textContent = "Yes";
+      if (at >= batch.length) nextBatch(); else paintVote();
+    } else if (next === "game") {
+      $("ask-text").textContent = "Keep this one in the game?";
+      $("no-text").textContent = "Remove";
+      $("yes-text").textContent = "Keep";
+      if (rAt >= rBatch.length) nextRemoveBatch(); else paintRemove();
+    } else {
+      $("stage-count").textContent = "";
+      $("stage-done").hidden = true;
+      // Folded, so the first thing seen is the palette filling the screen; choosing a colour,
+      // here or on the game, opens the editor.
+      fold(true);
+      paintMaker(true);
+    }
+    if (!fromHistory) {
+      history.pushState({ stage: next }, "", "#" + next);
+      pushed = true;
+    }
+    $("stage-close").focus({ preventScroll: true });
+  }
+
+  function hideStage() {
+    if (stage.hidden) return;
+    stage.hidden = true;
+    mode = null;
+    document.documentElement.classList.remove("staged");
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function () {});
+    var way = document.querySelector('.way[data-mode="' + lastMode + '"]');
+    if (way) way.focus({ preventScroll: true });
+  }
+
+  function closeStage() {
+    if (pushed) { pushed = false; history.back(); }     // popstate hides it
+    else {
+      hideStage();
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+
+  function modeFromHash() {
+    var id = location.hash.slice(1);
+    return id === "vote" || id === "make" || id === "game" ? id : null;
+  }
+  addEventListener("popstate", function () {
+    var m = modeFromHash();
+    if (m) openStage(m, true); else { pushed = false; hideStage(); }
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".way"), function (b) {
+    b.addEventListener("click", function () {
+      lastMode = b.dataset.mode;
+      // The whole screen, where the browser allows it: the game is the size it is on a phone,
+      // with nothing of the browser around it. Where it does not, the stage still fills the page.
+      var root = document.documentElement;
+      if (root.requestFullscreen && !document.fullscreenElement) {
+        root.requestFullscreen({ navigationUI: "hide" }).catch(function () {});
+      }
+      openStage(b.dataset.mode);
     });
   });
-  function fromHash() {
-    var id = location.hash.slice(1);
-    if (id === "vote" || id === "make" || id === "game") show(id);
-  }
-  addEventListener("hashchange", fromHash);
+  $("stage-close").addEventListener("click", closeStage);
 
-  // ------------------------------------------------------------------ vote
+  // The options: the palette cleanser, undo, and taking what is on screen into the maker.
+  function menu(open) {
+    $("stage-options").hidden = !open;
+    $("stage-menu").setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  $("stage-menu").addEventListener("click", function () { menu($("stage-options").hidden); });
+  var cleanserBox = $("opt-cleanser");
+  cleanserBox.checked = memory.cleanser;
+  cleanserBox.addEventListener("change", function () { memory.cleanser = cleanserBox.checked; remember(); });
+  $("opt-undo").addEventListener("click", function () { menu(false); undoCurrent(); });
+  $("opt-tweak").addEventListener("click", function () {
+    menu(false);
+    if (!shown) return;
+    loadMaker(shown);
+    history.replaceState({ stage: "make" }, "", "#make");
+    openStage("make", true);
+  });
+  stage.addEventListener("click", function (e) {
+    if (!$("stage-options").hidden && !e.target.closest("#stage-options, #stage-menu")) menu(false);
+  });
+
+  /*
+   * **The palette cleanser, if asked for, and never unless asked.** A plain mid-grey screen for a
+   * moment between palettes, so the next one is not seen through the afterimage of the last. The
+   * next palette is already on the game underneath it, and a tap lifts it early.
+   */
+  function advance(show) {
+    if (!memory.cleanser) { show(); return; }
+    var veil = $("cleanser");
+    locked = true;
+    veil.classList.remove("out");
+    veil.hidden = false;
+    show();
+    var lifted = false, timer = null;
+    var lift = function () {
+      if (lifted) return;
+      lifted = true;
+      clearTimeout(timer);
+      veil.classList.add("out");
+      setTimeout(function () { veil.hidden = true; locked = false; }, still ? 0 : 200);
+    };
+    timer = setTimeout(lift, CLEANSE_MS);
+    veil.onclick = lift;
+  }
+
+  // ------------------------------------------------------------------ voting on new palettes
 
   var pool = [];       // every palette open to a vote: harvested, then player-made
   var counts = {};     // votes each has had, from the Worker; never how many keeps
   var batch = [], at = 0, history_ = [];
-  var voteTower = document.getElementById("vote-tower");
-  var swipeEl = document.getElementById("vote-swipe");
-  var deckEl = document.getElementById("vote-deck"), doneEl = document.getElementById("vote-done");
-  var statusEl = document.getElementById("vote-status");
-  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function nextBatch() {
     var fresh = pool.filter(function (p) { return !(nameOf(p) in memory.votes); });
@@ -258,134 +396,169 @@
   }
 
   function paintVote() {
+    if (mode !== "vote") return;
     if (!batch.length) {
-      deckEl.hidden = doneEl.hidden = true;
-      statusEl.hidden = false;
-      statusEl.textContent = "You've seen every palette there is. Thank you! Why not make one of your own?";
+      done("You've seen every palette there is. Thank you!", "Why not make one of your own?", [], null);
       return;
     }
     if (at >= batch.length) return finishBatch();
-    statusEl.hidden = doneEl.hidden = true;
-    deckEl.hidden = false;
+    $("stage-done").hidden = true;
     var p = batch[at];
-    drawTower(voteTower, p);
-    document.getElementById("vote-tag").hidden = !p.player;
-    document.getElementById("vote-progress").textContent = (at + 1) + " of " + batch.length;
-    document.getElementById("vote-undo").disabled = history_.length === 0;
+    wear(p);
+    $("stage-tag").hidden = !p.player;
+    $("stage-count").textContent = (at + 1) + " of " + batch.length;
+    $("opt-undo").disabled = history_.length === 0;
   }
 
-  /* The decided card flies off the way it was voted, over the next one already in its place. Only
-   * a picture: the vote and the next card do not wait for it, so voting fast is never slowed. */
-  function flyOff(keep, dx) {
-    if (still || !swipeEl.animate) return;
-    var ghost = swipeEl.cloneNode(true);
-    ghost.removeAttribute("id");
-    Array.prototype.forEach.call(ghost.querySelectorAll("[id]"), function (el) { el.removeAttribute("id"); });
-    ghost.setAttribute("aria-hidden", "true");
-    ghost.classList.remove("dragging");
-    ghost.classList.add("ghost");
-    ghost.dataset.lean = keep ? "keep" : "skip";
-    var home = swipeEl.parentNode.getBoundingClientRect();    // where the card sits when not dragged
-    ghost.style.left = home.left + "px";
-    ghost.style.top = home.top + "px";
-    ghost.style.width = home.width + "px";
-    document.body.appendChild(ghost);
-    var way = keep ? 1 : -1, far = swipeEl.offsetWidth + 60;
-    ghost.animate([
-      { transform: "translateX(" + dx + "px) rotate(" + dx / 25 + "deg)", opacity: 1 },
-      { transform: "translateX(" + way * far + "px) rotate(" + way * 14 + "deg)", opacity: 0 },
-    ], { duration: 260, easing: "cubic-bezier(.4,0,1,1)" }).onfinish = function () { ghost.remove(); };
-    swipeEl.animate([{ transform: "scale(.95)", opacity: 0.4 }, { transform: "none", opacity: 1 }],
-      { duration: 200, easing: "ease-out" });
-  }
-
-  function decide(keep, dx) {
-    if (deckEl.hidden || at >= batch.length) return;
+  function decide(keep) {
+    if (at >= batch.length) return;
     var p = batch[at];
-    var name = nameOf(p);
-    memory.votes[name] = keep ? 1 : 0;
+    memory.votes[nameOf(p)] = keep ? 1 : 0;
     history_.push(at);
     at++;
-    send("/vote", { palette: name, keep: keep, visitor: memory.visitor });
-    if (at < batch.length) flyOff(keep, dx || 0);
-    paintVote();
-  }
-
-  function undo() {
-    if (!history_.length) return;
-    at = history_.pop();
-    // The palette comes back to be decided again; the next decision replaces the vote.
-    paintVote();
+    send("/vote", { palette: nameOf(p), keep: keep, visitor: memory.visitor });
+    if (at < batch.length) advance(paintVote); else paintVote();
   }
 
   function finishBatch() {
     var kept = batch.filter(function (p) { return memory.votes[nameOf(p)] === 1; });
-    deckEl.hidden = true;
-    doneEl.hidden = false;
-    document.getElementById("vote-done-text").textContent = kept.length
+    done(kept.length
       ? "Yes to " + kept.length + " of " + batch.length + ". Thank you!"
-      : "No to all " + batch.length + ". That helps too, thank you!";
-    var grid = document.getElementById("vote-kept");
-    grid.innerHTML = "";
-    grid.hidden = !kept.length;
-    kept.forEach(function (p) { grid.appendChild(miniTower(p)); });
+      : "No to all " + batch.length + ". That helps too, thank you!", null, kept, "vote");
   }
 
-  document.getElementById("vote-keep").addEventListener("click", function () { decide(true); });
-  document.getElementById("vote-skip").addEventListener("click", function () { decide(false); });
-  document.getElementById("vote-undo").addEventListener("click", undo);
-  document.getElementById("vote-undo-last").addEventListener("click", undo);
-  document.getElementById("vote-more").addEventListener("click", nextBatch);
-  document.getElementById("vote-remix").addEventListener("click", function () {
-    if (at < batch.length) { loadMaker(batch[at]); show("make"); }
-  });
+  // ------------------------------------------------------------------ voting palettes out of the game
 
-  addEventListener("keydown", function (e) {
-    if (document.getElementById("panel-vote").hidden || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.target.closest && e.target.closest("input, textarea, [role=tab]")) return;
-    if (e.key === "ArrowRight") { e.preventDefault(); decide(true); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); decide(false); }
-    else if (e.key === "z" || e.key === "Z") { e.preventDefault(); undo(); }
-  });
+  var game = [];
+  var rBatch = [], rAt = 0, rHistory = [];
 
-  // The swipe: the card follows the finger and says which way it is leaning.
-  (function () {
-    var x0 = null, dx = 0, id = null;
-    swipeEl.addEventListener("pointerdown", function (e) {
-      x0 = e.clientX; dx = 0; id = e.pointerId;
-      swipeEl.setPointerCapture(id);
-      swipeEl.classList.add("dragging");
+  /* The ones this browser has not judged yet come first, in an order of their own, so a visitor
+   * who stops after twenty has still said something about twenty different palettes. */
+  function nextRemoveBatch() {
+    var fresh = shuffled(game.filter(function (p) { return !(nameOf(p) in memory.judged); }));
+    var again = shuffled(game.filter(function (p) { return nameOf(p) in memory.judged; }));
+    rBatch = (fresh.length ? fresh : again).slice(0, BATCH);
+    rAt = 0;
+    rHistory = [];
+    paintRemove();
+  }
+
+  function paintRemove() {
+    if (mode !== "game") return;
+    if (rAt >= rBatch.length) return finishRemove();
+    $("stage-done").hidden = true;
+    var p = rBatch[rAt];
+    wear(p);
+    $("stage-tag").hidden = true;
+    $("stage-count").textContent = (rAt + 1) + " of " + rBatch.length;
+    $("opt-undo").disabled = rHistory.length === 0;
+  }
+
+  function judge(keep) {
+    if (rAt >= rBatch.length) return;
+    var name = nameOf(rBatch[rAt]);
+    if (keep) delete memory.dislikes[name]; else memory.dislikes[name] = 1;
+    memory.judged[name] = 1;
+    rHistory.push(rAt);
+    rAt++;
+    send("/dislike", { palette: name, dislike: !keep, visitor: memory.visitor });
+    if (rAt < rBatch.length) advance(paintRemove); else paintRemove();
+  }
+
+  function finishRemove() {
+    var out = rBatch.filter(function (p) { return memory.dislikes[nameOf(p)]; });
+    var left = game.filter(function (p) { return !(nameOf(p) in memory.judged); }).length;
+    done(out.length
+      ? "You'd take out " + out.length + " of " + rBatch.length + ". Thank you!"
+      : "You'd keep all " + rBatch.length + ". Thank you!",
+      out.length ? "Changed your mind? Tap one to keep it after all" : null, out, "game", left);
+  }
+
+  // ------------------------------------------------------------------ between batches
+
+  /** The summary over the game: what was said, what it was said about, and what next. */
+  function done(text, note, palettes, kind, left) {
+    $("stage-done").hidden = false;
+    $("stage-count").textContent = "";
+    $("stage-tag").hidden = true;
+    $("done-text").textContent = text;
+    $("done-note").hidden = !note;
+    $("done-note").textContent = note || "";
+    var grid = $("done-grid");
+    grid.innerHTML = "";
+    grid.hidden = !palettes.length;
+    palettes.forEach(function (p) {
+      if (kind !== "game") { grid.appendChild(miniTower(p)); return; }
+      // Voted out: tapping one takes it back.
+      var b = document.createElement("button");
+      b.className = "pick";
+      b.setAttribute("aria-pressed", "true");
+      b.setAttribute("aria-label", "Take out: background #" + p.field + ", crates #" + p.crates.join(", #"));
+      b.appendChild(miniTower(p));
+      var badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "Out";
+      b.appendChild(badge);
+      b.addEventListener("click", function () {
+        var name = nameOf(p), now = !memory.dislikes[name];
+        if (now) memory.dislikes[name] = 1; else delete memory.dislikes[name];
+        b.setAttribute("aria-pressed", now ? "true" : "false");
+        send("/dislike", { palette: name, dislike: now, visitor: memory.visitor });
+      });
+      grid.appendChild(b);
     });
-    swipeEl.addEventListener("pointermove", function (e) {
-      if (x0 === null || e.pointerId !== id) return;
-      dx = e.clientX - x0;
-      if (!still) swipeEl.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 25) + "deg)";
-      swipeEl.dataset.lean = dx > 30 ? "keep" : dx < -30 ? "skip" : "";
-    });
-    function end() {
-      if (x0 === null) return;
-      var decided = Math.abs(dx) > 80;
-      var way = dx > 0, from = dx;
-      x0 = null; id = null;
-      swipeEl.classList.remove("dragging");
-      swipeEl.style.transform = "";
-      swipeEl.dataset.lean = "";
-      if (decided) decide(way, still ? 0 : from);
+    var more = $("done-more");
+    more.hidden = !kind;
+    more.textContent = kind === "game" && left === 0 ? "Go through them again" : "Next 20";
+    $("done-undo").parentNode.hidden = !kind;
+    (kind ? more : $("done-close")).focus({ preventScroll: true });
+  }
+
+  $("done-more").addEventListener("click", function () {
+    if (mode === "vote") nextBatch(); else if (mode === "game") nextRemoveBatch();
+  });
+  $("done-close").addEventListener("click", closeStage);
+  $("done-undo").addEventListener("click", undoCurrent);
+
+  // ------------------------------------------------------------------ deciding, whichever way
+
+  function decideCurrent(yes) {
+    if (locked || mode === "make" || !$("stage-done").hidden) return;
+    if (mode === "vote") decide(yes); else if (mode === "game") judge(yes);
+  }
+
+  /** The last one comes back to be decided again; the next decision replaces the old one. */
+  function undoCurrent() {
+    if (locked) return;
+    if (mode === "vote" && history_.length) { at = history_.pop(); paintVote(); }
+    else if (mode === "game" && rHistory.length) { rAt = rHistory.pop(); paintRemove(); }
+  }
+
+  $("decide-yes").addEventListener("click", function () { decideCurrent(true); });
+  $("decide-no").addEventListener("click", function () { decideCurrent(false); });
+
+  function onKey(e) {
+    if (stage.hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      if (!$("stage-options").hidden) menu(false); else closeStage();
+      return;
     }
-    swipeEl.addEventListener("pointerup", end);
-    swipeEl.addEventListener("pointercancel", end);
-  })();
+    if (mode === "make" || (e.target.closest && e.target.closest("input, textarea"))) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); decideCurrent(true); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); decideCurrent(false); }
+    else if (e.key === "z" || e.key === "Z") { e.preventDefault(); undoCurrent(); }
+  }
+  addEventListener("keydown", onKey);
 
-  // ------------------------------------------------------------------ make
+  // ------------------------------------------------------------------ making one
 
   var made = { colours: [], slot: 0 };
   var SLOT_NAMES = ["Background", "Crate 1", "Crate 2", "Crate 3"];
-  var slotsEl = document.getElementById("make-slots");
-  var fieldRow = document.getElementById("make-slot-field"), crateRow = document.getElementById("make-slot-crates");
-  var ORDINAL = ["", "first", "second", "third"];
-  var picker = document.getElementById("make-picker");
-  var hexIn = document.getElementById("make-hex");
-  var hIn = document.getElementById("make-h"), sIn = document.getElementById("make-s"), lIn = document.getElementById("make-l");
+  var slotsEl = $("make-slots");
+  var picker = $("make-picker");
+  var hexIn = $("make-hex");
+  var hIn = $("make-h"), sIn = $("make-s"), lIn = $("make-l");
 
   function makerPalette() {
     return { field: made.colours[0], crates: made.colours.slice(1) };
@@ -394,32 +567,21 @@
   function loadMaker(p) {
     made.colours = [p.field].concat(p.crates);
     made.slot = 0;
+    $("make-status").textContent = "";
     paintMaker(true);
-    document.getElementById("make-status").textContent = "";
-  }
-
-  /** The crates, by slot number, that the game could not draw legibly on this background. */
-  function faintSlots() {
-    var faint = [];
-    for (var i = 1; i < 4; i++) if (contrast(made.colours[i], made.colours[0]) < 3) faint.push(i);
-    return faint;
   }
 
   function paintMaker(syncSliders) {
-    var p = makerPalette();
-    var faint = faintSlots();
-    drawTower(document.getElementById("make-tower"), p);
-    fieldRow.innerHTML = crateRow.innerHTML = "";
+    slotsEl.innerHTML = "";
     made.colours.forEach(function (c, i) {
       var b = document.createElement("button");
-      var weak = faint.indexOf(i) >= 0;
-      b.className = "slot" + (weak ? " faint" : "");
+      b.className = "chip";
       b.style.background = "#" + c;
       b.setAttribute("role", "radio");
       b.setAttribute("aria-checked", i === made.slot ? "true" : "false");
-      b.setAttribute("aria-label", SLOT_NAMES[i] + ", #" + c + (weak ? ", hard to see" : ""));
+      b.setAttribute("aria-label", SLOT_NAMES[i] + ", #" + c);
       b.tabIndex = i === made.slot ? 0 : -1;
-      b.addEventListener("click", function () { made.slot = i; paintMaker(true); });
+      b.addEventListener("click", function () { made.slot = i; fold(false); paintMaker(true); });
       b.addEventListener("keydown", function (e) {
         var d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
         if (!d) return;
@@ -428,7 +590,14 @@
         paintMaker(true);
         slotsEl.querySelectorAll('[role="radio"]')[made.slot].focus();
       });
-      (i ? crateRow : fieldRow).appendChild(b);
+      var label = document.createElement("span");
+      label.textContent = i === 0 ? "Background" : "Crate " + i;
+      label.setAttribute("aria-hidden", "true");
+      var cell = document.createElement("span");
+      cell.className = "chip-cell" + (i === 0 ? " field" : "");
+      cell.appendChild(b);
+      cell.appendChild(label);
+      slotsEl.appendChild(cell);
     });
     var hex = made.colours[made.slot];
     picker.value = "#" + hex.toLowerCase();
@@ -438,8 +607,13 @@
       hIn.value = Math.round(v[0]); sIn.value = Math.round(v[1]); lIn.value = Math.round(v[2]);
     }
     paintTracks(hex);
-    document.getElementById("make-as-field").hidden = made.slot === 0;
-    judge(faint);
+    $("make-as-field").hidden = made.slot === 0;
+    // Four colours, all different, is what a palette is: the one thing that has to be true.
+    var same = new Set(made.colours).size < 4;
+    var submit = $("make-submit");
+    submit.disabled = same;
+    submit.textContent = same ? "Two of the colours are the same" : "Add it to the vote";
+    if (mode === "make") wear(makerPalette());
     keepDraft();
   }
 
@@ -456,9 +630,17 @@
 
   function setSlot(hex, syncSliders) {
     made.colours[made.slot] = hex.toUpperCase();
-    document.getElementById("make-status").textContent = "";
+    $("make-status").textContent = "";
     paintMaker(syncSliders);
   }
+
+  /** The editor folds away so the game can have the screen, and opens when a colour is chosen. */
+  function fold(folded) {
+    $("make-body").hidden = folded;
+    $("make-fold").textContent = folded ? "Show" : "Hide";
+    $("make-fold").setAttribute("aria-expanded", folded ? "false" : "true");
+  }
+  $("make-fold").addEventListener("click", function () { fold(!$("make-body").hidden); });
 
   // What is being made survives a reload, so a slip of the thumb costs nothing. Saved as it
   // settles rather than on every step of a slider.
@@ -466,29 +648,6 @@
   function keepDraft() {
     clearTimeout(drafting);
     drafting = setTimeout(function () { memory.draft = made.colours.slice(); remember(); }, 400);
-  }
-
-  function judge(faint) {
-    var out = document.getElementById("make-readable");
-    var submit = document.getElementById("make-submit");
-    if (new Set(made.colours).size < 4) {
-      out.textContent = "Each of the four colours has to be different.";
-      out.className = "readable warn";
-      submit.disabled = true;
-      return;
-    }
-    submit.disabled = false;
-    if (!faint.length) {
-      out.textContent = "Every crate stands out from the background.";
-      out.className = "readable ok";
-      return;
-    }
-    var which = faint.length === 3 ? "None of the crates stand out"
-      : "The " + faint.map(function (i) { return ORDINAL[i]; }).join(" and ") +
-        (faint.length > 1 ? " crates are" : " crate is") + " hard to see";
-    out.textContent = which + " on this background. You can still add it, but the game only uses " +
-      "palettes where every crate stands out.";
-    out.className = "readable warn";
   }
 
   picker.addEventListener("input", function () { setSlot(picker.value.slice(1), true); });
@@ -501,29 +660,22 @@
   [hIn, sIn, lIn].forEach(function (r) {
     r.addEventListener("input", function () { setSlot(fromHsl(+hIn.value, +sIn.value, +lIn.value), false); });
   });
-  // The tower is a picker too: tap a crate for its colour, the background for the background.
-  document.getElementById("make-tower").addEventListener("click", function (e) {
-    var cell = e.target.closest("i[data-slot]");
-    made.slot = cell ? Number(cell.dataset.slot) : 0;
-    paintMaker(true);
-  });
-  document.getElementById("make-as-field").addEventListener("click", function () {
+  $("make-as-field").addEventListener("click", function () {
     var c = made.colours;
     var t = c[0]; c[0] = c[made.slot]; c[made.slot] = t;
     made.slot = 0;
     paintMaker(true);
   });
-  document.getElementById("make-random-one").addEventListener("click", function () { setSlot(randomHex(), true); });
-  document.getElementById("make-random-all").addEventListener("click", function () {
-    if (pool.length) loadMaker(pool[Math.floor(Math.random() * pool.length)]);
+  $("make-random-one").addEventListener("click", function () { setSlot(randomHex(), true); });
+  $("make-random-all").addEventListener("click", function () {
+    loadMaker({ field: randomHex(), crates: [randomHex(), randomHex(), randomHex()] });
   });
 
-  document.getElementById("make-submit").addEventListener("click", function () {
+  $("make-submit").addEventListener("click", function () {
     var p = makerPalette();
     var name = nameOf(p);
-    var status = document.getElementById("make-status");
+    var status = $("make-status");
     memory.votes[name] = 1;     // making it is its maker's keep, on the Worker too
-    remember();
     status.textContent = "Sending…";
     memory.outbox.push({ path: "/submit", body: { palette: name, field: p.field, visitor: memory.visitor } });
     remember();
@@ -532,59 +684,21 @@
       if (res.ok) {
         var body = await res.json().catch(function () { return {}; });
         status.textContent = body.duplicate
-          ? "Someone already made exactly this one. It's in the vote."
-          : "Added! It's in the vote now, for everyone.";
+          ? "Someone already made exactly this one. It's in the vote"
+          : "Added! It's in the vote now, for everyone";
         if (!body.duplicate && !pool.some(function (q) { return nameOf(q) === name; })) {
           pool.push({ field: p.field, crates: p.crates.slice(), player: true });
         }
       } else {
-        status.textContent = "That one couldn't be added. Try changing a colour.";
+        status.textContent = "That one couldn't be added. Try changing a colour";
       }
     };
     flush().then(function () {
       if (memory.outbox.indexOf(sent) >= 0) {
-        status.textContent = "Saved on this device. It will be added when the vote box is reachable.";
+        status.textContent = "Saved on this device. It will be added when the vote box is reachable";
       }
     });
   });
-
-  // ------------------------------------------------------------------ in the game now
-
-  var game = [];
-
-  function paintGame() {
-    var grid = document.getElementById("game-grid");
-    grid.innerHTML = "";
-    game.forEach(function (p) {
-      var name = nameOf(p);
-      var b = document.createElement("button");
-      b.className = "pick";
-      var off = !!memory.dislikes[name];
-      b.setAttribute("aria-pressed", off ? "true" : "false");
-      b.setAttribute("aria-label", "Not for me: background #" + p.field + ", crates #" + p.crates.join(", #"));
-      b.appendChild(miniTower(p));
-      var badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = "Not for me";
-      b.appendChild(badge);
-      b.addEventListener("click", function () {
-        var now = !memory.dislikes[name];
-        if (now) memory.dislikes[name] = 1; else delete memory.dislikes[name];
-        b.setAttribute("aria-pressed", now ? "true" : "false");
-        send("/dislike", { palette: name, dislike: now, visitor: memory.visitor });
-        countGame();
-      });
-      grid.appendChild(b);
-    });
-    countGame();
-  }
-
-  function countGame() {
-    var n = game.filter(function (p) { return memory.dislikes[nameOf(p)]; }).length;
-    document.getElementById("game-count").textContent = n
-      ? "You've marked " + n + " of " + game.length + "."
-      : game.length + " palettes. You haven't marked any.";
-  }
 
   // ------------------------------------------------------------------ start
 
@@ -593,7 +707,7 @@
     try {
       data = await (await fetch("palettes.json")).json();
     } catch (e) {
-      statusEl.textContent = "The palettes didn't load. Try refreshing the page.";
+      $("load-status").textContent = "The palettes didn't load. Try refreshing the page.";
       return;
     }
     pool = data.candidates.map(unpack);
@@ -618,11 +732,16 @@
     ]);
     await Promise.race([shared, new Promise(function (r) { setTimeout(r, 1500); })]);
 
-    nextBatch();
+    loaded = true;
+    $("load-status").hidden = true;
+    $("ways").hidden = false;
     if (memory.draft) loadMaker({ field: memory.draft[0], crates: memory.draft.slice(1) });
     else loadMaker(pool[Math.floor(Math.random() * pool.length)]);
-    paintGame();
-    fromHash();
+    drawTower($("art-vote"), pool[Math.floor(Math.random() * pool.length)]);
+    drawTower($("art-game"), game[Math.floor(Math.random() * game.length)]);
+    drawTower($("art-make"), makerPalette());
+    var m = modeFromHash();
+    if (m) { lastMode = m; openStage(m, true); }
     flush();
   })();
 })();

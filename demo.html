@@ -105,13 +105,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
   initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
   initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
@@ -261,10 +261,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForCompanion(Companion_15);
   initMetadataForClass(WaveGenerator, 'WaveGenerator', WaveGenerator);
   initMetadataForObject(Engine, 'Engine');
-  initMetadataForObject(PlayfieldAnim, 'PlayfieldAnim');
   initMetadataForCompanion(Companion_16);
-  initMetadataForClass(ViewCamera, 'ViewCamera');
+  initMetadataForClass(Role, 'Role', VOID, Enum);
   initMetadataForCompanion(Companion_17);
+  initMetadataForClass(Lab, 'Lab');
+  initMetadataForClass(ChromePalette, 'ChromePalette');
+  initMetadataForObject(PlayfieldAnim, 'PlayfieldAnim');
+  initMetadataForCompanion(Companion_18);
+  initMetadataForClass(ViewCamera, 'ViewCamera');
+  initMetadataForCompanion(Companion_19);
   initMetadataForClass(TowerViewport, 'TowerViewport', TowerViewport);
   initMetadataForObject(PlayfieldGeometry, 'PlayfieldGeometry');
   initMetadataForClass(FragmentInput, 'FragmentInput');
@@ -740,6 +745,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function downTo(_this__u8e3s4, to) {
     return Companion_instance_8.t(_this__u8e3s4, to, -1);
   }
+  function coerceIn_1(_this__u8e3s4, minimumValue, maximumValue) {
+    if (minimumValue > maximumValue)
+      throw IllegalArgumentException_init_$Create$_0('Cannot coerce value to an empty range: maximum ' + maximumValue + ' is less than minimum ' + minimumValue + '.');
+    if (_this__u8e3s4 < minimumValue)
+      return minimumValue;
+    if (_this__u8e3s4 > maximumValue)
+      return maximumValue;
+    return _this__u8e3s4;
+  }
   function _Char___init__impl__6a9atx(value) {
     return value;
   }
@@ -1078,6 +1092,45 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function arrayToString(array) {
     return joinToString(array, ', ', '[', ']', VOID, VOID, arrayToString$lambda);
   }
+  function contentEqualsInternal(_this__u8e3s4, other) {
+    // Inline function 'kotlin.js.asDynamic' call
+    var a = _this__u8e3s4;
+    // Inline function 'kotlin.js.asDynamic' call
+    var b = other;
+    if (a === b)
+      return true;
+    if (a == null || b == null || !isArrayish(b) || a.length != b.length)
+      return false;
+    var inductionVariable = 0;
+    var last = a.length;
+    if (inductionVariable < last)
+      do {
+        var i = inductionVariable;
+        inductionVariable = inductionVariable + 1 | 0;
+        if (!equals(a[i], b[i])) {
+          return false;
+        }
+      }
+       while (inductionVariable < last);
+    return true;
+  }
+  function contentHashCodeInternal(_this__u8e3s4) {
+    // Inline function 'kotlin.js.asDynamic' call
+    var a = _this__u8e3s4;
+    if (a == null)
+      return 0;
+    var result = 1;
+    var inductionVariable = 0;
+    var last = a.length;
+    if (inductionVariable < last)
+      do {
+        var i = inductionVariable;
+        inductionVariable = inductionVariable + 1 | 0;
+        result = imul(result, 31) + hashCode(a[i]) | 0;
+      }
+       while (inductionVariable < last);
+    return result;
+  }
   function arrayToString$lambda(it) {
     return toString_1(it);
   }
@@ -1379,6 +1432,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function THROW_CCE() {
     throw ClassCastException_init_$Create$();
+  }
+  function THROW_IAE(msg) {
+    throw IllegalArgumentException_init_$Create$_0(msg);
   }
   function get_ZERO() {
     _init_properties_longJs_kt__elc2w5();
@@ -1914,6 +1970,12 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       properties_initialized_void_kt_e4ret2 = true;
       VOID = void 0;
     }
+  }
+  function contentEquals(_this__u8e3s4, other) {
+    return contentEqualsInternal(_this__u8e3s4, other);
+  }
+  function contentHashCode(_this__u8e3s4) {
+    return contentHashCodeInternal(_this__u8e3s4);
   }
   function asList(_this__u8e3s4) {
     // Inline function 'kotlin.js.unsafeCast' call
@@ -2979,7 +3041,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       }
     }
   }
-  function contentEquals($this, other) {
+  function contentEquals_0($this, other) {
     return $this.j4_1 === other.k() && $this.w3(other.b1());
   }
   function putEntry($this, entry) {
@@ -3206,7 +3268,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     } else {
       var tmp_0;
       if (!(other == null) ? isInterface(other, KtMap) : false) {
-        tmp_0 = contentEquals(this, other);
+        tmp_0 = contentEquals_0(this, other);
       } else {
         tmp_0 = false;
       }
@@ -8464,66 +8526,69 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     Engine_instance = this;
     this.xh_1 = new GameEngine();
     this.yh_1 = this.xh_1.cg(new Long(1, 0));
-    this.zh_1 = TowerBands_getInstance().ti(this.yh_1.md_1);
-    this.ai_1 = 0;
+    this.zh_1 = TowerBands_getInstance().ui(this.yh_1.md_1);
+    this.ai_1 = null;
     this.bi_1 = 0;
     this.ci_1 = 0;
-    this.di_1 = new Int32Array(0);
-    this.ei_1 = 0;
-    this.fi_1 = -1;
-    this.gi_1 = new TowerViewport();
+    this.di_1 = 0;
+    this.ei_1 = new Int32Array(0);
+    this.fi_1 = 0;
+    this.gi_1 = -1;
+    this.hi_1 = new TowerViewport();
   }
   protoOf(Engine).deal = function (seed, minHeight, maxHeight, leanMin, leanMax) {
     this.yh_1 = this.xh_1.cg(toLong(seed)).ge(VOID, VOID, VOID, new Long(182, 0));
-    this.zh_1 = TowerBands_getInstance().ti(this.yh_1.md_1);
-    this.ai_1 = 0;
-    this.gi_1 = new TowerViewport();
-    this.di_1 = new Int32Array(0);
+    var tmp = this;
+    var tmp0_elvis_lhs = this.ai_1;
+    tmp.zh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().ui(this.yh_1.md_1) : tmp0_elvis_lhs;
+    this.bi_1 = 0;
+    this.hi_1 = new TowerViewport();
+    this.ei_1 = new Int32Array(0);
     var guard = 0;
     $l$loop_0: while (true) {
-      var tmp;
+      var tmp_0;
       if (this.yh_1.ee() < minHeight && !this.yh_1.de()) {
         var _unary__edvuaz = guard;
         guard = _unary__edvuaz + 1 | 0;
-        tmp = _unary__edvuaz < 160;
+        tmp_0 = _unary__edvuaz < 160;
       } else {
-        tmp = false;
+        tmp_0 = false;
       }
-      if (!tmp) {
+      if (!tmp_0) {
         break $l$loop_0;
       }
       if (!playBest(this, Engine$deal$lambda))
         break $l$loop_0;
     }
-    var tmp_0;
+    var tmp_1;
     if (this.yh_1.de()) {
-      tmp_0 = true;
+      tmp_1 = true;
     } else {
       var containsArg = this.yh_1.ee();
-      tmp_0 = !(minHeight <= containsArg ? containsArg <= maxHeight : false);
+      tmp_1 = !(minHeight <= containsArg ? containsArg <= maxHeight : false);
     }
-    if (tmp_0)
+    if (tmp_1)
       return NaN;
     var side = (seed & 1) === 0 ? 1.0 : -1.0;
     guard = 0;
     $l$loop_2: while (true) {
-      var tmp_1;
       var tmp_2;
+      var tmp_3;
       // Inline function 'kotlin.math.abs' call
       var x = this.yh_1.zd_1.c8_1;
       if (Math.abs(x) < leanMin) {
-        tmp_2 = !this.yh_1.de();
+        tmp_3 = !this.yh_1.de();
+      } else {
+        tmp_3 = false;
+      }
+      if (tmp_3) {
+        var _unary__edvuaz_0 = guard;
+        guard = _unary__edvuaz_0 + 1 | 0;
+        tmp_2 = _unary__edvuaz_0 < 20;
       } else {
         tmp_2 = false;
       }
-      if (tmp_2) {
-        var _unary__edvuaz_0 = guard;
-        guard = _unary__edvuaz_0 + 1 | 0;
-        tmp_1 = _unary__edvuaz_0 < 20;
-      } else {
-        tmp_1 = false;
-      }
-      if (!tmp_1) {
+      if (!tmp_2) {
         break $l$loop_2;
       }
       if (!playBest(this, Engine$deal$lambda_0(side)))
@@ -8531,15 +8596,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     guard = 0;
     $l$loop_4: while (true) {
-      var tmp_3;
+      var tmp_4;
       if (!handIsFull(this) && !this.yh_1.de()) {
         var _unary__edvuaz_1 = guard;
         guard = _unary__edvuaz_1 + 1 | 0;
-        tmp_3 = _unary__edvuaz_1 < 4;
+        tmp_4 = _unary__edvuaz_1 < 4;
       } else {
-        tmp_3 = false;
+        tmp_4 = false;
       }
-      if (!tmp_3) {
+      if (!tmp_4) {
         break $l$loop_4;
       }
       if (!playBest(this, Engine$deal$lambda_1(leanMin, leanMax))) {
@@ -8552,66 +8617,66 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (this.yh_1.ee() > maxHeight || !hasVisibleCompletingMove(this, maxHeight)) {
       return NaN;
     }
-    var tmp_4;
+    var tmp_5;
     // Inline function 'kotlin.math.abs' call
     if (Math.abs(lean) < leanMin) {
-      tmp_4 = true;
+      tmp_5 = true;
     } else {
       // Inline function 'kotlin.math.abs' call
-      tmp_4 = Math.abs(lean) > leanMax;
+      tmp_5 = Math.abs(lean) > leanMax;
     }
-    if (tmp_4)
+    if (tmp_5)
       return NaN;
-    this.bi_1 = this.yh_1.qd_1;
-    this.ci_1 = this.yh_1.td_1;
+    this.ci_1 = this.yh_1.qd_1;
+    this.di_1 = this.yh_1.td_1;
     return lean;
   };
-  protoOf(Engine).ui = function () {
+  protoOf(Engine).vi = function () {
     return hasVisibleCompletingMove(this, (2147483647 - this.yh_1.jd_1.k8_1 | 0) - 1 | 0);
   };
   protoOf(Engine).viewBottom = function (summitBottom, visibleRows) {
-    return this.gi_1.zi(summitOf(this, summitBottom, visibleRows), -1).vi_1;
+    return this.hi_1.aj(summitOf(this, summitBottom, visibleRows), -1).wi_1;
   };
   protoOf(Engine).scrollView = function (rows, summitBottom, visibleRows) {
-    this.gi_1 = this.gi_1.aj(rows, summitOf(this, summitBottom, visibleRows), -1);
-  };
-  protoOf(Engine).bj = function () {
-    return this.gi_1.yi_1;
+    this.hi_1 = this.hi_1.bj(rows, summitOf(this, summitBottom, visibleRows), -1);
   };
   protoOf(Engine).cj = function () {
+    return this.hi_1.zi_1;
+  };
+  protoOf(Engine).dj = function () {
     return 28.0;
   };
   protoOf(Engine).carriedCellX = function (anchorCellX, anchorFingerX, fingerX, cell) {
-    return PlayfieldGeometry_instance.pj(anchorCellX, anchorFingerX, fingerX, cell);
-  };
-  protoOf(Engine).qj = function () {
-    return 1.25;
+    return PlayfieldGeometry_instance.qj(anchorCellX, anchorFingerX, fingerX, cell);
   };
   protoOf(Engine).rj = function () {
-    return PlayfieldAnim_getInstance().yj_1;
+    return 1.25;
   };
-  protoOf(Engine).lk = function () {
-    return this.yh_1.jd_1.h8_1;
+  protoOf(Engine).sj = function () {
+    return PlayfieldAnim_getInstance().zj_1;
   };
   protoOf(Engine).mk = function () {
-    return this.yh_1.jd_1.k8_1;
+    return this.yh_1.jd_1.h8_1;
   };
   protoOf(Engine).nk = function () {
-    return 6;
+    return this.yh_1.jd_1.k8_1;
   };
   protoOf(Engine).ok = function () {
+    return 6;
+  };
+  protoOf(Engine).pk = function () {
     return this.yh_1.jd_1.n8_1;
   };
   protoOf(Engine).t8 = function () {
     return this.yh_1.jd_1.t8();
   };
-  protoOf(Engine).pk = function () {
+  protoOf(Engine).qk = function () {
     return this.yh_1.jd_1.s8_1;
   };
   protoOf(Engine).ee = function () {
     return this.yh_1.ee();
   };
-  protoOf(Engine).qk = function () {
+  protoOf(Engine).rk = function () {
     return this.yh_1.jd_1.o8_1;
   };
   protoOf(Engine).cellAt = function (x, y) {
@@ -8623,13 +8688,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).shaft = function (view) {
     // Inline function 'kotlin.collections.flatMap' call
     // Inline function 'kotlin.collections.flatMapTo' call
-    var this_0 = this.zh_1.tk(new ViewCamera(view[0], view[1]), this.yh_1.jd_1);
+    var this_0 = this.zh_1.uk(new ViewCamera(view[0], view[1]), this.yh_1.jd_1);
     var destination = ArrayList_init_$Create$();
     var tmp0_iterator = this_0.f();
     while (tmp0_iterator.g()) {
       var element = tmp0_iterator.h();
       // Inline function 'com.boxstack.playable.Engine.shaft.<anonymous>' call
-      var list = listOf_0([element.uk_1, element.vk_1]);
+      var list = listOf_0([element.vk_1, element.wk_1]);
       addAll(destination, list);
     }
     return toDoubleArray(destination);
@@ -8643,18 +8708,68 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var id = tmp;
-    return this.zh_1.wk(id, crateBand(this.yh_1.jd_1, x, y));
+    return this.zh_1.xk(id, crateBand(this.yh_1.jd_1, x, y));
   };
   protoOf(Engine).setRowColor = function (y) {
     var tmp = this.zh_1;
     var tmp0_safe_receiver = this.yh_1.jd_1.p9(y);
-    return tmp.wk(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1, setRowBand(this.yh_1.jd_1, y));
+    return tmp.xk(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1, setRowBand(this.yh_1.jd_1, y));
   };
   protoOf(Engine).handColor = function (shapeOrdinal) {
-    return this.zh_1.yk(shapeOrdinal, TowerBands_getInstance().xk(this.yh_1.jd_1));
+    return this.zh_1.zk(shapeOrdinal, TowerBands_getInstance().yk(this.yh_1.jd_1));
   };
-  protoOf(Engine).zk = function () {
-    return this.zh_1.al(TowerBands_getInstance().xk(this.yh_1.jd_1));
+  protoOf(Engine).al = function () {
+    return this.zh_1.bl(TowerBands_getInstance().yk(this.yh_1.jd_1));
+  };
+  protoOf(Engine).chrome = function (role) {
+    return this.zh_1.cl(TowerBands_getInstance().yk(this.yh_1.jd_1)).fl(valueOf(role));
+  };
+  protoOf(Engine).usePalette = function (field, first, second, third) {
+    // Inline function 'kotlin.intArrayOf' call
+    var tmp$ret$0 = new Int32Array([first, second, third]);
+    var band = new Band_0(field, tmp$ret$0);
+    // Inline function 'kotlin.collections.List' call
+    // Inline function 'kotlin.collections.MutableList' call
+    var size = TowerBands_getInstance().ki_1 - 1 | 0;
+    var list = ArrayList_init_$Create$_0(size);
+    // Inline function 'kotlin.repeat' call
+    // Inline function 'kotlin.contracts.contract' call
+    var inductionVariable = 0;
+    if (inductionVariable < size)
+      do {
+        var index = inductionVariable;
+        inductionVariable = inductionVariable + 1 | 0;
+        // Inline function 'kotlin.collections.MutableList.<anonymous>' call
+        // Inline function 'com.boxstack.playable.Engine.usePalette.<anonymous>' call
+        list.d(band);
+      }
+       while (inductionVariable < size);
+    var worn = new TowerPalette(plus(list, TowerBands_getInstance().ni_1));
+    this.ai_1 = worn;
+    this.zh_1 = worn;
+  };
+  protoOf(Engine).cellSlot = function (x, y) {
+    var board = this.yh_1.jd_1;
+    if (y < board.k8_1 || y >= board.t8())
+      return -1;
+    if (board.m9(y)) {
+      var tmp0_safe_receiver = board.p9(y);
+      var tmp1_safe_receiver = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1;
+      var tmp2_elvis_lhs = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.d1_1;
+      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % 3 | 0;
+    }
+    var tmp3_elvis_lhs = Companion_getInstance_9().f9(board.q9(x, y));
+    var tmp;
+    if (tmp3_elvis_lhs == null) {
+      return -1;
+    } else {
+      tmp = tmp3_elvis_lhs;
+    }
+    var id = tmp;
+    return id.d1_1 % 3 | 0;
+  };
+  protoOf(Engine).handSlot = function (shapeOrdinal) {
+    return shapeOrdinal % 3 | 0;
   };
   protoOf(Engine).completingRows = function (slot, originX) {
     var tmp0_elvis_lhs = this.yh_1.kd_1.le(slot);
@@ -8675,7 +8790,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.ve_1);
   };
-  protoOf(Engine).bl = function () {
+  protoOf(Engine).gl = function () {
     return this.yh_1.zd_1.c8_1;
   };
   protoOf(Engine).d8 = function () {
@@ -8684,22 +8799,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).e8 = function () {
     return this.yh_1.de();
   };
-  protoOf(Engine).cl = function () {
-    return this.yh_1.qd_1 - this.bi_1 | 0;
+  protoOf(Engine).hl = function () {
+    return this.yh_1.qd_1 - this.ci_1 | 0;
   };
-  protoOf(Engine).dl = function () {
+  protoOf(Engine).il = function () {
     return this.yh_1.sd_1;
   };
-  protoOf(Engine).el = function () {
-    return this.yh_1.td_1 - this.ci_1 | 0;
+  protoOf(Engine).jl = function () {
+    return this.yh_1.td_1 - this.di_1 | 0;
   };
-  protoOf(Engine).fl = function () {
+  protoOf(Engine).kl = function () {
     return this.yh_1.qd_1;
   };
-  protoOf(Engine).gl = function () {
+  protoOf(Engine).ll = function () {
     return Placement_instance.ug(this.yh_1.jd_1);
   };
-  protoOf(Engine).hl = function () {
+  protoOf(Engine).ml = function () {
     return this.yh_1.kd_1.je_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
@@ -8790,50 +8905,50 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(out instanceof Placed))
       return -1;
     this.yh_1 = out.gd_1;
-    this.ai_1 = this.ai_1 + 1 | 0;
-    this.di_1 = toIntArray(out.hd_1.bd_1);
-    this.ei_1 = out.hd_1.cd_1;
-    this.fi_1 = out.hd_1.ad_1;
-    return this.di_1.length;
+    this.bi_1 = this.bi_1 + 1 | 0;
+    this.ei_1 = toIntArray(out.hd_1.bd_1);
+    this.fi_1 = out.hd_1.cd_1;
+    this.gi_1 = out.hd_1.ad_1;
+    return this.ei_1.length;
   };
-  protoOf(Engine).il = function () {
-    return this.ai_1;
+  protoOf(Engine).nl = function () {
+    return this.bi_1;
   };
   protoOf(Engine).rowsJustSet = function () {
-    return this.di_1;
-  };
-  protoOf(Engine).jl = function () {
     return this.ei_1;
   };
-  protoOf(Engine).kl = function () {
+  protoOf(Engine).ol = function () {
     return this.fi_1;
   };
-  protoOf(Engine).ll = function () {
+  protoOf(Engine).pl = function () {
+    return this.gi_1;
+  };
+  protoOf(Engine).ql = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.ml(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).wi_1;
+    return PlayfieldGeometry_instance.rl(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).xi_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.ul(progress, revealing);
+    return ResultsAnim_instance.zl(progress, revealing);
   };
   protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.vl(revealing);
+    return ResultsAnim_instance.am(revealing);
   };
   protoOf(Engine).topplePhase = function (progress, revealing) {
-    return ResultsAnim_instance.wl(progress, revealing);
+    return ResultsAnim_instance.bm(progress, revealing);
   };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.xl(topple, tilt(this));
+    return ResultsAnim_instance.cm(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.yl(topple);
+    return ResultsAnim_instance.dm(topple);
   };
-  protoOf(Engine).zl = function () {
-    return ResultsAnim_instance.am(this.yh_1.jd_1);
+  protoOf(Engine).em = function () {
+    return ResultsAnim_instance.fm(this.yh_1.jd_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.yh_1.jd_1;
@@ -8855,10 +8970,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.q9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.bm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.cm_1);
-            out.d(piece.dm_1);
-            out.d(piece.em_1);
+            var piece = ResultsAnim_instance.gm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
+            out.d(piece.hm_1);
+            out.d(piece.im_1);
+            out.d(piece.jm_1);
             out.d(board.m9(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8868,15 +8983,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().hm(combo, rows, index);
+    return SoundLadder_getInstance().mm(combo, rows, index);
   };
-  protoOf(Engine).im = function () {
+  protoOf(Engine).nm = function () {
     return (new Long(300, 0)).u1();
   };
-  protoOf(Engine).jm = function () {
-    return ResultsAnim_instance.km(true, false);
+  protoOf(Engine).om = function () {
+    return ResultsAnim_instance.pm(true, false);
   };
-  protoOf(Engine).lm = function () {
+  protoOf(Engine).qm = function () {
     return get_entries().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
@@ -8917,33 +9032,557 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       new Engine();
     return Engine_instance;
   }
+  var Role_BACKGROUND_instance;
+  var Role_PANEL_instance;
+  var Role_PANEL_RAISED_instance;
+  var Role_BADGE_BEVEL_instance;
+  var Role_LINE_instance;
+  var Role_FRAME_instance;
+  var Role_FRAME_LIT_instance;
+  var Role_FRAME_SHADOW_instance;
+  var Role_BAR_TRACK_instance;
+  var Role_BAR_TRACK_EDGE_instance;
+  var Role_BAR_TRACK_HIGHLIGHT_instance;
+  var Role_MEDAL_PLATE_instance;
+  var Role_MEDAL_RIM_instance;
+  var Role_MEDAL_LOCKED_PLATE_instance;
+  var Role_MEDAL_LOCKED_INK_instance;
+  var Role_STAR_COLD_instance;
+  var Role_CARD_TOP_instance;
+  var Role_CARD_BOTTOM_instance;
+  var Role_TEXT_instance;
+  var Role_TEXT_DIM_instance;
+  var Role_ACTION_instance;
+  var Role_BAR_FILL_instance;
+  function values_0() {
+    return [Role_BACKGROUND_getInstance(), Role_PANEL_getInstance(), Role_PANEL_RAISED_getInstance(), Role_BADGE_BEVEL_getInstance(), Role_LINE_getInstance(), Role_FRAME_getInstance(), Role_FRAME_LIT_getInstance(), Role_FRAME_SHADOW_getInstance(), Role_BAR_TRACK_getInstance(), Role_BAR_TRACK_EDGE_getInstance(), Role_BAR_TRACK_HIGHLIGHT_getInstance(), Role_MEDAL_PLATE_getInstance(), Role_MEDAL_RIM_getInstance(), Role_MEDAL_LOCKED_PLATE_getInstance(), Role_MEDAL_LOCKED_INK_getInstance(), Role_STAR_COLD_getInstance(), Role_CARD_TOP_getInstance(), Role_CARD_BOTTOM_getInstance(), Role_TEXT_getInstance(), Role_TEXT_DIM_getInstance(), Role_ACTION_getInstance(), Role_BAR_FILL_getInstance()];
+  }
+  function valueOf(value) {
+    switch (value) {
+      case 'BACKGROUND':
+        return Role_BACKGROUND_getInstance();
+      case 'PANEL':
+        return Role_PANEL_getInstance();
+      case 'PANEL_RAISED':
+        return Role_PANEL_RAISED_getInstance();
+      case 'BADGE_BEVEL':
+        return Role_BADGE_BEVEL_getInstance();
+      case 'LINE':
+        return Role_LINE_getInstance();
+      case 'FRAME':
+        return Role_FRAME_getInstance();
+      case 'FRAME_LIT':
+        return Role_FRAME_LIT_getInstance();
+      case 'FRAME_SHADOW':
+        return Role_FRAME_SHADOW_getInstance();
+      case 'BAR_TRACK':
+        return Role_BAR_TRACK_getInstance();
+      case 'BAR_TRACK_EDGE':
+        return Role_BAR_TRACK_EDGE_getInstance();
+      case 'BAR_TRACK_HIGHLIGHT':
+        return Role_BAR_TRACK_HIGHLIGHT_getInstance();
+      case 'MEDAL_PLATE':
+        return Role_MEDAL_PLATE_getInstance();
+      case 'MEDAL_RIM':
+        return Role_MEDAL_RIM_getInstance();
+      case 'MEDAL_LOCKED_PLATE':
+        return Role_MEDAL_LOCKED_PLATE_getInstance();
+      case 'MEDAL_LOCKED_INK':
+        return Role_MEDAL_LOCKED_INK_getInstance();
+      case 'STAR_COLD':
+        return Role_STAR_COLD_getInstance();
+      case 'CARD_TOP':
+        return Role_CARD_TOP_getInstance();
+      case 'CARD_BOTTOM':
+        return Role_CARD_BOTTOM_getInstance();
+      case 'TEXT':
+        return Role_TEXT_getInstance();
+      case 'TEXT_DIM':
+        return Role_TEXT_DIM_getInstance();
+      case 'ACTION':
+        return Role_ACTION_getInstance();
+      case 'BAR_FILL':
+        return Role_BAR_FILL_getInstance();
+      default:
+        Role_initEntries();
+        THROW_IAE('No enum constant value.');
+        break;
+    }
+  }
+  function get_entries_0() {
+    if ($ENTRIES_0 == null)
+      $ENTRIES_0 = enumEntries(values_0());
+    return $ENTRIES_0;
+  }
+  var Role_entriesInitialized;
+  function Role_initEntries() {
+    if (Role_entriesInitialized)
+      return Unit_instance;
+    Role_entriesInitialized = true;
+    Role_BACKGROUND_instance = new Role('BACKGROUND', 0, 1053728);
+    Role_PANEL_instance = new Role('PANEL', 1, 1316898);
+    Role_PANEL_RAISED_instance = new Role('PANEL_RAISED', 2, 1777968);
+    Role_BADGE_BEVEL_instance = new Role('BADGE_BEVEL', 3, 2896966);
+    Role_LINE_instance = new Role('LINE', 4, 2304568);
+    Role_FRAME_instance = new Role('FRAME', 5, 3226189);
+    Role_FRAME_LIT_instance = new Role('FRAME_LIT', 6, 5596030);
+    Role_FRAME_SHADOW_instance = new Role('FRAME_SHADOW', 7, 1514536);
+    Role_BAR_TRACK_instance = new Role('BAR_TRACK', 8, 1712171);
+    Role_BAR_TRACK_EDGE_instance = new Role('BAR_TRACK_EDGE', 9, 790551);
+    Role_BAR_TRACK_HIGHLIGHT_instance = new Role('BAR_TRACK_HIGHLIGHT', 10, 3160652);
+    Role_MEDAL_PLATE_instance = new Role('MEDAL_PLATE', 11, 2304827);
+    Role_MEDAL_RIM_instance = new Role('MEDAL_RIM', 12, 5596030);
+    Role_MEDAL_LOCKED_PLATE_instance = new Role('MEDAL_LOCKED_PLATE', 13, 1316898);
+    Role_MEDAL_LOCKED_INK_instance = new Role('MEDAL_LOCKED_INK', 14, 2831172);
+    Role_STAR_COLD_instance = new Role('STAR_COLD', 15, 3028550);
+    Role_CARD_TOP_instance = new Role('CARD_TOP', 16, 1581624);
+    Role_CARD_BOTTOM_instance = new Role('CARD_BOTTOM', 17, 790552);
+    Role_TEXT_instance = new Role('TEXT', 18, 15265012, true);
+    Role_TEXT_DIM_instance = new Role('TEXT_DIM', 19, 10924228, true);
+    Role_ACTION_instance = new Role('ACTION', 20, 13160412, true);
+    Role_BAR_FILL_instance = new Role('BAR_FILL', 21, 9413560, true);
+  }
+  var $ENTRIES_0;
+  function wheelHue($this, packed) {
+    var r = (packed >> 16 & 255) / 255.0;
+    var g = (packed >> 8 & 255) / 255.0;
+    var b = (packed & 255) / 255.0;
+    // Inline function 'kotlin.comparisons.maxOf' call
+    var max = Math.max(r, g, b);
+    // Inline function 'kotlin.comparisons.minOf' call
+    var span = max - Math.min(r, g, b);
+    if (span <= 0.0)
+      return 240.0;
+    var sector = max === r ? ((g - b) / span + 6.0) % 6.0 : max === g ? (b - r) / span + 2.0 : (r - g) / span + 4.0;
+    return sector * 60.0;
+  }
+  function inGamut($this, l, chroma, hue) {
+    var tmp$ret$2;
+    $l$block_0: {
+      // Inline function 'kotlin.collections.all' call
+      // Inline function 'kotlin.math.cos' call
+      var tmp = chroma * Math.cos(hue);
+      // Inline function 'kotlin.math.sin' call
+      var tmp$ret$1 = Math.sin(hue);
+      var this_0 = srgb($this, l, tmp, chroma * tmp$ret$1);
+      var tmp_0;
+      if (isInterface(this_0, Collection)) {
+        tmp_0 = this_0.i();
+      } else {
+        tmp_0 = false;
+      }
+      if (tmp_0) {
+        tmp$ret$2 = true;
+        break $l$block_0;
+      }
+      var tmp0_iterator = this_0.f();
+      while (tmp0_iterator.g()) {
+        var element = tmp0_iterator.h();
+        // Inline function 'com.boxstack.presentation.Companion.inGamut.<anonymous>' call
+        var containsLower = -1.0E-4;
+        if (!(element <= 1 + 1.0E-4 ? containsLower <= element : false)) {
+          tmp$ret$2 = false;
+          break $l$block_0;
+        }
+      }
+      tmp$ret$2 = true;
+    }
+    return tmp$ret$2;
+  }
+  function rgb($this, l, chroma, hue) {
+    // Inline function 'kotlin.math.cos' call
+    var tmp = chroma * Math.cos(hue);
+    // Inline function 'kotlin.math.sin' call
+    var tmp$ret$1 = Math.sin(hue);
+    return toPacked($this, l, tmp, chroma * tmp$ret$1);
+  }
+  function toPacked($this, l, a, b) {
+    // Inline function 'kotlin.collections.map' call
+    var this_0 = srgb($this, l, a, b);
+    // Inline function 'kotlin.collections.mapTo' call
+    var destination = ArrayList_init_$Create$_0(collectionSizeOrDefault(this_0, 10));
+    var tmp0_iterator = this_0.f();
+    while (tmp0_iterator.g()) {
+      var item = tmp0_iterator.h();
+      // Inline function 'com.boxstack.presentation.Companion.toPacked.<anonymous>' call
+      var tmp$ret$0 = coerceIn_0(numberToInt(encode(Companion_instance_16, coerceIn_1(item, 0.0, 1.0)) * 255 + 0.5), 0, 255);
+      destination.d(tmp$ret$0);
+    }
+    // Inline function 'kotlin.collections.component1' call
+    var r = destination.j(0);
+    // Inline function 'kotlin.collections.component2' call
+    var g = destination.j(1);
+    // Inline function 'kotlin.collections.component3' call
+    var bl = destination.j(2);
+    return r << 16 | g << 8 | bl;
+  }
+  function srgb($this, l, a, b) {
+    // Inline function 'kotlin.let' call
+    // Inline function 'kotlin.contracts.contract' call
+    // Inline function 'com.boxstack.presentation.Companion.srgb.<anonymous>' call
+    var it = l + 0.3963377774 * a + 0.2158037573 * b;
+    var l0 = it * it * it;
+    // Inline function 'kotlin.let' call
+    // Inline function 'kotlin.contracts.contract' call
+    // Inline function 'com.boxstack.presentation.Companion.srgb.<anonymous>' call
+    var it_0 = l - 0.1055613458 * a - 0.0638541728 * b;
+    var m0 = it_0 * it_0 * it_0;
+    // Inline function 'kotlin.let' call
+    // Inline function 'kotlin.contracts.contract' call
+    // Inline function 'com.boxstack.presentation.Companion.srgb.<anonymous>' call
+    var it_1 = l - 0.0894841775 * a - 1.291485548 * b;
+    var s0 = it_1 * it_1 * it_1;
+    return listOf_0([4.0767416621 * l0 - 3.3077115913 * m0 + 0.2309699292 * s0, -1.2684380046 * l0 + 2.6097574011 * m0 - 0.3413193965 * s0, -0.0041960863 * l0 - 0.7034186147 * m0 + 1.707614701 * s0]);
+  }
+  function linear($this, v) {
+    var s = v / 255.0;
+    var tmp;
+    if (s <= 0.04045) {
+      tmp = s / 12.92;
+    } else {
+      // Inline function 'kotlin.math.pow' call
+      var this_0 = (s + 0.055) / 1.055;
+      tmp = Math.pow(this_0, 2.4);
+    }
+    return tmp;
+  }
+  function encode($this, c) {
+    var tmp;
+    if (c <= 0.0031308) {
+      tmp = 12.92 * c;
+    } else {
+      // Inline function 'kotlin.math.pow' call
+      var x = 1 / 2.4;
+      tmp = 1.055 * Math.pow(c, x) - 0.055;
+    }
+    return tmp;
+  }
+  function cbrt($this, x) {
+    var tmp;
+    if (x < 0) {
+      // Inline function 'kotlin.math.pow' call
+      var this_0 = -x;
+      var x_0 = 1.0 / 3.0;
+      tmp = -Math.pow(this_0, x_0);
+    } else {
+      // Inline function 'kotlin.math.pow' call
+      var x_1 = 1.0 / 3.0;
+      tmp = Math.pow(x, x_1);
+    }
+    return tmp;
+  }
+  function Companion_16() {
+    this.rm_1 = 20;
+    this.sm_1 = 1.0E-4;
+  }
+  protoOf(Companion_16).tm = function (packed) {
+    var r = linear(this, packed >> 16 & 255);
+    var g = linear(this, packed >> 8 & 255);
+    var b = linear(this, packed & 255);
+    var l0 = cbrt(this, 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    var m0 = cbrt(this, 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    var s0 = cbrt(this, 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    var l = 0.2104542553 * l0 + 0.793617785 * m0 - 0.0040720468 * s0;
+    var a = 1.9779984951 * l0 - 2.428592205 * m0 + 0.4505937099 * s0;
+    var bb = 0.0259040371 * l0 + 0.7827717662 * m0 - 0.808675766 * s0;
+    // Inline function 'kotlin.math.sqrt' call
+    var x = a * a + bb * bb;
+    var tmp = Math.sqrt(x);
+    // Inline function 'kotlin.math.atan2' call
+    var tmp$ret$1 = Math.atan2(bb, a);
+    return new Lab(l, tmp, tmp$ret$1);
+  };
+  protoOf(Companion_16).um = function (l, chroma, hue) {
+    var lo = 0.0;
+    var hi = chroma;
+    if (inGamut(this, l, hi, hue))
+      return rgb(this, l, hi, hue);
+    // Inline function 'kotlin.repeat' call
+    // Inline function 'kotlin.contracts.contract' call
+    var inductionVariable = 0;
+    if (inductionVariable < 20)
+      do {
+        var index = inductionVariable;
+        inductionVariable = inductionVariable + 1 | 0;
+        // Inline function 'com.boxstack.presentation.Companion.pack.<anonymous>' call
+        var mid = (lo + hi) / 2;
+        if (inGamut(Companion_instance_16, l, mid, hue))
+          lo = mid;
+        else
+          hi = mid;
+      }
+       while (inductionVariable < 20);
+    return rgb(this, l, lo, hue);
+  };
+  var Companion_instance_16;
+  function Companion_getInstance_16() {
+    return Companion_instance_16;
+  }
+  function Role(name, ordinal, night, ink) {
+    ink = ink === VOID ? false : ink;
+    Enum.call(this, name, ordinal);
+    this.xm_1 = night;
+    this.ym_1 = ink;
+  }
+  function Companion_17() {
+    Companion_instance_17 = this;
+    var tmp = this;
+    var tmp_0 = 0;
+    var tmp_1 = get_entries_0().k();
+    var tmp_2 = new Int32Array(tmp_1);
+    while (tmp_0 < tmp_1) {
+      var tmp_3 = tmp_0;
+      tmp_2[tmp_3] = get_entries_0().j(tmp_3).xm_1;
+      tmp_0 = tmp_0 + 1 | 0;
+    }
+    tmp.zm_1 = new ChromePalette(tmp_2, 240.0);
+    this.an_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
+    this.bn_1 = 240.0;
+    this.cn_1 = 0.65;
+    this.dn_1 = 0.15;
+    this.en_1 = 360.0;
+    this.fn_1 = 180.0;
+    this.gn_1 = 0.015;
+    this.hn_1 = 0.6;
+    this.in_1 = 0.21;
+    this.jn_1 = 0.3;
+    this.kn_1 = 0.145;
+    this.ln_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
+    this.mn_1 = 0.7;
+    this.nn_1 = 0.05;
+    this.on_1 = 0.3;
+    this.pn_1 = 0.025;
+  }
+  protoOf(Companion_17).tn = function (field, crates) {
+    var f = Companion_instance_16.tm(field);
+    var hue = {_v: f.sn_1};
+    var chroma = f.rn_1;
+    if (chroma < 0.015) {
+      var tmp$ret$3;
+      $l$block_0: {
+        // Inline function 'kotlin.collections.maxByOrNull' call
+        // Inline function 'kotlin.collections.map' call
+        // Inline function 'kotlin.collections.mapTo' call
+        var destination = ArrayList_init_$Create$_0(crates.length);
+        var inductionVariable = 0;
+        var last = crates.length;
+        while (inductionVariable < last) {
+          var item = crates[inductionVariable];
+          inductionVariable = inductionVariable + 1 | 0;
+          var tmp$ret$0 = Companion_instance_16.tm(item);
+          destination.d(tmp$ret$0);
+        }
+        var iterator = destination.f();
+        if (!iterator.g()) {
+          tmp$ret$3 = null;
+          break $l$block_0;
+        }
+        var maxElem = iterator.h();
+        if (!iterator.g()) {
+          tmp$ret$3 = maxElem;
+          break $l$block_0;
+        }
+        // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
+        var maxValue = maxElem.rn_1;
+        do {
+          var e = iterator.h();
+          // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
+          var v = e.rn_1;
+          if (compareTo(maxValue, v) < 0) {
+            maxElem = e;
+            maxValue = v;
+          }
+        }
+         while (iterator.g());
+        tmp$ret$3 = maxElem;
+      }
+      var vivid = tmp$ret$3;
+      if (!(vivid == null) && vivid.rn_1 > 0.015 * 2) {
+        hue._v = vivid.sn_1;
+        chroma = 0.015;
+      } else {
+        chroma = 0.0;
+      }
+    }
+    var base = f.qn_1 >= 0.6 ? this.an_1 : coerceIn_1(this.an_1 + (f.qn_1 - 0.21) * 0.3, 0.145, this.ln_1);
+    // Inline function 'kotlin.comparisons.minOf' call
+    var a = chroma * 0.7;
+    var surfaceChroma = Math.min(a, 0.05);
+    // Inline function 'kotlin.comparisons.minOf' call
+    var a_0 = chroma * 0.3;
+    var inkChroma = Math.min(a_0, 0.025);
+    var tmp = 0;
+    var tmp_0 = get_entries_0().k();
+    var tmp_1 = new Int32Array(tmp_0);
+    while (tmp < tmp_0) {
+      var tmp_2 = tmp;
+      var role = get_entries_0().j(tmp_2);
+      var night = Companion_instance_16.tm(role.xm_1);
+      var tmp_3;
+      if (role.ym_1) {
+        tmp_3 = Companion_instance_16.um(night.qn_1, inkChroma, hue._v);
+      } else {
+        tmp_3 = Companion_instance_16.um(base + (night.qn_1 - Companion_getInstance_17().an_1), surfaceChroma, hue._v);
+      }
+      tmp_1[tmp_2] = tmp_3;
+      tmp = tmp + 1 | 0;
+    }
+    var colours = tmp_1;
+    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.um(0.65, 0.15, hue._v));
+    return new ChromePalette(colours, glow);
+  };
+  var Companion_instance_17;
+  function Companion_getInstance_17() {
+    if (Companion_instance_17 == null)
+      new Companion_17();
+    return Companion_instance_17;
+  }
+  function Lab(l, chroma, hue) {
+    this.qn_1 = l;
+    this.rn_1 = chroma;
+    this.sn_1 = hue;
+  }
+  function Role_BACKGROUND_getInstance() {
+    Role_initEntries();
+    return Role_BACKGROUND_instance;
+  }
+  function Role_PANEL_getInstance() {
+    Role_initEntries();
+    return Role_PANEL_instance;
+  }
+  function Role_PANEL_RAISED_getInstance() {
+    Role_initEntries();
+    return Role_PANEL_RAISED_instance;
+  }
+  function Role_BADGE_BEVEL_getInstance() {
+    Role_initEntries();
+    return Role_BADGE_BEVEL_instance;
+  }
+  function Role_LINE_getInstance() {
+    Role_initEntries();
+    return Role_LINE_instance;
+  }
+  function Role_FRAME_getInstance() {
+    Role_initEntries();
+    return Role_FRAME_instance;
+  }
+  function Role_FRAME_LIT_getInstance() {
+    Role_initEntries();
+    return Role_FRAME_LIT_instance;
+  }
+  function Role_FRAME_SHADOW_getInstance() {
+    Role_initEntries();
+    return Role_FRAME_SHADOW_instance;
+  }
+  function Role_BAR_TRACK_getInstance() {
+    Role_initEntries();
+    return Role_BAR_TRACK_instance;
+  }
+  function Role_BAR_TRACK_EDGE_getInstance() {
+    Role_initEntries();
+    return Role_BAR_TRACK_EDGE_instance;
+  }
+  function Role_BAR_TRACK_HIGHLIGHT_getInstance() {
+    Role_initEntries();
+    return Role_BAR_TRACK_HIGHLIGHT_instance;
+  }
+  function Role_MEDAL_PLATE_getInstance() {
+    Role_initEntries();
+    return Role_MEDAL_PLATE_instance;
+  }
+  function Role_MEDAL_RIM_getInstance() {
+    Role_initEntries();
+    return Role_MEDAL_RIM_instance;
+  }
+  function Role_MEDAL_LOCKED_PLATE_getInstance() {
+    Role_initEntries();
+    return Role_MEDAL_LOCKED_PLATE_instance;
+  }
+  function Role_MEDAL_LOCKED_INK_getInstance() {
+    Role_initEntries();
+    return Role_MEDAL_LOCKED_INK_instance;
+  }
+  function Role_STAR_COLD_getInstance() {
+    Role_initEntries();
+    return Role_STAR_COLD_instance;
+  }
+  function Role_CARD_TOP_getInstance() {
+    Role_initEntries();
+    return Role_CARD_TOP_instance;
+  }
+  function Role_CARD_BOTTOM_getInstance() {
+    Role_initEntries();
+    return Role_CARD_BOTTOM_instance;
+  }
+  function Role_TEXT_getInstance() {
+    Role_initEntries();
+    return Role_TEXT_instance;
+  }
+  function Role_TEXT_DIM_getInstance() {
+    Role_initEntries();
+    return Role_TEXT_DIM_instance;
+  }
+  function Role_ACTION_getInstance() {
+    Role_initEntries();
+    return Role_ACTION_instance;
+  }
+  function Role_BAR_FILL_getInstance() {
+    Role_initEntries();
+    return Role_BAR_FILL_instance;
+  }
+  function ChromePalette(colours, glowHue) {
+    Companion_getInstance_17();
+    this.dl_1 = colours;
+    this.el_1 = glowHue;
+  }
+  protoOf(ChromePalette).fl = function (role) {
+    return this.dl_1[role.d1_1];
+  };
+  protoOf(ChromePalette).equals = function (other) {
+    var tmp;
+    var tmp_0;
+    if (other instanceof ChromePalette) {
+      tmp_0 = contentEquals(this.dl_1, other.dl_1);
+    } else {
+      tmp_0 = false;
+    }
+    if (tmp_0) {
+      tmp = this.el_1 === other.el_1;
+    } else {
+      tmp = false;
+    }
+    return tmp;
+  };
+  protoOf(ChromePalette).hashCode = function () {
+    return imul(31, contentHashCode(this.dl_1)) + getNumberHashCode(this.el_1) | 0;
+  };
   function PlayfieldAnim() {
     PlayfieldAnim_instance = this;
-    this.sj_1 = 180;
-    this.tj_1 = 260;
-    this.uj_1 = Shapes_getInstance().ob_1 + 0.5;
-    this.vj_1 = 225;
-    this.wj_1 = 260;
-    this.xj_1 = 0.74;
+    this.tj_1 = 180;
+    this.uj_1 = 260;
+    this.vj_1 = Shapes_getInstance().ob_1 + 0.5;
+    this.wj_1 = 225;
+    this.xj_1 = 260;
+    this.yj_1 = 0.74;
     var tmp = this;
     // Inline function 'kotlin.math.roundToInt' call
     var this_0 = 225 * 0.74;
-    tmp.yj_1 = roundToInt(this_0);
-    this.zj_1 = 0.13;
-    this.ak_1 = 0.28;
-    this.bk_1 = 0.17;
-    this.ck_1 = 770;
-    this.dk_1 = 1.7;
-    this.ek_1 = 0.14;
-    this.fk_1 = 0.42;
-    this.gk_1 = 90;
+    tmp.zj_1 = roundToInt(this_0);
+    this.ak_1 = 0.13;
+    this.bk_1 = 0.28;
+    this.ck_1 = 0.17;
+    this.dk_1 = 770;
+    this.ek_1 = 1.7;
+    this.fk_1 = 0.14;
+    this.gk_1 = 0.42;
+    this.hk_1 = 90;
     var tmp_0 = this;
     // Inline function 'kotlin.math.roundToInt' call
     var this_1 = 60000.0 / 90;
-    tmp_0.hk_1 = roundToInt(this_1);
-    this.ik_1 = 0.3;
-    this.jk_1 = 0.002;
-    this.kk_1 = 620;
+    tmp_0.ik_1 = roundToInt(this_1);
+    this.jk_1 = 0.3;
+    this.kk_1 = 0.002;
+    this.lk_1 = 620;
   }
   var PlayfieldAnim_instance;
   function PlayfieldAnim_getInstance() {
@@ -8951,22 +9590,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       new PlayfieldAnim();
     return PlayfieldAnim_instance;
   }
-  function Companion_16() {
+  function Companion_18() {
   }
-  var Companion_instance_16;
-  function Companion_getInstance_16() {
-    return Companion_instance_16;
+  var Companion_instance_18;
+  function Companion_getInstance_18() {
+    return Companion_instance_18;
   }
   function ViewCamera(bottomRow, visibleRows) {
-    this.vi_1 = bottomRow;
-    this.wi_1 = visibleRows;
+    this.wi_1 = bottomRow;
+    this.xi_1 = visibleRows;
   }
   protoOf(ViewCamera).toString = function () {
-    return 'ViewCamera(bottomRow=' + this.vi_1 + ', visibleRows=' + this.wi_1 + ')';
+    return 'ViewCamera(bottomRow=' + this.wi_1 + ', visibleRows=' + this.xi_1 + ')';
   };
   protoOf(ViewCamera).hashCode = function () {
-    var result = getNumberHashCode(this.vi_1);
-    result = imul(result, 31) + getNumberHashCode(this.wi_1) | 0;
+    var result = getNumberHashCode(this.wi_1);
+    result = imul(result, 31) + getNumberHashCode(this.xi_1) | 0;
     return result;
   };
   protoOf(ViewCamera).equals = function (other) {
@@ -8975,55 +9614,55 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof ViewCamera))
       return false;
     var tmp0_other_with_cast = other instanceof ViewCamera ? other : THROW_CCE();
-    if (!equals(this.vi_1, tmp0_other_with_cast.vi_1))
-      return false;
     if (!equals(this.wi_1, tmp0_other_with_cast.wi_1))
+      return false;
+    if (!equals(this.xi_1, tmp0_other_with_cast.xi_1))
       return false;
     return true;
   };
-  function Companion_17() {
-    this.mm_1 = 0.001;
+  function Companion_19() {
+    this.un_1 = 0.001;
   }
-  var Companion_instance_17;
-  function Companion_getInstance_17() {
-    return Companion_instance_17;
+  var Companion_instance_19;
+  function Companion_getInstance_19() {
+    return Companion_instance_19;
   }
   function TowerViewport(bottomRow, followsTop) {
     bottomRow = bottomRow === VOID ? 0.0 : bottomRow;
     followsTop = followsTop === VOID ? true : followsTop;
-    this.xi_1 = bottomRow;
-    this.yi_1 = followsTop;
+    this.yi_1 = bottomRow;
+    this.zi_1 = followsTop;
   }
-  protoOf(TowerViewport).zi = function (summit, minimumBottom) {
+  protoOf(TowerViewport).aj = function (summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
-    var b = summit.vi_1;
+    var b = summit.wi_1;
     var minimum = Math.min(minimumBottom, b);
     var tmp;
-    if (this.yi_1) {
-      tmp = summit.vi_1;
+    if (this.zi_1) {
+      tmp = summit.wi_1;
     } else {
-      tmp = coerceIn(this.xi_1, minimum, summit.vi_1);
+      tmp = coerceIn(this.yi_1, minimum, summit.wi_1);
     }
     var bottom = tmp;
-    return new ViewCamera(bottom, summit.wi_1);
+    return new ViewCamera(bottom, summit.xi_1);
   };
-  protoOf(TowerViewport).aj = function (rows, summit, minimumBottom) {
-    var current = this.zi(summit, minimumBottom).vi_1;
-    return this.nm(current + rows, summit, minimumBottom);
+  protoOf(TowerViewport).bj = function (rows, summit, minimumBottom) {
+    var current = this.aj(summit, minimumBottom).wi_1;
+    return this.vn(current + rows, summit, minimumBottom);
   };
-  protoOf(TowerViewport).nm = function (bottomRow, summit, minimumBottom) {
+  protoOf(TowerViewport).vn = function (bottomRow, summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
-    var b = summit.vi_1;
+    var b = summit.wi_1;
     var minimum = Math.min(minimumBottom, b);
-    var next = coerceIn(bottomRow, minimum, summit.vi_1);
-    return new TowerViewport(next, next >= summit.vi_1 - 0.001);
+    var next = coerceIn(bottomRow, minimum, summit.wi_1);
+    return new TowerViewport(next, next >= summit.wi_1 - 0.001);
   };
   protoOf(TowerViewport).toString = function () {
-    return 'TowerViewport(bottomRow=' + this.xi_1 + ', followsTop=' + this.yi_1 + ')';
+    return 'TowerViewport(bottomRow=' + this.yi_1 + ', followsTop=' + this.zi_1 + ')';
   };
   protoOf(TowerViewport).hashCode = function () {
-    var result = getNumberHashCode(this.xi_1);
-    result = imul(result, 31) + getBooleanHashCode(this.yi_1) | 0;
+    var result = getNumberHashCode(this.yi_1);
+    result = imul(result, 31) + getBooleanHashCode(this.zi_1) | 0;
     return result;
   };
   protoOf(TowerViewport).equals = function (other) {
@@ -9032,34 +9671,34 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof TowerViewport))
       return false;
     var tmp0_other_with_cast = other instanceof TowerViewport ? other : THROW_CCE();
-    if (!equals(this.xi_1, tmp0_other_with_cast.xi_1))
+    if (!equals(this.yi_1, tmp0_other_with_cast.yi_1))
       return false;
-    if (!(this.yi_1 === tmp0_other_with_cast.yi_1))
+    if (!(this.zi_1 === tmp0_other_with_cast.zi_1))
       return false;
     return true;
   };
   function PlayfieldGeometry() {
-    this.dj_1 = 0.125;
-    this.ej_1 = 9.0;
-    this.fj_1 = 2;
-    this.gj_1 = 1.25;
-    this.hj_1 = 1.0;
-    this.ij_1 = 1.6;
-    this.jj_1 = 0.05;
-    this.kj_1 = 0.875;
-    this.lj_1 = 28.0;
-    this.mj_1 = 0.5;
-    this.nj_1 = 1;
-    this.oj_1 = -1;
+    this.ej_1 = 0.125;
+    this.fj_1 = 9.0;
+    this.gj_1 = 2;
+    this.hj_1 = 1.25;
+    this.ij_1 = 1.0;
+    this.jj_1 = 1.6;
+    this.kj_1 = 0.05;
+    this.lj_1 = 0.875;
+    this.mj_1 = 28.0;
+    this.nj_1 = 0.5;
+    this.oj_1 = 1;
+    this.pj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).om = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+  protoOf(PlayfieldGeometry).wn = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
     return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
   };
-  protoOf(PlayfieldGeometry).pj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
+  protoOf(PlayfieldGeometry).qj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
     gain = gain === VOID ? 1.25 : gain;
-    return $super === VOID ? this.om(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.om.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+    return $super === VOID ? this.wn(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.wn.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
   };
-  protoOf(PlayfieldGeometry).ml = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).rl = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -9071,61 +9710,61 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.pm_1 = startX;
-    this.qm_1 = startY;
-    this.rm_1 = pivotX;
-    this.sm_1 = pivotY;
-    this.tm_1 = cellPx;
-    this.um_1 = groundY;
-    this.vm_1 = cellX;
-    this.wm_1 = cellY;
-    this.xm_1 = impact;
-    this.ym_1 = direction;
+    this.xn_1 = startX;
+    this.yn_1 = startY;
+    this.zn_1 = pivotX;
+    this.ao_1 = pivotY;
+    this.bo_1 = cellPx;
+    this.co_1 = groundY;
+    this.do_1 = cellX;
+    this.eo_1 = cellY;
+    this.fo_1 = impact;
+    this.go_1 = direction;
   }
   protoOf(FragmentInput).x7 = function () {
-    return this.pm_1;
+    return this.xn_1;
   };
   protoOf(FragmentInput).y7 = function () {
-    return this.qm_1;
+    return this.yn_1;
   };
-  protoOf(FragmentInput).zm = function () {
-    return this.rm_1;
+  protoOf(FragmentInput).ho = function () {
+    return this.zn_1;
   };
-  protoOf(FragmentInput).an = function () {
-    return this.sm_1;
+  protoOf(FragmentInput).io = function () {
+    return this.ao_1;
   };
-  protoOf(FragmentInput).bn = function () {
-    return this.tm_1;
+  protoOf(FragmentInput).jo = function () {
+    return this.bo_1;
   };
-  protoOf(FragmentInput).cn = function () {
-    return this.um_1;
+  protoOf(FragmentInput).ko = function () {
+    return this.co_1;
   };
-  protoOf(FragmentInput).dn = function () {
-    return this.vm_1;
+  protoOf(FragmentInput).lo = function () {
+    return this.do_1;
   };
-  protoOf(FragmentInput).en = function () {
-    return this.wm_1;
+  protoOf(FragmentInput).mo = function () {
+    return this.eo_1;
   };
-  protoOf(FragmentInput).fn = function () {
-    return this.xm_1;
+  protoOf(FragmentInput).no = function () {
+    return this.fo_1;
   };
-  protoOf(FragmentInput).gn = function () {
-    return this.ym_1;
+  protoOf(FragmentInput).oo = function () {
+    return this.go_1;
   };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.pm_1 + ', startY=' + this.qm_1 + ', pivotX=' + this.rm_1 + ', pivotY=' + this.sm_1 + ', cellPx=' + this.tm_1 + ', groundY=' + this.um_1 + ', cellX=' + this.vm_1 + ', cellY=' + this.wm_1 + ', impact=' + this.xm_1 + ', direction=' + this.ym_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.xn_1 + ', startY=' + this.yn_1 + ', pivotX=' + this.zn_1 + ', pivotY=' + this.ao_1 + ', cellPx=' + this.bo_1 + ', groundY=' + this.co_1 + ', cellX=' + this.do_1 + ', cellY=' + this.eo_1 + ', impact=' + this.fo_1 + ', direction=' + this.go_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.pm_1);
-    result = imul(result, 31) + getNumberHashCode(this.qm_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.rm_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.sm_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.tm_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.um_1) | 0;
-    result = imul(result, 31) + this.vm_1 | 0;
-    result = imul(result, 31) + this.wm_1 | 0;
-    result = imul(result, 31) + getNumberHashCode(this.xm_1) | 0;
-    result = imul(result, 31) + this.ym_1.hashCode() | 0;
+    var result = getNumberHashCode(this.xn_1);
+    result = imul(result, 31) + getNumberHashCode(this.yn_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.zn_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.ao_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.bo_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.co_1) | 0;
+    result = imul(result, 31) + this.do_1 | 0;
+    result = imul(result, 31) + this.eo_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.fo_1) | 0;
+    result = imul(result, 31) + this.go_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
@@ -9134,40 +9773,40 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof FragmentInput))
       return false;
     var tmp0_other_with_cast = other instanceof FragmentInput ? other : THROW_CCE();
-    if (!equals(this.pm_1, tmp0_other_with_cast.pm_1))
+    if (!equals(this.xn_1, tmp0_other_with_cast.xn_1))
       return false;
-    if (!equals(this.qm_1, tmp0_other_with_cast.qm_1))
+    if (!equals(this.yn_1, tmp0_other_with_cast.yn_1))
       return false;
-    if (!equals(this.rm_1, tmp0_other_with_cast.rm_1))
+    if (!equals(this.zn_1, tmp0_other_with_cast.zn_1))
       return false;
-    if (!equals(this.sm_1, tmp0_other_with_cast.sm_1))
+    if (!equals(this.ao_1, tmp0_other_with_cast.ao_1))
       return false;
-    if (!equals(this.tm_1, tmp0_other_with_cast.tm_1))
+    if (!equals(this.bo_1, tmp0_other_with_cast.bo_1))
       return false;
-    if (!equals(this.um_1, tmp0_other_with_cast.um_1))
+    if (!equals(this.co_1, tmp0_other_with_cast.co_1))
       return false;
-    if (!(this.vm_1 === tmp0_other_with_cast.vm_1))
+    if (!(this.do_1 === tmp0_other_with_cast.do_1))
       return false;
-    if (!(this.wm_1 === tmp0_other_with_cast.wm_1))
+    if (!(this.eo_1 === tmp0_other_with_cast.eo_1))
       return false;
-    if (!equals(this.xm_1, tmp0_other_with_cast.xm_1))
+    if (!equals(this.fo_1, tmp0_other_with_cast.fo_1))
       return false;
-    if (!this.ym_1.equals(tmp0_other_with_cast.ym_1))
+    if (!this.go_1.equals(tmp0_other_with_cast.go_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.cm_1 = x;
-    this.dm_1 = y;
-    this.em_1 = degrees;
+    this.hm_1 = x;
+    this.im_1 = y;
+    this.jm_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.cm_1 + ', y=' + this.dm_1 + ', degrees=' + this.em_1 + ')';
+    return 'Fragment(x=' + this.hm_1 + ', y=' + this.im_1 + ', degrees=' + this.jm_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.cm_1);
-    result = imul(result, 31) + getNumberHashCode(this.dm_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.em_1) | 0;
+    var result = getNumberHashCode(this.hm_1);
+    result = imul(result, 31) + getNumberHashCode(this.im_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.jm_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -9176,11 +9815,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof Fragment))
       return false;
     var tmp0_other_with_cast = other instanceof Fragment ? other : THROW_CCE();
-    if (!equals(this.cm_1, tmp0_other_with_cast.cm_1))
+    if (!equals(this.hm_1, tmp0_other_with_cast.hm_1))
       return false;
-    if (!equals(this.dm_1, tmp0_other_with_cast.dm_1))
+    if (!equals(this.im_1, tmp0_other_with_cast.im_1))
       return false;
-    if (!equals(this.em_1, tmp0_other_with_cast.em_1))
+    if (!equals(this.jm_1, tmp0_other_with_cast.jm_1))
       return false;
     return true;
   };
@@ -9195,22 +9834,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.nl_1 = 1725;
-    this.ol_1 = 0.42;
-    this.pl_1 = 62.0;
-    this.ql_1 = 620;
-    this.rl_1 = 260;
-    this.sl_1 = 271;
-    this.tl_1 = 0.35;
+    this.sl_1 = 1725;
+    this.tl_1 = 0.42;
+    this.ul_1 = 62.0;
+    this.vl_1 = 620;
+    this.wl_1 = 260;
+    this.xl_1 = 271;
+    this.yl_1 = 0.35;
   }
-  protoOf(ResultsAnim).hn = function (revealing) {
+  protoOf(ResultsAnim).po = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).km = function (revealing, reducedMotion) {
-    var impactAt = this.in((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).pm = function (revealing, reducedMotion) {
+    var impactAt = this.qo((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).in = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).qo = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -9221,35 +9860,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).ul = function (progress, revealing) {
+  protoOf(ResultsAnim).zl = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.hn(true);
+    var share = 620 / this.po(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).vl = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.hn(true);
+  protoOf(ResultsAnim).am = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.po(true);
   };
-  protoOf(ResultsAnim).wl = function (progress, revealing) {
+  protoOf(ResultsAnim).bm = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.hn(true);
+    var start = 880 / this.po(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).jn = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).ro = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).xl = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).cm = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.jn(progress, direction, maxDegrees) : $super.jn.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.ro(progress, direction, maxDegrees) : $super.ro.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).yl = function (topple) {
+  protoOf(ResultsAnim).dm = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).am = function (board) {
+  protoOf(ResultsAnim).fm = function (board) {
     var lowest = board.h8_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -9272,17 +9911,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).bm = function (input) {
+  protoOf(ResultsAnim).gm = function (input) {
     var startX = input.x7();
     var startY = input.y7();
-    var pivotX = input.zm();
-    var pivotY = input.an();
-    var cellPx = input.bn();
-    var groundY = input.cn();
-    var cellX = input.dn();
-    var cellY = input.en();
-    var impact = input.fn();
-    var direction = input.gn();
+    var pivotX = input.ho();
+    var pivotY = input.io();
+    var cellPx = input.jo();
+    var groundY = input.ko();
+    var cellX = input.lo();
+    var cellY = input.mo();
+    var impact = input.no();
+    var direction = input.oo();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -9318,19 +9957,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.fm_1 = 12;
-    this.gm_1 = new Long(300, 0);
+    this.km_1 = 12;
+    this.lm_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).kn = function (combo) {
+  protoOf(SoundLadder).so = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).ln = function (combo) {
+  protoOf(SoundLadder).to = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.kn(combo) / 12.0;
+    var x = this.so(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).hm = function (combo, rows, index) {
-    return this.ln(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).mm = function (combo, rows, index) {
+    return this.to(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -9339,16 +9978,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.mn_1 = field;
-    this.nn_1 = crates;
+    this.uo_1 = field;
+    this.vo_1 = crates;
   }
   function Stop(at, color) {
-    this.uk_1 = at;
-    this.vk_1 = color;
+    this.vk_1 = at;
+    this.wk_1 = color;
   }
   function Starts(board, rows) {
-    this.on_1 = board;
-    this.pn_1 = rows;
+    this.wo_1 = board;
+    this.xo_1 = rows;
   }
   function blend$mix($from, $to, f, shift) {
     var a = $from >> shift & 255;
@@ -9357,28 +9996,28 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function TowerBands() {
     TowerBands_instance = this;
-    this.hi_1 = new Long(182, 0);
-    this.ii_1 = Medal_SUMMIT_getInstance().pg_1;
-    this.ji_1 = this.ii_1.k() + 1 | 0;
-    this.ki_1 = 3;
-    this.li_1 = 0;
+    this.ii_1 = new Long(182, 0);
+    this.ji_1 = Medal_SUMMIT_getInstance().pg_1;
+    this.ki_1 = this.ji_1.k() + 1 | 0;
+    this.li_1 = 3;
+    this.mi_1 = 0;
     var tmp = this;
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$0 = new Int32Array([0, 0, 0]);
-    tmp.mi_1 = new Band_0(16777215, tmp$ret$0);
-    this.ni_1 = new Long(1284865837, 1481765933);
-    this.oi_1 = new Long(-144211633, 335903614);
-    this.pi_1 = this.ti(new Long(0, 0));
-    this.qi_1 = 2.0;
-    this.ri_1 = null;
-    this.si_1 = 1.0E-4;
+    tmp.ni_1 = new Band_0(16777215, tmp$ret$0);
+    this.oi_1 = new Long(1284865837, 1481765933);
+    this.pi_1 = new Long(-144211633, 335903614);
+    this.qi_1 = this.ui(new Long(0, 0));
+    this.ri_1 = 2.0;
+    this.si_1 = null;
+    this.ti_1 = 1.0E-4;
   }
-  protoOf(TowerBands).ti = function (runSeed) {
-    var deck = toMutableList(TowerPaletteBank_getInstance().qn_1);
-    var bands = ArrayList_init_$Create$_0(this.ji_1);
+  protoOf(TowerBands).ui = function (runSeed) {
+    var deck = toMutableList(TowerPaletteBank_getInstance().yo_1);
+    var bands = ArrayList_init_$Create$_0(this.ki_1);
     var seed = runSeed;
     // Inline function 'kotlin.repeat' call
-    var times = this.ji_1 - 1 | 0;
+    var times = this.ki_1 - 1 | 0;
     // Inline function 'kotlin.contracts.contract' call
     var inductionVariable = 0;
     if (inductionVariable < times)
@@ -9390,27 +10029,27 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         bands.d(deck.f2((seed.s1(33).t1() & 2147483647) % deck.k() | 0));
       }
        while (inductionVariable < times);
-    bands.d(this.mi_1);
+    bands.d(this.ni_1);
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).rn = function (placedOn, platformRows) {
-    return this.sn(placedOn - platformRows | 0);
+  protoOf(TowerBands).zo = function (placedOn, platformRows) {
+    return this.ap(placedOn - platformRows | 0);
   };
-  protoOf(TowerBands).xk = function (board) {
-    return this.rn(board.s8_1, board.k8_1);
+  protoOf(TowerBands).yk = function (board) {
+    return this.zo(board.s8_1, board.k8_1);
   };
-  protoOf(TowerBands).tn = function (board) {
-    var tmp0_safe_receiver = this.ri_1;
+  protoOf(TowerBands).bp = function (board) {
+    var tmp0_safe_receiver = this.si_1;
     if (tmp0_safe_receiver == null)
       null;
     else {
       // Inline function 'kotlin.let' call
       // Inline function 'kotlin.contracts.contract' call
-      if (tmp0_safe_receiver.on_1 === board)
-        return tmp0_safe_receiver.pn_1;
+      if (tmp0_safe_receiver.wo_1 === board)
+        return tmp0_safe_receiver.xo_1;
     }
     var tmp = 0;
-    var tmp_0 = this.ii_1.k();
+    var tmp_0 = this.ji_1.k();
     var tmp_1 = new Int32Array(tmp_0);
     while (tmp < tmp_0) {
       tmp_1[tmp] = 2147483647;
@@ -9430,7 +10069,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var x = inductionVariable_0;
             inductionVariable_0 = inductionVariable_0 + 1 | 0;
             var on = board.r9(x, y);
-            var band = on === 0 ? 0 : this.rn(on, board.k8_1);
+            var band = on === 0 ? 0 : this.zo(on, board.k8_1);
             if (band > 0 && on < rows[band - 1 | 0]) {
               rows[band - 1 | 0] = on;
             }
@@ -9439,7 +10078,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       }
        while (inductionVariable < last);
     var inductionVariable_1 = 1;
-    var last_1 = this.xk(board);
+    var last_1 = this.yk(board);
     if (inductionVariable_1 <= last_1)
       do {
         var band_0 = inductionVariable_1;
@@ -9449,16 +10088,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         }
       }
        while (!(band_0 === last_1));
-    this.ri_1 = new Starts(board, rows);
+    this.si_1 = new Starts(board, rows);
     return rows;
   };
-  protoOf(TowerBands).un = function (from, to, t) {
+  protoOf(TowerBands).cp = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).sn = function (boxes) {
+  protoOf(TowerBands).ap = function (boxes) {
     var band = 0;
-    while (band < this.ii_1.k() && boxes >= this.ii_1.j(band)) {
+    while (band < this.ji_1.k() && boxes >= this.ji_1.j(band)) {
       band = band + 1 | 0;
     }
     return band;
@@ -9470,29 +10109,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().rn(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().zo(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().rn(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().zo(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
   }
   function shaft$positionOf($camera, row) {
-    return 1.0 - (row - $camera.vi_1) / $camera.wi_1;
+    return 1.0 - (row - $camera.wi_1) / $camera.xi_1;
   }
   function TowerPalette(bands) {
-    this.rk_1 = bands;
+    this.sk_1 = bands;
     var tmp = this;
     // Inline function 'kotlin.arrayOfNulls' call
-    var size = TowerBands_getInstance().ji_1;
-    tmp.sk_1 = fillArrayVal(Array(size), null);
+    var size = TowerBands_getInstance().ki_1;
+    tmp.tk_1 = fillArrayVal(Array(size), null);
   }
-  protoOf(TowerPalette).vn = function (camera, board, reached) {
-    return this.wn(camera, TowerBands_getInstance().tn(board), reached);
+  protoOf(TowerPalette).dp = function (camera, board, reached) {
+    return this.ep(camera, TowerBands_getInstance().bp(board), reached);
   };
-  protoOf(TowerPalette).tk = function (camera, board, reached, $super) {
-    reached = reached === VOID ? TowerBands_getInstance().xk(board) : reached;
-    return $super === VOID ? this.vn(camera, board, reached) : $super.vn.call(this, camera, board, reached);
+  protoOf(TowerPalette).uk = function (camera, board, reached, $super) {
+    reached = reached === VOID ? TowerBands_getInstance().yk(board) : reached;
+    return $super === VOID ? this.dp(camera, board, reached) : $super.dp.call(this, camera, board, reached);
   };
-  protoOf(TowerPalette).wn = function (camera, starts, reached) {
+  protoOf(TowerPalette).ep = function (camera, starts, reached) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 1;
     if (inductionVariable <= reached)
@@ -9519,38 +10158,54 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp;
       // Inline function 'kotlin.collections.isNotEmpty' call
       if (!stops.i()) {
-        tmp = at_0 - stops.j(stops.k() - 1 | 0).uk_1 < 1.0E-4;
+        tmp = at_0 - stops.j(stops.k() - 1 | 0).vk_1 < 1.0E-4;
       } else {
         tmp = false;
       }
       if (tmp)
         continue $l$loop_0;
-      var row_0 = camera.vi_1 + (1.0 - at_0) * camera.wi_1;
-      stops.d(new Stop(at_0, this.xn(row_0, starts, reached)));
+      var row_0 = camera.wi_1 + (1.0 - at_0) * camera.xi_1;
+      stops.d(new Stop(at_0, this.fp(row_0, starts, reached)));
     }
     return stops;
   };
-  protoOf(TowerPalette).xn = function (row, starts, reached) {
+  protoOf(TowerPalette).fp = function (row, starts, reached) {
     var band = 0;
     while (band < reached && row >= starts[band]) {
       band = band + 1 | 0;
     }
     if (band === reached)
-      return this.al(band);
+      return this.bl(band);
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
-      return this.al(band);
-    return TowerBands_getInstance().un(this.al(band), this.al(band + 1 | 0), into / 2.0);
+      return this.bl(band);
+    return TowerBands_getInstance().cp(this.bl(band), this.bl(band + 1 | 0), into / 2.0);
   };
-  protoOf(TowerPalette).al = function (band) {
-    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ji_1 - 1 | 0)).mn_1;
+  protoOf(TowerPalette).bl = function (band) {
+    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).uo_1;
   };
-  protoOf(TowerPalette).wk = function (id, band) {
+  protoOf(TowerPalette).xk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
-    return this.yk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
+    return this.zk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
   };
-  protoOf(TowerPalette).yk = function (slot, band) {
-    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ji_1 - 1 | 0)).nn_1[slot % 3 | 0];
+  protoOf(TowerPalette).zk = function (slot, band) {
+    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).vo_1[slot % 3 | 0];
+  };
+  protoOf(TowerPalette).cl = function (band) {
+    var index = coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0);
+    var tmp0_elvis_lhs = this.tk_1[index];
+    var tmp;
+    if (tmp0_elvis_lhs == null) {
+      // Inline function 'kotlin.also' call
+      var this_0 = Companion_getInstance_17().tn(this.sk_1.j(index).uo_1, this.sk_1.j(index).vo_1);
+      // Inline function 'kotlin.contracts.contract' call
+      // Inline function 'com.boxstack.presentation.TowerPalette.chrome.<anonymous>' call
+      this.tk_1[index] = this_0;
+      tmp = this_0;
+    } else {
+      tmp = tmp0_elvis_lhs;
+    }
+    return tmp;
   };
   function TowerPaletteBank() {
     TowerPaletteBank_instance = this;
@@ -9944,7 +10599,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_128 = new Band_0(2367277, tmp$ret$128);
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$129 = new Int32Array([14671448, 10975704, 7579609]);
-    tmp.qn_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, tmp_44, tmp_45, tmp_46, tmp_47, tmp_48, tmp_49, tmp_50, tmp_51, tmp_52, tmp_53, tmp_54, tmp_55, tmp_56, tmp_57, tmp_58, tmp_59, tmp_60, tmp_61, tmp_62, tmp_63, tmp_64, tmp_65, tmp_66, tmp_67, tmp_68, tmp_69, tmp_70, tmp_71, tmp_72, tmp_73, tmp_74, tmp_75, tmp_76, tmp_77, tmp_78, tmp_79, tmp_80, tmp_81, tmp_82, tmp_83, tmp_84, tmp_85, tmp_86, tmp_87, tmp_88, tmp_89, tmp_90, tmp_91, tmp_92, tmp_93, tmp_94, tmp_95, tmp_96, tmp_97, tmp_98, tmp_99, tmp_100, tmp_101, tmp_102, tmp_103, tmp_104, tmp_105, tmp_106, tmp_107, tmp_108, tmp_109, tmp_110, tmp_111, tmp_112, tmp_113, tmp_114, tmp_115, tmp_116, tmp_117, tmp_118, tmp_119, tmp_120, tmp_121, tmp_122, tmp_123, tmp_124, tmp_125, tmp_126, tmp_127, tmp_128, new Band_0(4522310, tmp$ret$129)]);
+    tmp.yo_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, tmp_44, tmp_45, tmp_46, tmp_47, tmp_48, tmp_49, tmp_50, tmp_51, tmp_52, tmp_53, tmp_54, tmp_55, tmp_56, tmp_57, tmp_58, tmp_59, tmp_60, tmp_61, tmp_62, tmp_63, tmp_64, tmp_65, tmp_66, tmp_67, tmp_68, tmp_69, tmp_70, tmp_71, tmp_72, tmp_73, tmp_74, tmp_75, tmp_76, tmp_77, tmp_78, tmp_79, tmp_80, tmp_81, tmp_82, tmp_83, tmp_84, tmp_85, tmp_86, tmp_87, tmp_88, tmp_89, tmp_90, tmp_91, tmp_92, tmp_93, tmp_94, tmp_95, tmp_96, tmp_97, tmp_98, tmp_99, tmp_100, tmp_101, tmp_102, tmp_103, tmp_104, tmp_105, tmp_106, tmp_107, tmp_108, tmp_109, tmp_110, tmp_111, tmp_112, tmp_113, tmp_114, tmp_115, tmp_116, tmp_117, tmp_118, tmp_119, tmp_120, tmp_121, tmp_122, tmp_123, tmp_124, tmp_125, tmp_126, tmp_127, tmp_128, new Band_0(4522310, tmp$ret$129)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -9954,37 +10609,37 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   //region block: post-declaration
   protoOf(InternalHashMap).w3 = containsAllEntries;
-  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).ui);
-  defineProp(protoOf(Engine), 'viewFollowsTop', protoOf(Engine).bj);
-  defineProp(protoOf(Engine), 'towerDetachSlop', protoOf(Engine).cj);
-  defineProp(protoOf(Engine), 'dragGain', protoOf(Engine).qj);
-  defineProp(protoOf(Engine), 'contactMs', protoOf(Engine).rj);
-  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).lk);
-  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).mk);
-  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).nk);
-  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).ok);
+  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).vi);
+  defineProp(protoOf(Engine), 'viewFollowsTop', protoOf(Engine).cj);
+  defineProp(protoOf(Engine), 'towerDetachSlop', protoOf(Engine).dj);
+  defineProp(protoOf(Engine), 'dragGain', protoOf(Engine).rj);
+  defineProp(protoOf(Engine), 'contactMs', protoOf(Engine).sj);
+  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).mk);
+  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).nk);
+  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).ok);
+  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).pk);
   defineProp(protoOf(Engine), 'rowCount', protoOf(Engine).t8);
-  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).pk);
+  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).qk);
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).ee);
-  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).qk);
-  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).zk);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).bl);
+  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).rk);
+  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).al);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).gl);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).d8);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).e8);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).cl);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).dl);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).el);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).fl);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).gl);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).hl);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).il);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).jl);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).kl);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).ll);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).zl);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).im);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).jm);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).lm);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).hl);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).il);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).jl);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).kl);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).ll);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).ml);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).nl);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).ol);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).pl);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).ql);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).em);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).nm);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).om);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).qm);
   //endregion
   //region block: init
   Unit_instance = new Unit();
@@ -10011,7 +10666,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   Companion_instance_14 = new Companion_14();
   Companion_instance_15 = new Companion_15();
   Companion_instance_16 = new Companion_16();
-  Companion_instance_17 = new Companion_17();
+  Companion_instance_18 = new Companion_18();
+  Companion_instance_19 = new Companion_19();
   PlayfieldGeometry_instance = new PlayfieldGeometry();
   ResultsAnim_instance = new ResultsAnim();
   //endregion
@@ -10071,6 +10727,15 @@ var SHOW_TITLE = /[?&]title=1/.test(location.search);
    instead, and a touch that lands on nothing is left to scroll the page it sits in. */
 var HOST_WEB = /[?&]host=web/.test(location.search);
 if (HOST_WEB) document.documentElement.style.touchAction = document.body.style.touchAction = "pan-y";
+/* `?host=palette` is the game inside the website's palette vote, which fills the screen with it
+   so a palette is judged on the game rather than on a swatch. The page sends the palette to wear
+   (`boxstack:palette`) whenever this says it is ready, which it does again after BUILD AGAIN
+   reloads it. Nothing of the advert's own is drawn — no way out, no speaker, no lesson — and
+   nothing ends a run but the tower falling, because somebody may play one while deciding.
+   `&pick=1` is the palette maker: a tap on a crate says which of the colours it wears
+   (`boxstack:pick`, 1 to 3) and a tap on the sky says the background (0). */
+var HOST_PALETTE = /[?&]host=palette/.test(location.search);
+var PICK = HOST_PALETTE && /[?&]pick=1/.test(location.search);
 
 /* Per-placement experiments are parameters rather than forks. Neither timed mode
    draws a countdown; the network owns skip/countdown chrome outside the creative. */
@@ -10114,6 +10779,9 @@ var OPEN_MAX_HEIGHT = 9;
    would be showing the game's help instead of its game. */
 var OPEN_LEAN_MIN = 0.56;
 var OPEN_LEAN_MAX = 0.74;
+/* The palette vote opens on a calmer tower. Its visitors are judging colours, and a gauge in the
+   red is the loudest thing on the screen; under the caution line, the fill is the band's own. */
+if (HOST_PALETTE) { OPEN_LEAN_MIN = 0.12; OPEN_LEAN_MAX = 0.38; }
 var CTA_FROM = 3.0;           // seconds before the persistent way out appears
 /* The wordmark over the live board at the start — `?title=1`, and off by
    default. **It gates nothing**: the board is live under it and the first touch
@@ -10146,6 +10814,19 @@ var C = {
 };
 function packedRgb(value) {
   return "#" + ("000000" + ((value >>> 0) & 0xffffff).toString(16)).slice(-6);
+}
+/* **The chrome wears the band the hand is dealt in, as the game's does.** The values above are
+   the night theme the band ladder starts from, and what these roles are drawn in before a run;
+   from the deal on, each is the band's field at night (`ChromePalette`), read from the engine
+   whenever the band can have changed. Amber, lemon and red are meanings and stay. */
+var CHROME_ROLES = {
+  nightTop: "CARD_TOP", nightBottom: "CARD_BOTTOM", background: "BACKGROUND",
+  panelRaised: "PANEL_RAISED", line: "LINE", frame: "FRAME", frameLit: "FRAME_LIT",
+  track: "BAR_TRACK", ink: "TEXT", inkDim: "TEXT_DIM", action: "ACTION",
+  barFill: "BAR_FILL", onAction: "BACKGROUND"
+};
+function wearChrome() {
+  for (var key in CHROME_ROLES) C[key] = packedRgb(E.chrome(CHROME_ROLES[key]));
 }
 /* CargoMaterial's unit-space drawing constants. PlayableParityTest pins these to the
    presentation module, because the browser has to paint them again. */
@@ -10188,7 +10869,7 @@ var SOUND_B64 = {
   topple: "T2dnUwACAAAAAAAAAAAsEfN8AAAAAPua+lMBHgF2b3JiaXMAAAAAAUSsAAAAAAAA8E8BAAAAAAC4AU9nZ1MAAAAAAAAAAAAALBHzfAEAAABY86b1D1r/////////////////kQN2b3JiaXM0AAAAWGlwaC5PcmcgbGliVm9yYmlzIEkgMjAyMDA3MDQgKFJlZHVjaW5nIEVudmlyb25tZW50KQEAAAASAAAARU5DT0RFUj1saWJzbmRmaWxlAQV2b3JiaXMmQkNWAQAIAACAIkwYxIDQkFUAABAAAKCsN5Z7yL333nuBqEcUe4i9995746xH0HqIuffee+69pxp7y7333nMgNGQVAAAEAIApCJpy4ELqvfceGeYRURoqx733HhmFiTCUGYU9ldpa6yGT3ELqPeceCA1ZBQAAAgBACCGEFFJIIYUUUkghhRRSSCmlmGKKKaaYYsoppxxzzDHHIIMOOuikk1BCCSmkUEoqqaSUUkot1lpz7r0H3XPvQfgghBBCCCGEEEIIIYQQQghCQ1YBACAAAARCCCFkEEIIIYQUUkghpphiyimngNCQVQAAIACAAAAAAEmRFMuxHM3RHM3xHM8RJVESJdEyLdNSNVMzPVVURdVUVVdVXV13bdV2bdWWbddWbdV2bdVWbVm2bdu2bdu2bdu2bdu2bdu2bSA0ZBUAIAEAoCM5kiMpkiIpkuM4kgSEhqwCAGQAAAQAoCiK4ziO5EiOJWmSZnmWZ4maqJma6KmeCoSGrAIAAAEABAAAAAAA4HiK53iOZ3mS53iOZ3map2mapmmapmmapmmapmmapmmapmmapmmapmmapmmapmmapmmapmmapmmapmlAaMgqAEACAEDHcRzHcRzHcRxHciQHCA1ZBQDIAAAIAEBSJMdyLEdzNMdzPEd0RMd0TMmUVMm1XAsIDVkFAAACAAgAAAAAAEATLEVTPMeTPM8TNc/TNM0TTVE0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TdM0TVMUgdCQVQAABAAAIZ1mlmqACDOQYSA0ZBUAgAAAABihCEMMCA1ZBQAABAAAiKHkIJrQmvPNOQ6a5aCpFJvTwYlUmye5qZibc84555xszhnjnHPOKcqZxaCZ0JpzzkkMmqWgmdCac855EpsHranSmnPOGeecDsYZYZxzzmnSmgep2Vibc85Z0JrmqLkUm3POiZSbJ7W5VJtzzjnnnHPOOeecc86pXpzOwTnhnHPOidqba7kJXZxzzvlknO7NCeGcc84555xzzjnnnHPOCUJDVgEAQAAABGHYGMadgiB9jgZiFCGmIZMedI8Ok6AxyCmkHo2ORkqpg1BSGSeldILQkFUAACAAAIQQUkghhRRSSCGFFFJIIYYYYoghp5xyCiqopJKKKsoos8wyyyyzzDLLrMPOOuuwwxBDDDG00kosNdVWY4215p5zrjlIa6W11lorpZRSSimlIDRkFQAAAgBAIGSQQQYZhRRSSCGGmHLKKaegggoIDVkFAAACAAgAAADwJM8RHdERHdERHdERHdERHc/xHFESJVESJdEyLVMzPVVUVVd2bVmXddu3hV3Ydd/Xfd/XjV8XhmVZlmVZlmVZlmVZlmVZlmUJQkNWAQAgAAAAQgghhBRSSCGFlGKMMcecg05CCYHQkFUAACAAgAAAAABHcRTHkRzJkSRLsiRN0izN8jRP8zTRE0VRNE1TFV3RFXXTFmVTNl3TNWXTVWXVdmXZtmVbt31Ztn3f933f933f933f933f13UgNGQVACABAKAjOZIiKZIiOY7jSJIEhIasAgBkAAAEAKAojuI4jiNJkiRZkiZ5lmeJmqmZnumpogqEhqwCAAABAAQAAAAAAKBoiqeYiqeIiueIjiiJlmmJmqq5omzKruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6ruu6QGjIKgBAAgBAR3IkR3IkRVIkRXIkBwgNWQUAyAAACADAMRxDUiTHsixN8zRP8zTREz3RMz1VdEUXCA1ZBQAAAgAIAAAAAADAkAxLsRzN0SRRUi3VUjXVUi1VVD1VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVXVNE3TNIHQkJUAABAAAA06+Bp7yZjEkntojEIMeuuYc456zYwiyHHsEDOIeQuVIwR5jZlEiHEgNGRFABAFAAAYgxxDzCHnnKROUuSco9JRapxzlDpKHaUUa8q1o1RiS7U2zjlKHaWMUsq1tNpRSrWmGgsAAAhwAAAIsBAKDVkRAEQBABAIIaWQUkgp5pxyDimlnGPOIaaUc8o55ZyD0kmpnHPSOSmRUso55ZxyzknpnFTOOSmdhAIAAAIcAAACLIRCQ1YEAHECAA7H8TxJ00RR0jRR9EzRdT3RdF1J00xTE0VV1URRVU1XtW3RVGVb0jTT1ERRVTVRVFVRNW3ZVFXb9kzTlk3X1W1RVXVbtm1heG3b9z3TtG1RVW3ddF1bd23Z92Vb141H00xTE0VX1URRdU1X1W1TdW1dE0XXFVVXlkXVlWVXlnVflWXd10TRdUXVlF1RdWVblV3fdmVZ903X9XVVloVflWXht3VdGG7fN55RVXVflV3fV2XZF27dNn7b94Vn0jTT1ETRVTXRVF3TVXXddF3b1kTRdUVXtWXRVF3ZlW3fV13Z9jVRdF3RVWVZdFVZVmXZ911Z9nVRVX1blWXfV13Z923fF4bZ1n3hdF1dV2XZF1ZZ9n3b15Xl1nXh+EzTtk3X1XXTdX3f9nVnmXVd+EXX9X1Vln1jtWVf+IXfqfvG8Yyqquuq7Qq/KsvCsAu789y+L5R12/ht3Wfcvo/x4/zGkWvbwjHrtnPcvq4sv/MzfmVYeqZp26br+rrpur4v67ox3L6vFFXV11VbNobVlYXjFn7j2H3hOEbX9X1Vln1jtWVh2H3feH5heJ7Xto3h9n3KbOtGH3yf8sy6je37xnL7Oud3js7wDAkAABhwAAAIMKEMFBqyIgCIEwBgEHIOMQUhUgxCCCGlDkJKEWMQMuekZMxJCaWkFkpJLWIMQuaYlMw5KaGUlkIpLYUSWgulxBZKaa21VmtqLdYQSmuhlBhDKS2m1mpMrdUaMQYhc05K5pyUUkproZTWMueodA5S6iCklFJqsaQUY+WclAw6Kh2ElEoqMZWUYgypxFZSirWkVGNrseUWY86hlBZLKrGVlGJtMeUYY8w5YgxC5pyUzDkpoZTWSkktVs5J6SCklDkoqaQUYykpxcw5SR2ElDroKJWUYkwtxRZKia2kVGMpqcUWY84txVhDSS2WlGItKcXYYsy5xZZbB6G1kEqMoZQYW4w5t9ZqDaXEWFKKtaRUY4y19hhjzqGUGEsqNZaUYm019tpirDm1lmtqseYWY8+15dZrzr2n1mpNseXaYsw95hhkzbkHD0JroZQWQykxttZqbTHmHEqJraRUYykp1hhjzi3W2kMpMZaUYi0p1RpjzDnW2GtqLdcWY8+pxZprzsHHmGNPLdYcY8w9xZZrzbn3mluQBQAADDgAAASYUAYKDVkJAEQBABCEKMUYhAYhxpyT0CDEmHNSKsacg5BKxZhzEErKnINQSkqZcxBKSSmUkkpKrYVSSkqptQIAAAocAAACbNCUWByg0JCVAEAqAIDBcSzL80RRNWXZsSTPE0XTVFXbdizL80TRNFXVti3PE0XTVFXX1XXL80TRVFXVdXXdE0XVVFXXlWXf90TRNFXVdWXZ903TdFXXlWXb9n3TNFXXdWVZtn1hdVXXlWXb1m1jWFXXdWXZtm1dOW7d1nXhF4ZhmNq67vu+LwzH8EwDAMATHACACmxYHeGkaCyw0JCVAEAGAABhDEIGIYUMQkghhZRCSCklAABgwAEAIMCEMlBoyEoAIBUAACDEWmuttdZaYqm11lprrbWGSmuttdZaa6211lprrbXWWmuttdZaa6211lprrbXWWmuttZRSSimllFJKKaWUUkoppZRSSimllFJKKaWUUkoppZRSSimllFJKKaWUUkoppZRSSimllFJKKRUA6FfhAOD/YMPqCCdFY4GFhqwEAMIBAABjlGIMOukkpNQw5RiEUlJJpZVGMecglJJSSq1VzklIpaXWWouxck5KSSm1FluMHYSUWmotxhhj7CCklFprMcYYYyilpRhjrDHWWkNJqbUYY4w111pSai3GWmutufeSUosxxlxr7rmX1mKsteacc849tRZjrTXn3HPwqbUYY8619957UK3FWGuuOQfhewEA3A0OABAJNs6wknRWOBpcaMhKACAkAIBAiDHGnHMOQgghREox5pxzEEIIIYRIKcaccw5CCCGEkDHmnHMQQgihlFIyxpxzDkIIJZRQSuaccxBCCKGUUkrJnHMOQgghlFJKKR10EEIIoZRSSimlcw5CCKGUUkoppYQQQiillFJKKaWUEEIIpZRSSimllBJCCKWUUkoppZRSQgihlFJKKaWkUkoIoZRSSimllFJKCSGUUkoppZRSSimhhFJKKaWUUkopJZRQSimllFJKKqUUAABw4AAAEGAEnWRUWYSNJlx4AAoNWQkAAAEAIM5abClGRjHnIIbIIMQghgopxZy1DCmDHKZMKYSUlc4xhoiTFlsLFQMAAEAQAEAgZAKBAigwkAEABwgJUgBAYYGhQ4QIEKPAwLi4tAEACEJkhkhELAaJCdVAUTEdACwuMOQDQIbGRtrFBXQZ4IIu7joQQhCCEMTiAApIwMEJNzzxhifc4ASdolIHAQAAAABwAAAPAADHBhAR0RxHh8cHSIjICElJ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"
 };
 var audio = null;          // null untried, false unavailable, else the context
-var muted = false;
+var muted = HOST_PALETTE;  // the palette vote is about how it looks, and is silent
 
 /* **Built at load, started on the first touch.** Constructing a context and
    decoding into it needs no gesture — only *starting* a sound does — and doing
@@ -10268,6 +10949,7 @@ for (var tries = 0; tries < 200 && isNaN(openLean); tries++) {
   );
 }
 if (isNaN(openLean)) throw new Error("No coached opening found");
+wearChrome();
 
 var G = {
   t: 0, runT: 0, endT: 0,
@@ -10305,7 +10987,8 @@ function report(name, extra) {
     name: name, seconds: Math.round(G.clock * 10) / 10,
     placements: E.placedCount, rows: E.rowsCompleted, score: E.score,
     placementMode: PLACEMENT_MODE, endsOn: ENDS_ON,
-    ctaStyle: CTA_STYLE, branded: SHOW_TITLE, host: HOST_WEB ? "web" : "network"
+    ctaStyle: CTA_STYLE, branded: SHOW_TITLE,
+    host: HOST_WEB ? "web" : HOST_PALETTE ? "palette" : "network"
   };
   if (extra) for (var key in extra) if (Object.prototype.hasOwnProperty.call(extra, key)) {
     detail[key] = extra[key];
@@ -10372,7 +11055,7 @@ function bestMimeMove() {
 }
 
 function mimeFrame() {
-  if (G.started || E.placedCount > 0 || G.carried || G.falling || G.ended || G.idle < 0.65) return null;
+  if (HOST_PALETTE || G.started || E.placedCount > 0 || G.carried || G.falling || G.ended || G.idle < 0.65) return null;
   var move = bestMimeMove(); if (!move) return null;
   var phase = ((G.idle - 0.65) % 2.8) / 2.8;
   var travel = ease(Math.max(0, Math.min(1, (phase - 0.10) / 0.56)));
@@ -11481,7 +12164,7 @@ function muteX() { return 12; }
 function drawCta() {
   // The result has its own large install action. Keeping this one as well made
   // two controls compete for the same destination on the final impression.
-  if (HOST_WEB || G.ended || G.t < CTA_FROM) { G.ctaButton = null; return; }
+  if (HOST_WEB || HOST_PALETTE || G.ended || G.t < CTA_FROM) { G.ctaButton = null; return; }
   var h = utilitySize(), w = ctaWidth(), x = ctaX(), y = 10;
   ctx.globalAlpha = 0.94;
   ctx.fillStyle = C.crane; rr(x, y, w, h, h / 2); ctx.fill();
@@ -11512,7 +12195,7 @@ function drawCta() {
    network's own mute, where there is one, sits outside the creative and this
    does not fight it. */
 function drawMute() {
-  if (G.ended) { G.muteButton = null; return; }
+  if (G.ended || HOST_PALETTE) { G.muteButton = null; return; }
   var s = utilitySize(), x = muteX(), y = 10;
   ctx.globalAlpha = 0.85;
   ctx.fillStyle = C.panelRaised; rr(x, y, s, s, 8); ctx.fill();
@@ -11618,7 +12301,10 @@ function drop() {
   var sh = handShape(c.slot); if (!sh) { G.carried = null; return; }
   // Let go over the hand and it goes back, as in the game: a tap on a crate is
   // not a drop, and a change of mind costs nothing.
-  if (c.returning) { G.carried = null; G.projected = null; return; }
+  if (c.returning) {
+    if (PICK && Math.abs(c.px - c.anchorFingerX) < 12) pick(E.handSlot(E.handOrdinal(c.slot)) + 1);
+    G.carried = null; G.projected = null; return;
+  }
   var col = aimedColumn();
   if (E.landingY(c.slot, col) < 0) { G.carried = null; return; }  // put back, no penalty
   G.falling = { shape: sh, slot: c.slot, x: col, to: E.landingY(c.slot, col),
@@ -11646,12 +12332,16 @@ function land() {
     };
   }
   shapeCache = [null, null, null];
+  wearChrome();
   if (E.isToppled) { startFall(false, "topple"); return; }
   if (ENDS_ON === "crates" && E.placedCount >= CRATE_LIMIT) startFall(true, "crate_limit");
 }
 
 var last = 0;
 function frame(now) {
+  // A frame hidden by the page around it has no size to draw at. Wait for it to come back
+  // rather than drawing into nothing, and without counting the time away as play.
+  if (!cvs.clientWidth || !cvs.clientHeight) { last = 0; requestAnimationFrame(frame); return; }
   var dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
   last = now;
   G.t += dt;
@@ -11674,7 +12364,8 @@ function frame(now) {
     G.clock += dt;
     // Never take the run away between release and landing: that loses a placement
     // already made. The safety limit is invisible and ends on the intact tower.
-    var limit = ENDS_ON === "time" ? TIME_LIMIT : (ENDS_ON === "loss" ? SAFETY_LIMIT : Infinity);
+    var limit = ENDS_ON === "time" ? TIME_LIMIT :
+      (ENDS_ON === "loss" && !HOST_PALETTE ? SAFETY_LIMIT : Infinity);
     if (G.clock >= limit && !G.carried && !G.falling) {
       startFall(true, ENDS_ON === "loss" ? "safety" : "time_limit");
     }
@@ -11682,7 +12373,9 @@ function frame(now) {
   // A stranger who never touched it: end it rather than leave the tab spinning.
   // Not on a website, where the demo waits on a page somebody may still be
   // reading, and ending it there would greet them with a result they never played.
-  if (!HOST_WEB && !G.started && !G.ended && !G.fall && G.runT > SAFETY_LIMIT) startFall(true, "idle");
+  if (!HOST_WEB && !HOST_PALETTE && !G.started && !G.ended && !G.fall && G.runT > SAFETY_LIMIT) {
+    startFall(true, "idle");
+  }
 
   if (cvs.clientWidth !== lastW || cvs.clientHeight !== lastH) {
     lastW = cvs.clientWidth; lastH = cvs.clientHeight; layout();
@@ -11746,7 +12439,7 @@ function down(e) {
   if (G.ended) {
     if (inBox(G.endCtaButton, p, 8)) {
       take();
-      if (HOST_WEB && !demoFinished()) buildAgain(); else openStore("result");
+      if (HOST_PALETTE || (HOST_WEB && !demoFinished())) buildAgain(); else openStore("result");
     }
     return;
   }
@@ -11771,6 +12464,9 @@ function down(e) {
   if (inBox(L.shaft, p) && (!HOST_WEB || towerHidden())) {
     take();
     beginScroll(p);
+  } else if (PICK && inBox(traySlotArea(), p)) {
+    take();
+    pick(0);
   }
 }
 function move(e) {
@@ -11823,7 +12519,7 @@ function towerHidden() {
 }
 function beginScroll(p) {
   G.fling = 0;
-  G.scroll = { y: p.y, pull: 0, engaged: false, t: performance.now(), v: 0 };
+  G.scroll = { x: p.x, y0: p.y, y: p.y, pull: 0, engaged: false, t: performance.now(), v: 0 };
 }
 function moveScroll(p) {
   var sc = G.scroll, dy = p.y - sc.y;
@@ -11845,6 +12541,7 @@ function moveScroll(p) {
 function endScroll() {
   var sc = G.scroll;
   G.scroll = null;
+  if (PICK && !sc.engaged) pickAt(sc.x, sc.y0);
   // A finger that stopped before letting go has nothing to coast on.
   if (sc.engaged && performance.now() - sc.t < 90 && Math.abs(sc.v) > 2) {
     G.fling = Math.max(-60, Math.min(60, sc.v));
@@ -11899,8 +12596,45 @@ function openStore(source) {
   setTimeout(function () { ctaFired = false; }, 900);
 }
 
+/* ------------------------------------------------------------- palette vote --
+   See `HOST_PALETTE`. The page and this frame are one site, so each only listens to its own
+   origin. */
+function toPage(message) {
+  try { parent.postMessage(message, location.origin === "null" ? "*" : location.origin); } catch (err) {}
+}
+function pick(slot) { toPage({ type: "boxstack:pick", slot: slot }); }
+/** What the tap at ([x], [y]) in the shaft landed on: a crate's colour, or the background. */
+function pickAt(x, y) {
+  var col = Math.floor((x - L.shaft.x) / L.cell);
+  var row = Math.floor(viewTopRow() - (y - L.fieldTop) / L.cell);
+  var slot = col >= 0 && col < E.boardWidth ? E.cellSlot(col, row) : -1;
+  pick(slot + 1);
+}
+/** The dealer's mat, which wears the background. */
+function traySlotArea() {
+  var a = traySlot(0), b = traySlot(E.handSize - 1);
+  if (!a || !b) return null;
+  var x = Math.min(a.x, b.x), y = Math.min(a.y, b.y);
+  return { x: x, y: y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y };
+}
+function hexValue(hex) {
+  return typeof hex === "string" && /^[0-9A-Fa-f]{6}$/.test(hex) ? parseInt(hex, 16) : -1;
+}
+if (HOST_PALETTE) {
+  addEventListener("message", function (e) {
+    if (e.origin !== location.origin || e.source !== parent) return;
+    var d = e.data;
+    if (!d || d.type !== "boxstack:palette" || !d.crates || d.crates.length !== 3) return;
+    var four = [d.field].concat(d.crates).map(hexValue);
+    if (four.indexOf(-1) >= 0) return;
+    E.usePalette(four[0], four[1], four[2], four[3]);
+    shapeCache = [null, null, null];
+    wearChrome();
+  });
+}
+
 layout();
-setTimeout(function () { report("ready"); }, 0);
+setTimeout(function () { report("ready"); if (HOST_PALETTE) toPage({ type: "boxstack:ready" }); }, 0);
 requestAnimationFrame(frame);
 </script>
 </body>

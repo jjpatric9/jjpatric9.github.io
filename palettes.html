@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pick Box Stack's colours · TallmanGames</title>
-<meta name="description" content="Help pick the colours Box Stack's towers climb through. Vote on palettes, make your own, or mark the ones in the game you'd rather lose.">
+<meta name="description" content="Help pick the colours Box Stack's towers climb through. See each palette on a real game, full screen: vote on new ones, vote out ones in the game, or make your own.">
 <link rel="canonical" href="https://tallman-games.com/palettes.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TallmanGames">
@@ -40,74 +40,108 @@
   <h1>Pick Box Stack's colours</h1>
   <p class="lede">
     Every tower in Box Stack climbs through bands of colour, and I'd love your help choosing them.
+    Each palette is shown on a real game, filling your screen, so you see it the way you'd play it.
   </p>
 
   <noscript><p class="callout">This page needs JavaScript to show the palettes.</p></noscript>
 
-  <div class="tabs" role="tablist" aria-label="Ways to help">
-    <button role="tab" id="tab-vote" aria-controls="panel-vote" aria-selected="true">Vote</button>
-    <button role="tab" id="tab-make" aria-controls="panel-make" aria-selected="false" tabindex="-1">Make one</button>
-    <button role="tab" id="tab-game" aria-controls="panel-game" aria-selected="false" tabindex="-1">In the game</button>
+  <p class="meta" id="load-status" aria-live="polite">Loading palettes…</p>
+
+  <div class="ways" id="ways" hidden>
+    <button class="way" id="go-vote" data-mode="vote">
+      <span class="way-art tower" id="art-vote" aria-hidden="true"></span>
+      <span class="way-text">
+        <strong>Vote on new palettes</strong>
+        <span>Yes or no, one at a time</span>
+      </span>
+    </button>
+    <button class="way" id="go-game" data-mode="game">
+      <span class="way-art tower" id="art-game" aria-hidden="true"></span>
+      <span class="way-text">
+        <strong>Vote palettes out of the game</strong>
+        <span>Keep or remove the ones in it now</span>
+      </span>
+    </button>
+    <button class="way" id="go-make" data-mode="make">
+      <span class="way-art tower" id="art-make" aria-hidden="true"></span>
+      <span class="way-text">
+        <strong>Make your own</strong>
+        <span>Pick four colours and add them to the vote</span>
+      </span>
+    </button>
   </div>
 
-  <!-- ------------------------------------------------------------------ vote -->
-  <section id="panel-vote" role="tabpanel" aria-labelledby="tab-vote">
-    <p class="meta" id="vote-status" aria-live="polite">Loading palettes…</p>
+  <p class="meta" id="sync" aria-live="polite"></p>
 
-    <div id="vote-deck" hidden>
-      <div class="ask">
-        <h2>Want this in the game?</h2>
-        <span class="meta" id="vote-progress" aria-live="polite"></span>
-      </div>
-      <div class="stage">
-        <div class="swipe" id="vote-swipe">
-          <div class="tower big" id="vote-tower" role="img"></div>
-          <span class="verdict keep" aria-hidden="true">Yes</span>
-          <span class="verdict skip" aria-hidden="true">No</span>
-          <span class="tag" id="vote-tag" hidden>Made by a player</span>
-        </div>
-      </div>
-      <div class="choose">
-        <button class="btn skip" id="vote-skip"><span aria-hidden="true">✕</span> No</button>
-        <button class="btn keep" id="vote-keep"><span aria-hidden="true">✓</span> Yes</button>
-      </div>
-      <div class="minor">
-        <button class="link" id="vote-undo" disabled>Undo</button>
-        <button class="link" id="vote-remix">Tweak this one</button>
-      </div>
-      <p class="meta hint">
-        <span class="by-touch">Or swipe the card: right for yes, left for no</span>
-        <span class="by-keys">Keys work too: → yes, ← no, Z to undo</span>
-      </p>
-    </div>
-
-    <div id="vote-done" hidden>
-      <h2 id="vote-done-text"></h2>
-      <div class="grid" id="vote-kept"></div>
-      <div class="choose">
-        <button class="btn primary" id="vote-more">Next 20</button>
-      </div>
-      <div class="minor">
-        <button class="link" id="vote-undo-last">Undo the last one</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ------------------------------------------------------------------ make -->
-  <section id="panel-make" role="tabpanel" aria-labelledby="tab-make" hidden>
-    <p class="intro">
-      A background and three crate colours. Pick one to change it, or
-      <button class="link inline" id="make-random-all">roll a random palette</button>.
+  <div class="privacy-note">
+    <h2>What this page saves</h2>
+    <p class="meta">
+      Your votes, the palettes you make and the ones you'd take out, along with a random ID your
+      browser makes up so each person only counts once. No name, no account, no cookies, and your
+      IP address isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's
+      colours. Your browser also remembers what you've already seen, on your device only, so you
+      don't get the same palette twice.
     </p>
+  </div>
 
-    <div class="tower big pickable" id="make-tower" role="img"></div>
 
-    <div class="slots" role="radiogroup" aria-label="Colour to change" id="make-slots">
-      <div class="slot-group"><div class="slot-row" id="make-slot-field"></div><span class="slot-name" aria-hidden="true">Background</span></div>
-      <div class="slot-group"><div class="slot-row three" id="make-slot-crates"></div><span class="slot-name" aria-hidden="true">Crates</span></div>
+</div>
+</main>
+
+<!-- The stage: the whole screen, a live game wearing the palette, and the choice about it. -->
+<div class="stage" id="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title" hidden>
+  <h2 class="sr-only" id="stage-title">Palette</h2>
+  <div class="stage-game">
+    <iframe id="game" title="Box Stack, wearing the palette"></iframe>
+    <p class="stage-loading" id="stage-loading">Loading the game…</p>
+
+    <div class="stage-top">
+      <button class="round" id="stage-close" aria-label="Close"><span aria-hidden="true">✕</span></button>
+      <span class="count" id="stage-count" aria-live="polite"></span>
+      <span class="spacer"></span>
+      <button class="round" id="stage-menu" aria-label="Options" aria-expanded="false" aria-controls="stage-options"><span aria-hidden="true">⋯</span></button>
+    </div>
+    <div class="stage-options" id="stage-options" hidden>
+      <label class="toggle">
+        <input type="checkbox" id="opt-cleanser">
+        <span><b>Palette cleanser</b><br>A plain grey screen for a moment between palettes</span>
+      </label>
+      <button class="link" id="opt-undo">Undo the last one</button>
+      <button class="link" id="opt-tweak">Tweak this one</button>
     </div>
 
-    <div class="editor">
+    <div class="stage-done" id="stage-done" hidden>
+      <div class="done-card">
+        <h2 id="done-text"></h2>
+        <p class="meta" id="done-note" hidden></p>
+        <div class="grid" id="done-grid"></div>
+        <div class="choose">
+          <button class="btn" id="done-close">Done</button>
+          <button class="btn primary" id="done-more">Next 20</button>
+        </div>
+        <div class="minor"><button class="link" id="done-undo">Undo the last one</button></div>
+      </div>
+    </div>
+
+    <div class="cleanser" id="cleanser" hidden><span>Next palette</span></div>
+  </div>
+
+  <!-- Where the game's banner sits: the choice about what is on screen. -->
+  <div class="stage-bar" id="bar-decide">
+    <p class="ask"><span id="ask-text">Want this in the game?</span> <span class="tag" id="stage-tag" hidden>Made by a player</span></p>
+    <div class="decide">
+      <button class="btn skip" id="decide-no"><span aria-hidden="true">✕</span> <span id="no-text">No</span></button>
+      <button class="btn keep" id="decide-yes"><span aria-hidden="true">✓</span> <span id="yes-text">Yes</span></button>
+    </div>
+  </div>
+
+  <div class="stage-sheet" id="bar-make" hidden>
+    <div class="chips" role="radiogroup" aria-label="Colour to change" id="make-slots"></div>
+    <div class="sheet-row">
+      <p class="meta sheet-hint">Tap a colour here or on the game to change it</p>
+      <button class="link" id="make-fold" aria-expanded="true" aria-controls="make-body">Hide</button>
+    </div>
+    <div class="sheet-body" id="make-body">
       <div class="editor-row">
         <label class="swatch-picker">
           <span class="sr-only">Pick a colour</span>
@@ -117,50 +151,22 @@
           <span class="sr-only">Hex code</span>
           <input type="text" id="make-hex" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7">
         </label>
+        <button class="btn small" id="make-random-one">Random</button>
       </div>
       <label class="slider"><span>Hue</span><input type="range" id="make-h" min="0" max="359" step="1"></label>
       <label class="slider"><span>Saturation</span><input type="range" id="make-s" min="0" max="100" step="1"></label>
       <label class="slider"><span>Lightness</span><input type="range" id="make-l" min="0" max="100" step="1"></label>
       <div class="minor">
-        <button class="link" id="make-random-one">Random colour</button>
+        <button class="link" id="make-random-all">Random palette</button>
         <button class="link" id="make-as-field">Use as background</button>
       </div>
     </div>
-
-    <p class="readable" id="make-readable" aria-live="polite"></p>
-
-    <div class="choose">
+    <div class="sheet-foot">
       <button class="btn primary" id="make-submit">Add it to the vote</button>
+      <p class="meta status" id="make-status" aria-live="polite"></p>
     </div>
-    <p class="meta status" id="make-status" aria-live="polite"></p>
-  </section>
-
-  <!-- ------------------------------------------------------------------ game -->
-  <section id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
-    <p class="intro">
-      Pick any you'd rather not see in a run, and again to change your mind. The ones marked most
-      are the first to go.
-    </p>
-    <p class="meta" id="game-count" aria-live="polite"></p>
-    <div class="grid" id="game-grid"></div>
-  </section>
-
-  <p class="meta" id="sync" aria-live="polite"></p>
-
-  <div class="privacy-note">
-    <h2>What this page saves</h2>
-    <p class="meta">
-      Your votes, the palettes you make and the ones you mark, along with a random ID your browser
-      makes up so each person only counts once. No name, no account, no cookies, and your IP address
-      isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's colours. Your
-      browser also remembers what you've already seen, on your device only, so you don't get the
-      same palette twice.
-    </p>
   </div>
-
-
 </div>
-</main>
 
 <footer class="foot">
   <div class="wrap">
