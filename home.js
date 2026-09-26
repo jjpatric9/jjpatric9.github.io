@@ -412,8 +412,12 @@
     try {
       f.contentWindow.addEventListener("boxstack:playable", function (e) {
         var name = e.detail && e.detail.name;
-        if (name === "loss") say("Toppled! It happens to the best of us.");
-        else if (name === "survived") say("Still standing. Nicely done!");
+        if (name === "loss") say("Toppled! It happens to the best of us. There's a lot more where that came from.");
+        // The demo ends at its last piece, and from there the building carries on in the app.
+        else if (name === "survived" && e.detail.reason === "crate_limit") {
+          say("That's the end of the demo: all " + e.detail.placements + " pieces placed. To keep building, get the app.");
+        }
+        else if (name === "survived") say("Still standing. Nicely done! There's a lot more where that came from.");
         else if (name === "replay") say("");
       });
     } catch (err) { /* a different origin, as when opened from a file: the demo still plays */ }
@@ -423,7 +427,7 @@
     after.innerHTML = "";
     if (!text) return;
     var p = document.createElement("div");
-    p.textContent = text + " There's a lot more where that came from.";
+    p.textContent = text;
     var a = document.createElement("a");
     a.className = "btn primary";
     a.href = STORE;
