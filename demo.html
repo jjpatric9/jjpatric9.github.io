@@ -10057,6 +10057,12 @@ var ENDS_ON = "loss";
 var TIME_LIMIT = 20;          // URL-only `?ends=time&t=20` experiment
 var CRATE_LIMIT = 6;          // URL-only `?ends=crates&n=6` experiment
 var SAFETY_LIMIT = 45;        // active seconds; never shown to the player
+/* **A website run is fifty crates, not forty-five seconds.** The time backstop is
+   there because an ad network expects a playable to end; a visitor to the site
+   has chosen to play, and a clock ending a good tower half a minute in cut short
+   the thing the demo is for. So there it ends when the tower falls or on the
+   fiftieth crate, standing — the same `crates` ending the URL experiments use. */
+var WEB_CRATE_LIMIT = 50;
 var PLACEMENT_MODE = "open"; // natural run unless a campaign preset says otherwise
 var CTA_STYLE = "label";     // the readable default; `?cta=icon` is the experiment
 var SHOW_TITLE = /[?&]title=1/.test(location.search);
@@ -10069,6 +10075,7 @@ if (HOST_WEB) document.documentElement.style.touchAction = document.body.style.t
 /* Per-placement experiments are parameters rather than forks. Neither timed mode
    draws a countdown; the network owns skip/countdown chrome outside the creative. */
 (function () {
+  if (HOST_WEB) { ENDS_ON = "crates"; CRATE_LIMIT = WEB_CRATE_LIMIT; }
   var placement = /[?&]placement=(rewarded|interstitial)/.exec(location.search);
   if (placement) {
     PLACEMENT_MODE = placement[1];
@@ -11632,7 +11639,9 @@ function frame(now) {
     }
   }
   // A stranger who never touched it: end it rather than leave the tab spinning.
-  if (!G.started && !G.ended && !G.fall && G.runT > SAFETY_LIMIT) startFall(true, "idle");
+  // Not on a website, where the demo waits on a page somebody may still be
+  // reading, and ending it there would greet them with a result they never played.
+  if (!HOST_WEB && !G.started && !G.ended && !G.fall && G.runT > SAFETY_LIMIT) startFall(true, "idle");
 
   if (cvs.clientWidth !== lastW || cvs.clientHeight !== lastH) {
     lastW = cvs.clientWidth; lastH = cvs.clientHeight; layout();
