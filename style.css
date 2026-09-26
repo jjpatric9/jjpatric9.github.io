@@ -591,7 +591,9 @@ a.promo:hover .go { transform: translateX(4px); }
   touch-action: manipulation;
   transition: transform 0.15s, border-color 0.15s;
 }
-.way:hover { transform: translateY(-2px); border-color: var(--crane); }
+.way:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--crane); }
+.way:disabled { cursor: default; box-shadow: none; opacity: 0.7; }
+.way:disabled .way-art { filter: grayscale(1); opacity: 0.6; }
 .way-art { display: grid; }
 .way-art.tower { padding: 0.35rem; gap: 1px; border-radius: 8px; }
 .way-art.tower i { border-radius: 1px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }

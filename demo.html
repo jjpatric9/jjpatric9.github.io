@@ -105,20 +105,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -163,7 +163,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -8537,7 +8537,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.hi_1 = new TowerViewport();
   }
   protoOf(Engine).deal = function (seed, minHeight, maxHeight, leanMin, leanMax) {
-    this.yh_1 = this.xh_1.cg(toLong(seed)).ge(VOID, VOID, VOID, new Long(182, 0));
+    this.yh_1 = this.xh_1.cg(toLong(seed)).ge(VOID, VOID, VOID, new Long(12, 0));
     var tmp = this;
     var tmp0_elvis_lhs = this.ai_1;
     tmp.zh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().ui(this.yh_1.md_1) : tmp0_elvis_lhs;
@@ -8724,10 +8724,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).chrome = function (role) {
     return this.zh_1.cl(TowerBands_getInstance().yk(this.yh_1.jd_1)).fl(valueOf(role));
   };
-  protoOf(Engine).usePalette = function (field, first, second, third) {
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$0 = new Int32Array([first, second, third]);
-    var band = new Band_0(field, tmp$ret$0);
+  protoOf(Engine).usePalette = function (field, crates) {
+    // Inline function 'kotlin.collections.copyOf' call
+    // Inline function 'kotlin.js.asDynamic' call
+    var tmp$ret$1 = crates.slice();
+    var band = new Band_0(field, tmp$ret$1);
     // Inline function 'kotlin.collections.List' call
     // Inline function 'kotlin.collections.MutableList' call
     var size = TowerBands_getInstance().ki_1 - 1 | 0;
@@ -8756,7 +8757,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp0_safe_receiver = board.p9(y);
       var tmp1_safe_receiver = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1;
       var tmp2_elvis_lhs = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.d1_1;
-      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % 3 | 0;
+      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % this.zh_1.gl(setRowBand(board, y)).length | 0;
     }
     var tmp3_elvis_lhs = Companion_getInstance_9().f9(board.q9(x, y));
     var tmp;
@@ -8766,10 +8767,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp3_elvis_lhs;
     }
     var id = tmp;
-    return id.d1_1 % 3 | 0;
+    return id.d1_1 % this.zh_1.gl(crateBand(board, x, y)).length | 0;
   };
   protoOf(Engine).handSlot = function (shapeOrdinal) {
-    return shapeOrdinal % 3 | 0;
+    return shapeOrdinal % this.zh_1.gl(TowerBands_getInstance().yk(this.yh_1.jd_1)).length | 0;
   };
   protoOf(Engine).completingRows = function (slot, originX) {
     var tmp0_elvis_lhs = this.yh_1.kd_1.le(slot);
@@ -8790,7 +8791,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.ve_1);
   };
-  protoOf(Engine).gl = function () {
+  protoOf(Engine).hl = function () {
     return this.yh_1.zd_1.c8_1;
   };
   protoOf(Engine).d8 = function () {
@@ -8799,22 +8800,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).e8 = function () {
     return this.yh_1.de();
   };
-  protoOf(Engine).hl = function () {
+  protoOf(Engine).il = function () {
     return this.yh_1.qd_1 - this.ci_1 | 0;
   };
-  protoOf(Engine).il = function () {
+  protoOf(Engine).jl = function () {
     return this.yh_1.sd_1;
   };
-  protoOf(Engine).jl = function () {
+  protoOf(Engine).kl = function () {
     return this.yh_1.td_1 - this.di_1 | 0;
   };
-  protoOf(Engine).kl = function () {
+  protoOf(Engine).ll = function () {
     return this.yh_1.qd_1;
   };
-  protoOf(Engine).ll = function () {
+  protoOf(Engine).ml = function () {
     return Placement_instance.ug(this.yh_1.jd_1);
   };
-  protoOf(Engine).ml = function () {
+  protoOf(Engine).nl = function () {
     return this.yh_1.kd_1.je_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
@@ -8911,44 +8912,44 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.gi_1 = out.hd_1.ad_1;
     return this.ei_1.length;
   };
-  protoOf(Engine).nl = function () {
+  protoOf(Engine).ol = function () {
     return this.bi_1;
   };
   protoOf(Engine).rowsJustSet = function () {
     return this.ei_1;
   };
-  protoOf(Engine).ol = function () {
+  protoOf(Engine).pl = function () {
     return this.fi_1;
   };
-  protoOf(Engine).pl = function () {
+  protoOf(Engine).ql = function () {
     return this.gi_1;
   };
-  protoOf(Engine).ql = function () {
+  protoOf(Engine).rl = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.rl(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).xi_1;
+    return PlayfieldGeometry_instance.sl(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).xi_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.zl(progress, revealing);
+    return ResultsAnim_instance.am(progress, revealing);
   };
   protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.am(revealing);
+    return ResultsAnim_instance.bm(revealing);
   };
   protoOf(Engine).topplePhase = function (progress, revealing) {
-    return ResultsAnim_instance.bm(progress, revealing);
+    return ResultsAnim_instance.cm(progress, revealing);
   };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.cm(topple, tilt(this));
+    return ResultsAnim_instance.dm(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.dm(topple);
+    return ResultsAnim_instance.em(topple);
   };
-  protoOf(Engine).em = function () {
-    return ResultsAnim_instance.fm(this.yh_1.jd_1);
+  protoOf(Engine).fm = function () {
+    return ResultsAnim_instance.gm(this.yh_1.jd_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.yh_1.jd_1;
@@ -8970,10 +8971,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.q9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.gm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.hm_1);
+            var piece = ResultsAnim_instance.hm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
             out.d(piece.im_1);
             out.d(piece.jm_1);
+            out.d(piece.km_1);
             out.d(board.m9(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8983,15 +8984,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().mm(combo, rows, index);
-  };
-  protoOf(Engine).nm = function () {
-    return (new Long(300, 0)).u1();
+    return SoundLadder_getInstance().nm(combo, rows, index);
   };
   protoOf(Engine).om = function () {
-    return ResultsAnim_instance.pm(true, false);
+    return (new Long(300, 0)).u1();
   };
-  protoOf(Engine).qm = function () {
+  protoOf(Engine).pm = function () {
+    return ResultsAnim_instance.qm(true, false);
+  };
+  protoOf(Engine).rm = function () {
     return get_entries().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
@@ -9272,10 +9273,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp;
   }
   function Companion_16() {
-    this.rm_1 = 20;
-    this.sm_1 = 1.0E-4;
+    this.sm_1 = 20;
+    this.tm_1 = 1.0E-4;
   }
-  protoOf(Companion_16).tm = function (packed) {
+  protoOf(Companion_16).um = function (packed) {
     var r = linear(this, packed >> 16 & 255);
     var g = linear(this, packed >> 8 & 255);
     var b = linear(this, packed & 255);
@@ -9292,7 +9293,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp$ret$1 = Math.atan2(bb, a);
     return new Lab(l, tmp, tmp$ret$1);
   };
-  protoOf(Companion_16).um = function (l, chroma, hue) {
+  protoOf(Companion_16).vm = function (l, chroma, hue) {
     var lo = 0.0;
     var hi = chroma;
     if (inGamut(this, l, hi, hue))
@@ -9321,8 +9322,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function Role(name, ordinal, night, ink) {
     ink = ink === VOID ? false : ink;
     Enum.call(this, name, ordinal);
-    this.xm_1 = night;
-    this.ym_1 = ink;
+    this.ym_1 = night;
+    this.zm_1 = ink;
   }
   function Companion_17() {
     Companion_instance_17 = this;
@@ -9332,31 +9333,31 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_2 = new Int32Array(tmp_1);
     while (tmp_0 < tmp_1) {
       var tmp_3 = tmp_0;
-      tmp_2[tmp_3] = get_entries_0().j(tmp_3).xm_1;
+      tmp_2[tmp_3] = get_entries_0().j(tmp_3).ym_1;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.zm_1 = new ChromePalette(tmp_2, 240.0);
-    this.an_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
-    this.bn_1 = 240.0;
-    this.cn_1 = 0.65;
-    this.dn_1 = 0.15;
-    this.en_1 = 360.0;
-    this.fn_1 = 180.0;
-    this.gn_1 = 0.015;
-    this.hn_1 = 0.6;
-    this.in_1 = 0.21;
-    this.jn_1 = 0.3;
-    this.kn_1 = 0.145;
-    this.ln_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
-    this.mn_1 = 0.7;
-    this.nn_1 = 0.05;
-    this.on_1 = 0.3;
-    this.pn_1 = 0.025;
+    tmp.an_1 = new ChromePalette(tmp_2, 240.0);
+    this.bn_1 = Companion_instance_16.um(Role_BACKGROUND_getInstance().ym_1).rn_1;
+    this.cn_1 = 240.0;
+    this.dn_1 = 0.65;
+    this.en_1 = 0.15;
+    this.fn_1 = 360.0;
+    this.gn_1 = 180.0;
+    this.hn_1 = 0.015;
+    this.in_1 = 0.6;
+    this.jn_1 = 0.21;
+    this.kn_1 = 0.3;
+    this.ln_1 = 0.145;
+    this.mn_1 = Companion_instance_16.um(Role_BACKGROUND_getInstance().ym_1).rn_1;
+    this.nn_1 = 0.7;
+    this.on_1 = 0.05;
+    this.pn_1 = 0.3;
+    this.qn_1 = 0.025;
   }
-  protoOf(Companion_17).tn = function (field, crates) {
-    var f = Companion_instance_16.tm(field);
-    var hue = {_v: f.sn_1};
-    var chroma = f.rn_1;
+  protoOf(Companion_17).un = function (field, crates) {
+    var f = Companion_instance_16.um(field);
+    var hue = {_v: f.tn_1};
+    var chroma = f.sn_1;
     if (chroma < 0.015) {
       var tmp$ret$3;
       $l$block_0: {
@@ -9369,7 +9370,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         while (inductionVariable < last) {
           var item = crates[inductionVariable];
           inductionVariable = inductionVariable + 1 | 0;
-          var tmp$ret$0 = Companion_instance_16.tm(item);
+          var tmp$ret$0 = Companion_instance_16.um(item);
           destination.d(tmp$ret$0);
         }
         var iterator = destination.f();
@@ -9383,11 +9384,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           break $l$block_0;
         }
         // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
-        var maxValue = maxElem.rn_1;
+        var maxValue = maxElem.sn_1;
         do {
           var e = iterator.h();
           // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
-          var v = e.rn_1;
+          var v = e.sn_1;
           if (compareTo(maxValue, v) < 0) {
             maxElem = e;
             maxValue = v;
@@ -9397,14 +9398,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         tmp$ret$3 = maxElem;
       }
       var vivid = tmp$ret$3;
-      if (!(vivid == null) && vivid.rn_1 > 0.015 * 2) {
-        hue._v = vivid.sn_1;
+      if (!(vivid == null) && vivid.sn_1 > 0.015 * 2) {
+        hue._v = vivid.tn_1;
         chroma = 0.015;
       } else {
         chroma = 0.0;
       }
     }
-    var base = f.qn_1 >= 0.6 ? this.an_1 : coerceIn_1(this.an_1 + (f.qn_1 - 0.21) * 0.3, 0.145, this.ln_1);
+    var base = f.rn_1 >= 0.6 ? this.bn_1 : coerceIn_1(this.bn_1 + (f.rn_1 - 0.21) * 0.3, 0.145, this.mn_1);
     // Inline function 'kotlin.comparisons.minOf' call
     var a = chroma * 0.7;
     var surfaceChroma = Math.min(a, 0.05);
@@ -9417,18 +9418,18 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     while (tmp < tmp_0) {
       var tmp_2 = tmp;
       var role = get_entries_0().j(tmp_2);
-      var night = Companion_instance_16.tm(role.xm_1);
+      var night = Companion_instance_16.um(role.ym_1);
       var tmp_3;
-      if (role.ym_1) {
-        tmp_3 = Companion_instance_16.um(night.qn_1, inkChroma, hue._v);
+      if (role.zm_1) {
+        tmp_3 = Companion_instance_16.vm(night.rn_1, inkChroma, hue._v);
       } else {
-        tmp_3 = Companion_instance_16.um(base + (night.qn_1 - Companion_getInstance_17().an_1), surfaceChroma, hue._v);
+        tmp_3 = Companion_instance_16.vm(base + (night.rn_1 - Companion_getInstance_17().bn_1), surfaceChroma, hue._v);
       }
       tmp_1[tmp_2] = tmp_3;
       tmp = tmp + 1 | 0;
     }
     var colours = tmp_1;
-    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.um(0.65, 0.15, hue._v));
+    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.vm(0.65, 0.15, hue._v));
     return new ChromePalette(colours, glow);
   };
   var Companion_instance_17;
@@ -9438,9 +9439,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_17;
   }
   function Lab(l, chroma, hue) {
-    this.qn_1 = l;
-    this.rn_1 = chroma;
-    this.sn_1 = hue;
+    this.rn_1 = l;
+    this.sn_1 = chroma;
+    this.tn_1 = hue;
   }
   function Role_BACKGROUND_getInstance() {
     Role_initEntries();
@@ -9621,7 +9622,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return true;
   };
   function Companion_19() {
-    this.un_1 = 0.001;
+    this.vn_1 = 0.001;
   }
   var Companion_instance_19;
   function Companion_getInstance_19() {
@@ -9648,9 +9649,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   protoOf(TowerViewport).bj = function (rows, summit, minimumBottom) {
     var current = this.aj(summit, minimumBottom).wi_1;
-    return this.vn(current + rows, summit, minimumBottom);
+    return this.wn(current + rows, summit, minimumBottom);
   };
-  protoOf(TowerViewport).vn = function (bottomRow, summit, minimumBottom) {
+  protoOf(TowerViewport).wn = function (bottomRow, summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
     var b = summit.wi_1;
     var minimum = Math.min(minimumBottom, b);
@@ -9691,14 +9692,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.oj_1 = 1;
     this.pj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).wn = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+  protoOf(PlayfieldGeometry).xn = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
     return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
   };
   protoOf(PlayfieldGeometry).qj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
     gain = gain === VOID ? 1.25 : gain;
-    return $super === VOID ? this.wn(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.wn.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+    return $super === VOID ? this.xn(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.xn.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
   };
-  protoOf(PlayfieldGeometry).rl = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).sl = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -9710,24 +9711,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.xn_1 = startX;
-    this.yn_1 = startY;
-    this.zn_1 = pivotX;
-    this.ao_1 = pivotY;
-    this.bo_1 = cellPx;
-    this.co_1 = groundY;
-    this.do_1 = cellX;
-    this.eo_1 = cellY;
-    this.fo_1 = impact;
-    this.go_1 = direction;
+    this.yn_1 = startX;
+    this.zn_1 = startY;
+    this.ao_1 = pivotX;
+    this.bo_1 = pivotY;
+    this.co_1 = cellPx;
+    this.do_1 = groundY;
+    this.eo_1 = cellX;
+    this.fo_1 = cellY;
+    this.go_1 = impact;
+    this.ho_1 = direction;
   }
   protoOf(FragmentInput).x7 = function () {
-    return this.xn_1;
-  };
-  protoOf(FragmentInput).y7 = function () {
     return this.yn_1;
   };
-  protoOf(FragmentInput).ho = function () {
+  protoOf(FragmentInput).y7 = function () {
     return this.zn_1;
   };
   protoOf(FragmentInput).io = function () {
@@ -9751,20 +9749,23 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(FragmentInput).oo = function () {
     return this.go_1;
   };
+  protoOf(FragmentInput).po = function () {
+    return this.ho_1;
+  };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.xn_1 + ', startY=' + this.yn_1 + ', pivotX=' + this.zn_1 + ', pivotY=' + this.ao_1 + ', cellPx=' + this.bo_1 + ', groundY=' + this.co_1 + ', cellX=' + this.do_1 + ', cellY=' + this.eo_1 + ', impact=' + this.fo_1 + ', direction=' + this.go_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.yn_1 + ', startY=' + this.zn_1 + ', pivotX=' + this.ao_1 + ', pivotY=' + this.bo_1 + ', cellPx=' + this.co_1 + ', groundY=' + this.do_1 + ', cellX=' + this.eo_1 + ', cellY=' + this.fo_1 + ', impact=' + this.go_1 + ', direction=' + this.ho_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.xn_1);
-    result = imul(result, 31) + getNumberHashCode(this.yn_1) | 0;
+    var result = getNumberHashCode(this.yn_1);
     result = imul(result, 31) + getNumberHashCode(this.zn_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.ao_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.bo_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.co_1) | 0;
-    result = imul(result, 31) + this.do_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.do_1) | 0;
     result = imul(result, 31) + this.eo_1 | 0;
-    result = imul(result, 31) + getNumberHashCode(this.fo_1) | 0;
-    result = imul(result, 31) + this.go_1.hashCode() | 0;
+    result = imul(result, 31) + this.fo_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.go_1) | 0;
+    result = imul(result, 31) + this.ho_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
@@ -9773,8 +9774,6 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof FragmentInput))
       return false;
     var tmp0_other_with_cast = other instanceof FragmentInput ? other : THROW_CCE();
-    if (!equals(this.xn_1, tmp0_other_with_cast.xn_1))
-      return false;
     if (!equals(this.yn_1, tmp0_other_with_cast.yn_1))
       return false;
     if (!equals(this.zn_1, tmp0_other_with_cast.zn_1))
@@ -9785,28 +9784,30 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return false;
     if (!equals(this.co_1, tmp0_other_with_cast.co_1))
       return false;
-    if (!(this.do_1 === tmp0_other_with_cast.do_1))
+    if (!equals(this.do_1, tmp0_other_with_cast.do_1))
       return false;
     if (!(this.eo_1 === tmp0_other_with_cast.eo_1))
       return false;
-    if (!equals(this.fo_1, tmp0_other_with_cast.fo_1))
+    if (!(this.fo_1 === tmp0_other_with_cast.fo_1))
       return false;
-    if (!this.go_1.equals(tmp0_other_with_cast.go_1))
+    if (!equals(this.go_1, tmp0_other_with_cast.go_1))
+      return false;
+    if (!this.ho_1.equals(tmp0_other_with_cast.ho_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.hm_1 = x;
-    this.im_1 = y;
-    this.jm_1 = degrees;
+    this.im_1 = x;
+    this.jm_1 = y;
+    this.km_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.hm_1 + ', y=' + this.im_1 + ', degrees=' + this.jm_1 + ')';
+    return 'Fragment(x=' + this.im_1 + ', y=' + this.jm_1 + ', degrees=' + this.km_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.hm_1);
-    result = imul(result, 31) + getNumberHashCode(this.im_1) | 0;
+    var result = getNumberHashCode(this.im_1);
     result = imul(result, 31) + getNumberHashCode(this.jm_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.km_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -9815,11 +9816,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof Fragment))
       return false;
     var tmp0_other_with_cast = other instanceof Fragment ? other : THROW_CCE();
-    if (!equals(this.hm_1, tmp0_other_with_cast.hm_1))
-      return false;
     if (!equals(this.im_1, tmp0_other_with_cast.im_1))
       return false;
     if (!equals(this.jm_1, tmp0_other_with_cast.jm_1))
+      return false;
+    if (!equals(this.km_1, tmp0_other_with_cast.km_1))
       return false;
     return true;
   };
@@ -9834,22 +9835,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.sl_1 = 1725;
-    this.tl_1 = 0.42;
-    this.ul_1 = 62.0;
-    this.vl_1 = 620;
-    this.wl_1 = 260;
-    this.xl_1 = 271;
-    this.yl_1 = 0.35;
+    this.tl_1 = 1725;
+    this.ul_1 = 0.42;
+    this.vl_1 = 62.0;
+    this.wl_1 = 620;
+    this.xl_1 = 260;
+    this.yl_1 = 271;
+    this.zl_1 = 0.35;
   }
-  protoOf(ResultsAnim).po = function (revealing) {
+  protoOf(ResultsAnim).qo = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).pm = function (revealing, reducedMotion) {
-    var impactAt = this.qo((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).qm = function (revealing, reducedMotion) {
+    var impactAt = this.ro((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).qo = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).ro = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -9860,35 +9861,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).zl = function (progress, revealing) {
+  protoOf(ResultsAnim).am = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.po(true);
+    var share = 620 / this.qo(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).am = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.po(true);
+  protoOf(ResultsAnim).bm = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.qo(true);
   };
-  protoOf(ResultsAnim).bm = function (progress, revealing) {
+  protoOf(ResultsAnim).cm = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.po(true);
+    var start = 880 / this.qo(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).ro = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).so = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).cm = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).dm = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.ro(progress, direction, maxDegrees) : $super.ro.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.so(progress, direction, maxDegrees) : $super.so.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).dm = function (topple) {
+  protoOf(ResultsAnim).em = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).fm = function (board) {
+  protoOf(ResultsAnim).gm = function (board) {
     var lowest = board.h8_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -9911,17 +9912,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).gm = function (input) {
+  protoOf(ResultsAnim).hm = function (input) {
     var startX = input.x7();
     var startY = input.y7();
-    var pivotX = input.ho();
-    var pivotY = input.io();
-    var cellPx = input.jo();
-    var groundY = input.ko();
-    var cellX = input.lo();
-    var cellY = input.mo();
-    var impact = input.no();
-    var direction = input.oo();
+    var pivotX = input.io();
+    var pivotY = input.jo();
+    var cellPx = input.ko();
+    var groundY = input.lo();
+    var cellX = input.mo();
+    var cellY = input.no();
+    var impact = input.oo();
+    var direction = input.po();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -9957,19 +9958,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.km_1 = 12;
-    this.lm_1 = new Long(300, 0);
+    this.lm_1 = 12;
+    this.mm_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).so = function (combo) {
+  protoOf(SoundLadder).to = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).to = function (combo) {
+  protoOf(SoundLadder).uo = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.so(combo) / 12.0;
+    var x = this.to(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).mm = function (combo, rows, index) {
-    return this.to(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).nm = function (combo, rows, index) {
+    return this.uo(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -9978,16 +9979,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.uo_1 = field;
-    this.vo_1 = crates;
+    this.vo_1 = field;
+    this.wo_1 = crates;
   }
   function Stop(at, color) {
     this.vk_1 = at;
     this.wk_1 = color;
   }
   function Starts(board, rows) {
-    this.wo_1 = board;
-    this.xo_1 = rows;
+    this.xo_1 = board;
+    this.yo_1 = rows;
   }
   function blend$mix($from, $to, f, shift) {
     var a = $from >> shift & 255;
@@ -9996,15 +9997,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function TowerBands() {
     TowerBands_instance = this;
-    this.ii_1 = new Long(182, 0);
+    this.ii_1 = new Long(12, 0);
     this.ji_1 = Medal_SUMMIT_getInstance().pg_1;
     this.ki_1 = this.ji_1.k() + 1 | 0;
-    this.li_1 = 3;
+    this.li_1 = 5;
     this.mi_1 = 0;
     var tmp = this;
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$0 = new Int32Array([0, 0, 0]);
-    tmp.ni_1 = new Band_0(16777215, tmp$ret$0);
+    var tmp_0 = 0;
+    var tmp_1 = new Int32Array(5);
+    while (tmp_0 < 5) {
+      tmp_1[tmp_0] = 0;
+      tmp_0 = tmp_0 + 1 | 0;
+    }
+    tmp.ni_1 = new Band_0(16777215, tmp_1);
     this.oi_1 = new Long(1284865837, 1481765933);
     this.pi_1 = new Long(-144211633, 335903614);
     this.qi_1 = this.ui(new Long(0, 0));
@@ -10013,7 +10018,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.ti_1 = 1.0E-4;
   }
   protoOf(TowerBands).ui = function (runSeed) {
-    var deck = toMutableList(TowerPaletteBank_getInstance().yo_1);
+    return this.ap(runSeed, TowerPaletteBank_getInstance().zo_1);
+  };
+  protoOf(TowerBands).ap = function (runSeed, bank) {
+    var deck = ArrayList_init_$Create$();
     var bands = ArrayList_init_$Create$_0(this.ki_1);
     var seed = runSeed;
     // Inline function 'kotlin.repeat' call
@@ -10025,6 +10033,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         var index = inductionVariable;
         inductionVariable = inductionVariable + 1 | 0;
         // Inline function 'com.boxstack.presentation.TowerBands.of.<anonymous>' call
+        if (deck.i()) {
+          deck.p(bank);
+        }
         seed = seed.n1(new Long(1284865837, 1481765933)).m1(new Long(-144211633, 335903614));
         bands.d(deck.f2((seed.s1(33).t1() & 2147483647) % deck.k() | 0));
       }
@@ -10032,21 +10043,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     bands.d(this.ni_1);
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).zo = function (placedOn, platformRows) {
-    return this.ap(placedOn - platformRows | 0);
+  protoOf(TowerBands).bp = function (placedOn, platformRows) {
+    return this.cp(placedOn - platformRows | 0);
   };
   protoOf(TowerBands).yk = function (board) {
-    return this.zo(board.s8_1, board.k8_1);
+    return this.bp(board.s8_1, board.k8_1);
   };
-  protoOf(TowerBands).bp = function (board) {
+  protoOf(TowerBands).dp = function (board) {
     var tmp0_safe_receiver = this.si_1;
     if (tmp0_safe_receiver == null)
       null;
     else {
       // Inline function 'kotlin.let' call
       // Inline function 'kotlin.contracts.contract' call
-      if (tmp0_safe_receiver.wo_1 === board)
-        return tmp0_safe_receiver.xo_1;
+      if (tmp0_safe_receiver.xo_1 === board)
+        return tmp0_safe_receiver.yo_1;
     }
     var tmp = 0;
     var tmp_0 = this.ji_1.k();
@@ -10069,7 +10080,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var x = inductionVariable_0;
             inductionVariable_0 = inductionVariable_0 + 1 | 0;
             var on = board.r9(x, y);
-            var band = on === 0 ? 0 : this.zo(on, board.k8_1);
+            var band = on === 0 ? 0 : this.bp(on, board.k8_1);
             if (band > 0 && on < rows[band - 1 | 0]) {
               rows[band - 1 | 0] = on;
             }
@@ -10091,11 +10102,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.si_1 = new Starts(board, rows);
     return rows;
   };
-  protoOf(TowerBands).cp = function (from, to, t) {
+  protoOf(TowerBands).ep = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).ap = function (boxes) {
+  protoOf(TowerBands).cp = function (boxes) {
     var band = 0;
     while (band < this.ji_1.k() && boxes >= this.ji_1.j(band)) {
       band = band + 1 | 0;
@@ -10109,10 +10120,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().zo(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().bp(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().zo(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().bp(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
   }
   function shaft$positionOf($camera, row) {
     return 1.0 - (row - $camera.wi_1) / $camera.xi_1;
@@ -10124,14 +10135,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var size = TowerBands_getInstance().ki_1;
     tmp.tk_1 = fillArrayVal(Array(size), null);
   }
-  protoOf(TowerPalette).dp = function (camera, board, reached) {
-    return this.ep(camera, TowerBands_getInstance().bp(board), reached);
+  protoOf(TowerPalette).fp = function (camera, board, reached) {
+    return this.gp(camera, TowerBands_getInstance().dp(board), reached);
   };
   protoOf(TowerPalette).uk = function (camera, board, reached, $super) {
     reached = reached === VOID ? TowerBands_getInstance().yk(board) : reached;
-    return $super === VOID ? this.dp(camera, board, reached) : $super.dp.call(this, camera, board, reached);
+    return $super === VOID ? this.fp(camera, board, reached) : $super.fp.call(this, camera, board, reached);
   };
-  protoOf(TowerPalette).ep = function (camera, starts, reached) {
+  protoOf(TowerPalette).gp = function (camera, starts, reached) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 1;
     if (inductionVariable <= reached)
@@ -10165,11 +10176,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       if (tmp)
         continue $l$loop_0;
       var row_0 = camera.wi_1 + (1.0 - at_0) * camera.xi_1;
-      stops.d(new Stop(at_0, this.fp(row_0, starts, reached)));
+      stops.d(new Stop(at_0, this.hp(row_0, starts, reached)));
     }
     return stops;
   };
-  protoOf(TowerPalette).fp = function (row, starts, reached) {
+  protoOf(TowerPalette).hp = function (row, starts, reached) {
     var band = 0;
     while (band < reached && row >= starts[band]) {
       band = band + 1 | 0;
@@ -10179,17 +10190,26 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
       return this.bl(band);
-    return TowerBands_getInstance().cp(this.bl(band), this.bl(band + 1 | 0), into / 2.0);
+    return TowerBands_getInstance().ep(this.bl(band), this.bl(band + 1 | 0), into / 2.0);
   };
   protoOf(TowerPalette).bl = function (band) {
-    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).uo_1;
+    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).vo_1;
   };
   protoOf(TowerPalette).xk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
     return this.zk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
   };
   protoOf(TowerPalette).zk = function (slot, band) {
-    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).vo_1[slot % 3 | 0];
+    // Inline function 'kotlin.let' call
+    // Inline function 'kotlin.contracts.contract' call
+    // Inline function 'com.boxstack.presentation.TowerPalette.crateSlot.<anonymous>' call
+    var it = this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).wo_1;
+    return it[slot % it.length | 0];
+  };
+  protoOf(TowerPalette).gl = function (band) {
+    // Inline function 'kotlin.collections.copyOf' call
+    // Inline function 'kotlin.js.asDynamic' call
+    return this.sk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).wo_1.slice();
   };
   protoOf(TowerPalette).cl = function (band) {
     var index = coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0);
@@ -10197,7 +10217,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp;
     if (tmp0_elvis_lhs == null) {
       // Inline function 'kotlin.also' call
-      var this_0 = Companion_getInstance_17().tn(this.sk_1.j(index).uo_1, this.sk_1.j(index).vo_1);
+      var this_0 = Companion_getInstance_17().un(this.sk_1.j(index).vo_1, this.sk_1.j(index).wo_1);
       // Inline function 'kotlin.contracts.contract' call
       // Inline function 'com.boxstack.presentation.TowerPalette.chrome.<anonymous>' call
       this.tk_1[index] = this_0;
@@ -10211,395 +10231,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     TowerPaletteBank_instance = this;
     var tmp = this;
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$0 = new Int32Array([11983173, 8903066, 15976937]);
-    var tmp_0 = new Band_0(1443090, tmp$ret$0);
+    var tmp$ret$0 = new Int32Array([2083038, 9099578, 4166389, 10185714, 14577622]);
+    var tmp_0 = new Band_0(857121, tmp$ret$0);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$1 = new Int32Array([12695675, 14147070, 14187959]);
-    var tmp_1 = new Band_0(66846, tmp$ret$1);
+    var tmp$ret$1 = new Int32Array([13119516, 2894376, 8079900, 9313051, 5913104]);
+    var tmp_1 = new Band_0(16240684, tmp$ret$1);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$2 = new Int32Array([14601981, 4834739, 11061864]);
-    var tmp_2 = new Band_0(1311286, tmp$ret$2);
+    var tmp$ret$2 = new Int32Array([15761456, 16756838, 16507558, 15022875, 16765503]);
+    var tmp_2 = new Band_0(2823184, tmp$ret$2);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$3 = new Int32Array([16506853, 16098743, 14389877]);
-    var tmp_3 = new Band_0(2098186, tmp$ret$3);
+    var tmp$ret$3 = new Int32Array([8177384, 5152724, 11066864, 11890746, 15916192]);
+    var tmp_3 = new Band_0(929605, tmp$ret$3);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$4 = new Int32Array([2869817, 9603326, 12828159]);
-    var tmp_4 = new Band_0(393282, tmp$ret$4);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$5 = new Int32Array([15108241, 16176600, 9607118]);
-    var tmp_5 = new Band_0(1639687, tmp$ret$5);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$6 = new Int32Array([16570853, 5954994, 12834406]);
-    var tmp_6 = new Band_0(4326681, tmp$ret$6);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$7 = new Int32Array([5359772, 13009646, 15454969]);
-    var tmp_7 = new Band_0(1967661, tmp$ret$7);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$8 = new Int32Array([16699085, 3190834, 5222064]);
-    var tmp_8 = new Band_0(2294017, tmp$ret$8);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$9 = new Int32Array([11261307, 9948154, 13559805]);
-    var tmp_9 = new Band_0(206148, tmp$ret$9);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$10 = new Int32Array([15325417, 11532528, 10073282]);
-    var tmp_10 = new Band_0(1185585, tmp$ret$10);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$11 = new Int32Array([10680004, 4638889, 11256312]);
-    var tmp_11 = new Band_0(2235164, tmp$ret$11);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$12 = new Int32Array([13366996, 10138028, 13551296]);
-    var tmp_12 = new Band_0(1184555, tmp$ret$12);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$13 = new Int32Array([15322592, 15129834, 7971298]);
-    var tmp_13 = new Band_0(1642792, tmp$ret$13);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$14 = new Int32Array([11881153, 9165185, 15718898]);
-    var tmp_14 = new Band_0(1378327, tmp$ret$14);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$15 = new Int32Array([11323824, 7841421, 15969424]);
-    var tmp_15 = new Band_0(1049657, tmp$ret$15);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$16 = new Int32Array([12633550, 16045220, 12567007]);
-    var tmp_16 = new Band_0(2498359, tmp$ret$16);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$17 = new Int32Array([16568279, 16360114, 15802952]);
-    var tmp_17 = new Band_0(2490889, tmp$ret$17);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$18 = new Int32Array([6281341, 11428039, 14801910]);
-    var tmp_18 = new Band_0(1182249, tmp$ret$18);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$19 = new Int32Array([10023110, 12350420, 15112676]);
-    var tmp_19 = new Band_0(855110, tmp$ret$19);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$20 = new Int32Array([2931349, 15457247, 13859005]);
-    var tmp_20 = new Band_0(2167318, tmp$ret$20);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$21 = new Int32Array([14407933, 12762364, 11032799]);
-    var tmp_21 = new Band_0(525115, tmp$ret$21);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$22 = new Int32Array([11905779, 8575811, 15452153]);
-    var tmp_22 = new Band_0(4004634, tmp$ret$22);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$23 = new Int32Array([11581943, 12439760, 11254217]);
-    var tmp_23 = new Band_0(1057576, tmp$ret$23);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$24 = new Int32Array([5355342, 12644593, 7522976]);
-    var tmp_24 = new Band_0(333635, tmp$ret$24);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$25 = new Int32Array([12417914, 8176837, 15323902]);
-    var tmp_25 = new Band_0(1769778, tmp$ret$25);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$26 = new Int32Array([11892575, 15522773, 13217098]);
-    var tmp_26 = new Band_0(1379594, tmp$ret$26);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$27 = new Int32Array([13940170, 14279388, 9695462]);
-    var tmp_27 = new Band_0(3351572, tmp$ret$27);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$28 = new Int32Array([13352153, 7645506, 15262446]);
-    var tmp_28 = new Band_0(1708832, tmp$ret$28);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$29 = new Int32Array([4834506, 8903051, 13014104]);
-    var tmp_29 = new Band_0(2888209, tmp$ret$29);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$30 = new Int32Array([14199657, 15521021, 2924458]);
-    var tmp_30 = new Band_0(1966641, tmp$ret$30);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$31 = new Int32Array([13625596, 7913331, 13715930]);
-    var tmp_31 = new Band_0(137516, tmp$ret$31);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$32 = new Int32Array([15063527, 6273309, 12361528]);
-    var tmp_32 = new Band_0(2562321, tmp$ret$32);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$33 = new Int32Array([4508231, 9720784, 9144810]);
-    var tmp_33 = new Band_0(526379, tmp$ret$33);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$34 = new Int32Array([4884446, 3059065, 15063005]);
-    var tmp_34 = new Band_0(1379857, tmp$ret$34);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$35 = new Int32Array([8966972, 8379565, 13773183]);
-    var tmp_35 = new Band_0(2230037, tmp$ret$35);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$36 = new Int32Array([8248985, 9808735, 4437662]);
-    var tmp_36 = new Band_0(1907490, tmp$ret$36);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$37 = new Int32Array([13937375, 14737111, 13887180]);
-    var tmp_37 = new Band_0(2955092, tmp$ret$37);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$38 = new Int32Array([14805718, 12374436, 7975654]);
-    var tmp_38 = new Band_0(1844499, tmp$ret$38);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$39 = new Int32Array([12892373, 8320955, 15710899]);
-    var tmp_39 = new Band_0(274243, tmp$ret$39);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$40 = new Int32Array([6526763, 15062773, 9128401]);
-    var tmp_40 = new Band_0(984600, tmp$ret$40);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$41 = new Int32Array([13101502, 11007681, 13685436]);
-    var tmp_41 = new Band_0(3877206, tmp$ret$41);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$42 = new Int32Array([11717490, 10280362, 7119198]);
-    var tmp_42 = new Band_0(2625558, tmp$ret$42);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$43 = new Int32Array([3444075, 13454396, 16702697]);
-    var tmp_43 = new Band_0(1966348, tmp$ret$43);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$44 = new Int32Array([16442582, 8834941, 10848976]);
-    var tmp_44 = new Band_0(3020037, tmp$ret$44);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$45 = new Int32Array([3908789, 12948194, 3001747]);
-    var tmp_45 = new Band_0(2297136, tmp$ret$45);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$46 = new Int32Array([16368587, 10863465, 6847193]);
-    var tmp_46 = new Band_0(2753546, tmp$ret$46);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$47 = new Int32Array([12634667, 11891633, 14703253]);
-    var tmp_47 = new Band_0(3082522, tmp$ret$47);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$48 = new Int32Array([12074335, 4902759, 13664446]);
-    var tmp_48 = new Band_0(199457, tmp$ret$48);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$49 = new Int32Array([3260304, 11760520, 14510537]);
-    var tmp_49 = new Band_0(1970197, tmp$ret$49);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$50 = new Int32Array([12463508, 16240600, 15033472]);
-    var tmp_50 = new Band_0(2032907, tmp$ret$50);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$51 = new Int32Array([5350715, 16701407, 16261709]);
-    var tmp_51 = new Band_0(3539468, tmp$ret$51);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$52 = new Int32Array([7832994, 13344835, 13796547]);
-    var tmp_52 = new Band_0(921877, tmp$ret$52);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$53 = new Int32Array([10835409, 14928369, 15786999]);
-    var tmp_53 = new Band_0(1968936, tmp$ret$53);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$54 = new Int32Array([15508821, 9807750, 11844767]);
-    var tmp_54 = new Band_0(3540768, tmp$ret$54);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$55 = new Int32Array([13276315, 7259746, 12742461]);
-    var tmp_55 = new Band_0(2035473, tmp$ret$55);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$56 = new Int32Array([16700148, 14450585, 15009204]);
-    var tmp_56 = new Band_0(3277095, tmp$ret$56);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$57 = new Int32Array([13012558, 4621774, 9983698]);
-    var tmp_57 = new Band_0(1705241, tmp$ret$57);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$58 = new Int32Array([16700157, 12830301, 11745137]);
-    var tmp_58 = new Band_0(1966109, tmp$ret$58);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$59 = new Int32Array([12283083, 14216696, 6333266]);
-    var tmp_59 = new Band_0(465959, tmp$ret$59);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$60 = new Int32Array([1877220, 3313949, 13823481]);
-    var tmp_60 = new Band_0(201755, tmp$ret$60);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$61 = new Int32Array([11839650, 12964805, 14544804]);
-    var tmp_61 = new Band_0(4394767, tmp$ret$61);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$62 = new Int32Array([14442714, 14073251, 11171036]);
-    var tmp_62 = new Band_0(2300432, tmp$ret$62);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$63 = new Int32Array([12614832, 6793404, 15981053]);
-    var tmp_63 = new Band_0(2819130, tmp$ret$63);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$64 = new Int32Array([13349520, 13853131, 16112627]);
-    var tmp_64 = new Band_0(3149102, tmp$ret$64);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$65 = new Int32Array([15170269, 8053124, 13051064]);
-    var tmp_65 = new Band_0(2820136, tmp$ret$65);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$66 = new Int32Array([3451831, 14824225, 16441051]);
-    var tmp_66 = new Band_0(2689029, tmp$ret$66);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$67 = new Int32Array([13013387, 4897737, 15064043]);
-    var tmp_67 = new Band_0(2496814, tmp$ret$67);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$68 = new Int32Array([7850579, 15523570, 2525601]);
-    var tmp_68 = new Band_0(1772833, tmp$ret$68);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$69 = new Int32Array([8038543, 12892394, 11388055]);
-    var tmp_69 = new Band_0(1118544, tmp$ret$69);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$70 = new Int32Array([13067883, 14444293, 16490838]);
-    var tmp_70 = new Band_0(2626305, tmp$ret$70);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$71 = new Int32Array([11921128, 16243903, 13454506]);
-    var tmp_71 = new Band_0(531504, tmp$ret$71);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$72 = new Int32Array([3706762, 14863870, 10639648]);
-    var tmp_72 = new Band_0(1048867, tmp$ret$72);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$73 = new Int32Array([14460863, 15978114, 16036848]);
-    var tmp_73 = new Band_0(3812397, tmp$ret$73);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$74 = new Int32Array([12507851, 8955279, 13020806]);
-    var tmp_74 = new Band_0(2953513, tmp$ret$74);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$75 = new Int32Array([11522223, 14925784, 9220992]);
-    var tmp_75 = new Band_0(3022127, tmp$ret$75);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$76 = new Int32Array([10389013, 12179577, 6277249]);
-    var tmp_76 = new Band_0(2104068, tmp$ret$76);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$77 = new Int32Array([3645556, 15259381, 4893877]);
-    var tmp_77 = new Band_0(2231345, tmp$ret$77);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$78 = new Int32Array([6015126, 171528, 191500]);
-    var tmp_78 = new Band_0(10242, tmp$ret$78);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$79 = new Int32Array([14542794, 9404100, 8975050]);
-    var tmp_79 = new Band_0(2823954, tmp$ret$79);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$80 = new Int32Array([10663578, 14607836, 12864039]);
-    var tmp_80 = new Band_0(922125, tmp$ret$80);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$81 = new Int32Array([11974722, 4896123, 5680716]);
-    var tmp_81 = new Band_0(729911, tmp$ret$81);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$82 = new Int32Array([12163236, 14868710, 15903659]);
-    var tmp_82 = new Band_0(1646403, tmp$ret$82);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$83 = new Int32Array([4097055, 16700127, 10702226]);
-    var tmp_83 = new Band_0(2293771, tmp$ret$83);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$84 = new Int32Array([15039456, 15778231, 13858950]);
-    var tmp_84 = new Band_0(2433560, tmp$ret$84);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$85 = new Int32Array([9359642, 6260333, 6932851]);
-    var tmp_85 = new Band_0(2163514, tmp$ret$85);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$86 = new Int32Array([7463468, 15134796, 13022182]);
-    var tmp_86 = new Band_0(1456500, tmp$ret$86);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$87 = new Int32Array([13989396, 12611008, 16508624]);
-    var tmp_87 = new Band_0(3086852, tmp$ret$87);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$88 = new Int32Array([14018811, 6805978, 1338568]);
-    var tmp_88 = new Band_0(201249, tmp$ret$88);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$89 = new Int32Array([7562706, 12028216, 13800693]);
-    var tmp_89 = new Band_0(2032687, tmp$ret$89);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$90 = new Int32Array([14346230, 13847178, 4897727]);
-    var tmp_90 = new Band_0(727853, tmp$ret$90);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$91 = new Int32Array([6878929, 13333129, 10207270]);
-    var tmp_91 = new Band_0(207649, tmp$ret$91);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$92 = new Int32Array([14381778, 3379353, 16111346]);
-    var tmp_92 = new Band_0(2689574, tmp$ret$92);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$93 = new Int32Array([946121, 5285107, 11323279]);
-    var tmp_93 = new Band_0(135713, tmp$ret$93);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$94 = new Int32Array([4742634, 13752058, 5275547]);
-    var tmp_94 = new Band_0(330286, tmp$ret$94);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$95 = new Int32Array([12494713, 2660783, 14104345]);
-    var tmp_95 = new Band_0(2427140, tmp$ret$95);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$96 = new Int32Array([6727387, 13388433, 14275417]);
-    var tmp_96 = new Band_0(3149088, tmp$ret$96);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$97 = new Int32Array([11558510, 16497640, 16215244]);
-    var tmp_97 = new Band_0(3146530, tmp$ret$97);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$98 = new Int32Array([7373886, 6988438, 7585673]);
-    var tmp_98 = new Band_0(791313, tmp$ret$98);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$99 = new Int32Array([12247418, 4180268, 4824270]);
-    var tmp_99 = new Band_0(993592, tmp$ret$99);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$100 = new Int32Array([13955802, 14835888, 14122912]);
-    var tmp_100 = new Band_0(2822230, tmp$ret$100);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$101 = new Int32Array([9695693, 7653935, 13556148]);
-    var tmp_101 = new Band_0(4402477, tmp$ret$101);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$102 = new Int32Array([4026532, 15345386, 16436474]);
-    var tmp_102 = new Band_0(2425893, tmp$ret$102);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$103 = new Int32Array([11818389, 12088145, 15916145]);
-    var tmp_103 = new Band_0(1841155, tmp$ret$103);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$104 = new Int32Array([3779685, 7320491, 12301443]);
-    var tmp_104 = new Band_0(2170642, tmp$ret$104);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$105 = new Int32Array([12499605, 9275222, 12793740]);
-    var tmp_105 = new Band_0(1249804, tmp$ret$105);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$106 = new Int32Array([15193340, 9847795, 8436923]);
-    var tmp_106 = new Band_0(2229315, tmp$ret$106);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$107 = new Int32Array([10959237, 8820442, 14559049]);
-    var tmp_107 = new Band_0(2032906, tmp$ret$107);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$108 = new Int32Array([12547485, 15719911, 12894042]);
-    var tmp_108 = new Band_0(3217189, tmp$ret$108);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$109 = new Int32Array([10806711, 11070408, 14648974]);
-    var tmp_109 = new Band_0(4133205, tmp$ret$109);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$110 = new Int32Array([12475240, 6265017, 4758416]);
-    var tmp_110 = new Band_0(660755, tmp$ret$110);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$111 = new Int32Array([13747677, 1621735, 12161694]);
-    var tmp_111 = new Band_0(3934272, tmp$ret$111);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$112 = new Int32Array([11588437, 4230267, 13881818]);
-    var tmp_112 = new Band_0(1578780, tmp$ret$112);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$113 = new Int32Array([12110868, 9011658, 11305278]);
-    var tmp_113 = new Band_0(1908739, tmp$ret$113);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$114 = new Int32Array([9185530, 7698391, 14100524]);
-    var tmp_114 = new Band_0(1901116, tmp$ret$114);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$115 = new Int32Array([5799971, 14998002, 10315583]);
-    var tmp_115 = new Band_0(1247775, tmp$ret$115);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$116 = new Int32Array([16218612, 16636412, 6264787]);
-    var tmp_116 = new Band_0(4392002, tmp$ret$116);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$117 = new Int32Array([2334493, 15979476, 12071224]);
-    var tmp_117 = new Band_0(2099466, tmp$ret$117);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$118 = new Int32Array([14797500, 5688721, 13015635]);
-    var tmp_118 = new Band_0(2173995, tmp$ret$118);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$119 = new Int32Array([7573214, 8641637, 12309363]);
-    var tmp_119 = new Band_0(732215, tmp$ret$119);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$120 = new Int32Array([12837818, 13877454, 5029242]);
-    var tmp_120 = new Band_0(1191738, tmp$ret$120);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$121 = new Int32Array([13474441, 14601949, 6549101]);
-    var tmp_121 = new Band_0(1652756, tmp$ret$121);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$122 = new Int32Array([6999522, 10968268, 13890244]);
-    var tmp_122 = new Band_0(1189384, tmp$ret$122);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$123 = new Int32Array([11320168, 12335203, 4954969]);
-    var tmp_123 = new Band_0(984637, tmp$ret$123);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$124 = new Int32Array([12708314, 8438408, 8286927]);
-    var tmp_124 = new Band_0(795162, tmp$ret$124);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$125 = new Int32Array([5359789, 13945781, 9351059]);
-    var tmp_125 = new Band_0(2370843, tmp$ret$125);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$126 = new Int32Array([5208726, 12453749, 14638442]);
-    var tmp_126 = new Band_0(2228501, tmp$ret$126);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$127 = new Int32Array([4097476, 12531651, 13689329]);
-    var tmp_127 = new Band_0(859435, tmp$ret$127);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$128 = new Int32Array([15720381, 13145823, 10063155]);
-    var tmp_128 = new Band_0(2367277, tmp$ret$128);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$129 = new Int32Array([14671448, 10975704, 7579609]);
-    tmp.yo_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, tmp_44, tmp_45, tmp_46, tmp_47, tmp_48, tmp_49, tmp_50, tmp_51, tmp_52, tmp_53, tmp_54, tmp_55, tmp_56, tmp_57, tmp_58, tmp_59, tmp_60, tmp_61, tmp_62, tmp_63, tmp_64, tmp_65, tmp_66, tmp_67, tmp_68, tmp_69, tmp_70, tmp_71, tmp_72, tmp_73, tmp_74, tmp_75, tmp_76, tmp_77, tmp_78, tmp_79, tmp_80, tmp_81, tmp_82, tmp_83, tmp_84, tmp_85, tmp_86, tmp_87, tmp_88, tmp_89, tmp_90, tmp_91, tmp_92, tmp_93, tmp_94, tmp_95, tmp_96, tmp_97, tmp_98, tmp_99, tmp_100, tmp_101, tmp_102, tmp_103, tmp_104, tmp_105, tmp_106, tmp_107, tmp_108, tmp_109, tmp_110, tmp_111, tmp_112, tmp_113, tmp_114, tmp_115, tmp_116, tmp_117, tmp_118, tmp_119, tmp_120, tmp_121, tmp_122, tmp_123, tmp_124, tmp_125, tmp_126, tmp_127, tmp_128, new Band_0(4522310, tmp$ret$129)]);
+    var tmp$ret$4 = new Int32Array([7128742, 10937289, 6142819, 3971669, 14698568]);
+    tmp.zo_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, new Band_0(993828, tmp$ret$4)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -10623,23 +10268,23 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).ee);
   defineProp(protoOf(Engine), 'foundation', protoOf(Engine).rk);
   defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).al);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).gl);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).hl);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).d8);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).e8);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).hl);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).il);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).jl);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).kl);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).ll);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).ml);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).nl);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).ol);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).pl);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).ql);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).em);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).nm);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).om);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).qm);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).il);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).jl);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).kl);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).ll);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).ml);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).nl);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).ol);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).pl);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).ql);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).rl);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).fm);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).om);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).pm);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).rm);
   //endregion
   //region block: init
   Unit_instance = new Unit();
@@ -10733,7 +10378,7 @@ if (HOST_WEB) document.documentElement.style.touchAction = document.body.style.t
    reloads it. Nothing of the advert's own is drawn — no way out, no speaker, no lesson — and
    nothing ends a run but the tower falling, because somebody may play one while deciding.
    `&pick=1` is the palette maker: a tap on a crate says which of the colours it wears
-   (`boxstack:pick`, 1 to 3) and a tap on the sky says the background (0). */
+   (`boxstack:pick`, from 1) and a tap on the sky says the background (0). */
 var HOST_PALETTE = /[?&]host=palette/.test(location.search);
 var PICK = HOST_PALETTE && /[?&]pick=1/.test(location.search);
 
@@ -12624,10 +12269,10 @@ if (HOST_PALETTE) {
   addEventListener("message", function (e) {
     if (e.origin !== location.origin || e.source !== parent) return;
     var d = e.data;
-    if (!d || d.type !== "boxstack:palette" || !d.crates || d.crates.length !== 3) return;
-    var four = [d.field].concat(d.crates).map(hexValue);
-    if (four.indexOf(-1) >= 0) return;
-    E.usePalette(four[0], four[1], four[2], four[3]);
+    if (!d || d.type !== "boxstack:palette" || !d.crates || d.crates.length < 1 || d.crates.length > 8) return;
+    var field = hexValue(d.field), crates = d.crates.map(hexValue);
+    if (field < 0 || crates.indexOf(-1) >= 0) return;
+    E.usePalette(field, Int32Array.from(crates));
     shapeCache = [null, null, null];
     wearChrome();
   });

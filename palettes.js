@@ -702,6 +702,18 @@
 
   // ------------------------------------------------------------------ start
 
+  /** The game's own original palette, for pictures when there is nothing else to show. */
+  var ORIGINAL = { field: "0D1421", crates: ["1FC8DE", "8AD93A", "3F92F5"] };
+
+  /** A way in shows one of its palettes, or says there is nothing there yet and stays shut. */
+  function offer(kind, list, empty) {
+    var way = $("go-" + kind);
+    drawTower($("art-" + kind), list.length ? list[Math.floor(Math.random() * list.length)] : ORIGINAL);
+    if (list.length) return;
+    way.disabled = true;
+    way.querySelector(".way-text span").textContent = empty;
+  }
+
   (async function start() {
     var data;
     try {
@@ -736,12 +748,14 @@
     $("load-status").hidden = true;
     $("ways").hidden = false;
     if (memory.draft) loadMaker({ field: memory.draft[0], crates: memory.draft.slice(1) });
-    else loadMaker(pool[Math.floor(Math.random() * pool.length)]);
-    drawTower($("art-vote"), pool[Math.floor(Math.random() * pool.length)]);
-    drawTower($("art-game"), game[Math.floor(Math.random() * game.length)]);
+    else if (pool.length) loadMaker(pool[Math.floor(Math.random() * pool.length)]);
+    else loadMaker(ORIGINAL);
+    offer("vote", pool, "Nothing to vote on right now. New palettes are on the way");
+    offer("game", game, "Nothing to vote out right now");
     drawTower($("art-make"), makerPalette());
     var m = modeFromHash();
-    if (m) { lastMode = m; openStage(m, true); }
+    if (m && !$("go-" + m).disabled) { lastMode = m; openStage(m, true); }
+    else if (m) history.replaceState(null, "", location.pathname + location.search);
     flush();
   })();
 })();
