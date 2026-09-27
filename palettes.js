@@ -1,7 +1,7 @@
 /* Box Stack palette votes: palettes.html.
  *
- * The page reads palettes.json (every harvested palette, and the ones already in the game), and
- * talks to one small Cloudflare Worker for everything that has to be shared between visitors. Its
+ * The page reads palettes.json (the palettes offered to the vote, and the ones already in the game),
+ * and talks to one small Cloudflare Worker for everything that has to be shared between visitors. Its
  * source and the steps to set it up live in the Boxstack repository, tools/palette-votes/.
  *
  * **A palette is judged on the game, not on a swatch.** Voting, voting one out and making one all
@@ -25,6 +25,10 @@
   var HERE = location.origin === "null" ? "*" : location.origin;
 
   var BATCH = 20;
+  /** A palette someone makes starts with three crate colours and can have up to ten, as the game's. */
+  var MIN_CRATES = 3, MAX_CRATES = 10;
+  /** The names the Worker has to take before a vote made here is sent: see `names` in worker.js. */
+  var NAMES = 2;
   var STORE = "tg-palettes-v1";
   var CLEANSE_MS = 800;
 
@@ -69,13 +73,27 @@
 
   // ------------------------------------------------------------------ palettes
 
-  /** A palette: its background and three crates, as six-digit hex. */
+  /** A palette as palettes.json packs it: its background, then its crates, as six-digit hex. */
   function unpack(s) {
-    return { field: s.slice(0, 6), crates: [s.slice(6, 12), s.slice(12, 18), s.slice(18, 24)] };
+    var all = s.match(/[0-9A-F]{6}/g);
+    return { field: all[0], crates: all.slice(1) };
   }
-  /** Its name: the four colours sorted, exactly as the Worker checks it. */
+  /**
+   * Its name, exactly as the Worker checks it: the background, then the crates sorted, so the same
+   * crates in another order are the same palette. The game's own keep their repeats: a colour has
+   * as many of their ten slots as it covers of the thing the palette is of.
+   */
   function nameOf(p) {
-    return [p.field].concat(p.crates).slice().sort().join("-");
+    return p.field + ":" + p.crates.slice().sort().join("-");
+  }
+  /** A name back into a palette, or null if it is not one this page makes. */
+  function fromName(name) {
+    var m = /^([0-9A-F]{6}):([0-9A-F]{6}(?:-[0-9A-F]{6}){0,9})$/.exec(name);
+    return m ? { field: m[1], crates: m[2].split("-") } : null;
+  }
+  /** Each colour once, in the order it first appears. */
+  function distinct(list) {
+    return list.filter(function (c, i) { return list.indexOf(c) === i; });
   }
   function shuffled(list) {
     var out = list.slice();
@@ -89,14 +107,16 @@
   /*
    * A small tower on the palette's own background, for the summaries and the ways in: loose crates
    * in their piece's colour, and two finished rows, each entirely the colour of the piece that
-   * closed it. Top row first. Digits are crate colours; a, b are finished rows; dots are air.
+   * closed it. Top row first. Digits are crate slots, taken round the palette's crates the way the
+   * game deals them, so a palette of three shows three and the game's ten-slot ones show their
+   * proportions; a, b are finished rows; dots are air.
    */
   var SHAPE = [
-    "...22...",
-    ".111....",
-    ".00022..",
+    "...66...",
+    ".555.77.",
+    ".4448899",
     "bbbbbbbb",
-    "01.12200",
+    "01.12233",
     "aaaaaaaa",
   ];
 
@@ -107,12 +127,12 @@
       for (var i = 0; i < row.length; i++) {
         var ch = row[i];
         if (ch === ".") { cells.push('<i class="gap"></i>'); continue; }
-        var crate = ch === "a" ? 0 : ch === "b" ? 1 : Number(ch);
-        cells.push('<i style="background:#' + p.crates[crate] + '"></i>');
+        var slot = ch === "a" ? 0 : ch === "b" ? 3 : Number(ch);
+        cells.push('<i style="background:#' + p.crates[slot % p.crates.length] + '"></i>');
       }
     });
     el.innerHTML = cells.join("");
-    el.setAttribute("aria-label", "Background #" + p.field + " with crates #" + p.crates.join(", #"));
+    el.setAttribute("aria-label", "Background #" + p.field + " with crates #" + distinct(p.crates).join(", #"));
   }
 
   function miniTower(p) {
@@ -136,7 +156,8 @@
       memory.outbox = Array.isArray(saved.outbox) ? saved.outbox : [];
       memory.cleanser = saved.cleanser === true;
       var d = saved.draft;
-      memory.draft = Array.isArray(d) && d.length === 4 && d.every(function (c) { return /^[0-9A-F]{6}$/.test(c); }) ? d : null;
+      memory.draft = Array.isArray(d) && d.length >= 1 + MIN_CRATES && d.length <= 1 + MAX_CRATES &&
+        d.every(function (c) { return /^[0-9A-F]{6}$/.test(c); }) ? d : null;
     }
   } catch (e) { /* private window or blocked storage: start fresh, which is fine */ }
 
@@ -166,10 +187,28 @@
     return flush();
   }
 
+  /*
+   * **Nothing is sent to a Worker that would refuse it.** The page is published by a push and the
+   * Worker by a paste, so for a while one can be newer than the other; a vote refused in that time
+   * would be gone. Until the Worker says it takes this page's names, votes wait on this device.
+   */
+  var workerTakes = false;
+  async function workerReady() {
+    if (!workerTakes) {
+      var h = await getJSON("/health");
+      workerTakes = Boolean(h && h.names >= NAMES);
+    }
+    return workerTakes;
+  }
+
   var flushing = null;
   function flush() {
     if (flushing) return flushing;
     flushing = (async function () {
+      if (memory.outbox.length && !(await workerReady())) {
+        syncEl.textContent = "The vote box is being updated. Your choices are saved here and will be sent when it's ready.";
+        return;
+      }
       while (memory.outbox.length) {
         var next = memory.outbox[0];
         var res;
@@ -243,7 +282,7 @@
       $("stage-loading").hidden = true;
       if (shown) wear(shown);
       try { frame.contentWindow.addEventListener("keydown", onKey); } catch (err) { /* keys stay on the page */ }
-    } else if (d.type === "boxstack:pick" && mode === "make" && d.slot >= 0 && d.slot <= 3) {
+    } else if (d.type === "boxstack:pick" && mode === "make" && d.slot >= 0 && d.slot < made.colours.length) {
       made.slot = d.slot;
       fold(false);
       paintMaker(true);
@@ -493,7 +532,7 @@
       var b = document.createElement("button");
       b.className = "pick";
       b.setAttribute("aria-pressed", "true");
-      b.setAttribute("aria-label", "Take out: background #" + p.field + ", crates #" + p.crates.join(", #"));
+      b.setAttribute("aria-label", "Take out: background #" + p.field + ", crates #" + distinct(p.crates).join(", #"));
       b.appendChild(miniTower(p));
       var badge = document.createElement("span");
       badge.className = "badge";
@@ -554,7 +593,6 @@
   // ------------------------------------------------------------------ making one
 
   var made = { colours: [], slot: 0 };
-  var SLOT_NAMES = ["Background", "Crate 1", "Crate 2", "Crate 3"];
   var slotsEl = $("make-slots");
   var picker = $("make-picker");
   var hexIn = $("make-hex");
@@ -564,8 +602,16 @@
     return { field: made.colours[0], crates: made.colours.slice(1) };
   }
 
-  function loadMaker(p) {
-    made.colours = [p.field].concat(p.crates);
+  /**
+   * Starts the maker on [p]: its background and each of its crate colours once — the game's own
+   * give a colour several slots, and a palette made here is each colour once — at least three, and
+   * no more than [crates] when a fresh start asks for fewer. A draft comes back [exactly] as it was
+   * left, repeats and all, since it is still being made.
+   */
+  function loadMaker(p, crates, exactly) {
+    var own = exactly ? p.crates.slice() : distinct(p.crates).slice(0, crates || MAX_CRATES);
+    while (own.length < MIN_CRATES) own.push(randomHex());
+    made.colours = [p.field].concat(own);
     made.slot = 0;
     $("make-status").textContent = "";
     paintMaker(true);
@@ -579,19 +625,19 @@
       b.style.background = "#" + c;
       b.setAttribute("role", "radio");
       b.setAttribute("aria-checked", i === made.slot ? "true" : "false");
-      b.setAttribute("aria-label", SLOT_NAMES[i] + ", #" + c);
+      b.setAttribute("aria-label", (i === 0 ? "Background" : "Crate " + i) + ", #" + c);
       b.tabIndex = i === made.slot ? 0 : -1;
       b.addEventListener("click", function () { made.slot = i; fold(false); paintMaker(true); });
       b.addEventListener("keydown", function (e) {
         var d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
         if (!d) return;
         e.preventDefault();
-        made.slot = (made.slot + d + 4) % 4;
+        made.slot = (made.slot + d + made.colours.length) % made.colours.length;
         paintMaker(true);
         slotsEl.querySelectorAll('[role="radio"]')[made.slot].focus();
       });
       var label = document.createElement("span");
-      label.textContent = i === 0 ? "Background" : "Crate " + i;
+      label.textContent = i === 0 ? "Background" : String(i);
       label.setAttribute("aria-hidden", "true");
       var cell = document.createElement("span");
       cell.className = "chip-cell" + (i === 0 ? " field" : "");
@@ -599,6 +645,22 @@
       cell.appendChild(label);
       slotsEl.appendChild(cell);
     });
+    // Three crate colours to start, and room for more up to the game's ten.
+    if (made.colours.length - 1 < MAX_CRATES) {
+      var add = document.createElement("button");
+      add.className = "chip add";
+      add.setAttribute("aria-label", "Add a crate colour");
+      add.innerHTML = '<span aria-hidden="true">+</span>';
+      add.addEventListener("click", addCrate);
+      var addLabel = document.createElement("span");
+      addLabel.textContent = "Add";
+      addLabel.setAttribute("aria-hidden", "true");
+      var addCell = document.createElement("span");
+      addCell.className = "chip-cell";
+      addCell.appendChild(add);
+      addCell.appendChild(addLabel);
+      slotsEl.appendChild(addCell);
+    }
     var hex = made.colours[made.slot];
     picker.value = "#" + hex.toLowerCase();
     if (document.activeElement !== hexIn) hexIn.value = "#" + hex;
@@ -608,8 +670,9 @@
     }
     paintTracks(hex);
     $("make-as-field").hidden = made.slot === 0;
-    // Four colours, all different, is what a palette is: the one thing that has to be true.
-    var same = new Set(made.colours).size < 4;
+    $("make-remove").hidden = made.slot === 0 || made.colours.length - 1 <= MIN_CRATES;
+    // Every colour different is the one thing a palette has to be.
+    var same = new Set(made.colours).size < made.colours.length;
     var submit = $("make-submit");
     submit.disabled = same;
     submit.textContent = same ? "Two of the colours are the same" : "Add it to the vote";
@@ -668,7 +731,28 @@
   });
   $("make-random-one").addEventListener("click", function () { setSlot(randomHex(), true); });
   $("make-random-all").addEventListener("click", function () {
-    loadMaker({ field: randomHex(), crates: [randomHex(), randomHex(), randomHex()] });
+    var crates = [];
+    for (var i = 1; i < made.colours.length; i++) crates.push(randomHex());
+    loadMaker({ field: randomHex(), crates: crates });
+  });
+
+  /** A new crate colour, chosen at random and ready to change: the editor opens on it. */
+  function addCrate() {
+    if (made.colours.length - 1 >= MAX_CRATES) return;
+    made.colours.push(randomHex());
+    made.slot = made.colours.length - 1;
+    $("make-status").textContent = "";
+    fold(false);
+    paintMaker(true);
+    var chips = slotsEl.querySelectorAll('[role="radio"]');
+    chips[made.slot].focus({ preventScroll: true });
+  }
+  $("make-remove").addEventListener("click", function () {
+    if (made.slot === 0 || made.colours.length - 1 <= MIN_CRATES) return;
+    made.colours.splice(made.slot, 1);
+    made.slot = Math.min(made.slot, made.colours.length - 1);
+    $("make-status").textContent = "";
+    paintMaker(true);
   });
 
   $("make-submit").addEventListener("click", function () {
@@ -677,7 +761,7 @@
     var status = $("make-status");
     memory.votes[name] = 1;     // making it is its maker's keep, on the Worker too
     status.textContent = "Sending…";
-    memory.outbox.push({ path: "/submit", body: { palette: name, field: p.field, visitor: memory.visitor } });
+    memory.outbox.push({ path: "/submit", body: { palette: name, visitor: memory.visitor } });
     remember();
     var sent = memory.outbox[memory.outbox.length - 1];
     sent.onDone = async function (res) {
@@ -703,7 +787,7 @@
   // ------------------------------------------------------------------ start
 
   /** The game's own original palette, for pictures when there is nothing else to show. */
-  var ORIGINAL = { field: "0D1421", crates: ["1FC8DE", "8AD93A", "3F92F5"] };
+  var ORIGINAL = { field: "0D1421", crates: ["1FC8DE", "8AD93A", "3F92F5", "9B6BF2", "DE6FD6"] };
 
   /** A way in shows one of its palettes, or says there is nothing there yet and stays shut. */
   function offer(kind, list, empty) {
@@ -734,11 +818,11 @@
       getJSON("/counts").then(function (c) { if (c) counts = c; }),
       getJSON("/submissions").then(function (list) {
         (list || []).forEach(function (s) {
-          if (have[s.palette] || !/^[0-9A-F]{6}$/.test(s.field)) return;
-          var four = s.palette.split("-");
-          if (four.indexOf(s.field) < 0) return;
+          var p = typeof s.palette === "string" && fromName(s.palette);
+          if (!p || have[s.palette]) return;
           have[s.palette] = true;
-          pool.push({ field: s.field, crates: four.filter(function (c) { return c !== s.field; }), player: true });
+          p.player = true;
+          pool.push(p);
         });
       }),
     ]);
@@ -747,9 +831,10 @@
     loaded = true;
     $("load-status").hidden = true;
     $("ways").hidden = false;
-    if (memory.draft) loadMaker({ field: memory.draft[0], crates: memory.draft.slice(1) });
-    else if (pool.length) loadMaker(pool[Math.floor(Math.random() * pool.length)]);
-    else loadMaker(ORIGINAL);
+    // A fresh start is three crate colours; more are a tap away.
+    if (memory.draft) loadMaker({ field: memory.draft[0], crates: memory.draft.slice(1) }, MAX_CRATES, true);
+    else if (pool.length) loadMaker(pool[Math.floor(Math.random() * pool.length)], MIN_CRATES);
+    else loadMaker(ORIGINAL, MIN_CRATES);
     offer("vote", pool, "Nothing to vote on right now. New palettes are on the way");
     offer("game", game, "Nothing to vote out right now");
     drawTower($("art-make"), makerPalette());

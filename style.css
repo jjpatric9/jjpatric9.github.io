@@ -822,7 +822,7 @@ html.staged, html.staged body { overflow: hidden; }
 .cleanser.out { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .cleanser { transition: none; } }
 
-/* The maker's sheet, under the game: the four colours, then what changes the chosen one. */
+/* The maker's sheet, under the game: its colours, then what changes the chosen one. */
 .stage-sheet {
   display: grid;
   gap: 0.35rem;
@@ -834,7 +834,9 @@ html.staged, html.staged body { overflow: hidden; }
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .stage-sheet[hidden] { display: none; }
-.chips { display: grid; grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+/* The background, then the crates and the way to add one, wrapping as there come to be more. */
+.chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 0.5rem; }
+.chip-cell.field { grid-column: span 2; }
 .chip-cell { display: grid; gap: 0.2rem; justify-items: stretch; text-align: center; font-size: 0.76rem; color: var(--ink-dim); min-width: 0; }
 .chip-cell span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chip {
@@ -847,6 +849,13 @@ html.staged, html.staged body { overflow: hidden; }
   touch-action: manipulation;
 }
 .chip[aria-checked="true"] { outline: 3px solid var(--amber); outline-offset: 2px; }
+.chip.add {
+  background: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+  color: var(--ink);
+  font: 600 1.5rem/1 var(--display);
+}
+.chip.add:hover { box-shadow: inset 0 0 0 2px var(--amber); color: var(--amber); }
 .sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .sheet-hint { margin: 0; font-size: 0.88rem; }
 .sheet-row button.link { flex: none; min-width: 3.5rem; }
