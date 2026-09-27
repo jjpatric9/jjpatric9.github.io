@@ -108,17 +108,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
   initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -163,7 +163,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -266,6 +266,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForCompanion(Companion_17);
   initMetadataForClass(Lab, 'Lab');
   initMetadataForClass(ChromePalette, 'ChromePalette');
+  initMetadataForClass(Water, 'Water');
+  initMetadataForObject(DockMaterial, 'DockMaterial');
   initMetadataForObject(PlayfieldAnim, 'PlayfieldAnim');
   initMetadataForCompanion(Companion_18);
   initMetadataForClass(ViewCamera, 'ViewCamera');
@@ -8720,8 +8722,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).zk = function () {
     return this.zh_1.al(TowerBands_getInstance().xk(this.yh_1.jd_1));
   };
+  protoOf(Engine).bl = function () {
+    return DockMaterial_instance.bm(this.zh_1.al(0)).cl_1;
+  };
+  protoOf(Engine).cm = function () {
+    return DockMaterial_instance.bm(this.zh_1.al(0)).dl_1;
+  };
+  protoOf(Engine).dm = function () {
+    return DockMaterial_instance.bm(this.zh_1.al(0)).el_1;
+  };
+  protoOf(Engine).em = function () {
+    return DockMaterial_instance.bm(this.zh_1.al(0)).fl_1;
+  };
   protoOf(Engine).chrome = function (role) {
-    return this.zh_1.bl(TowerBands_getInstance().xk(this.yh_1.jd_1)).el(valueOf(role));
+    return this.zh_1.fm(TowerBands_getInstance().xk(this.yh_1.jd_1)).im(valueOf(role));
   };
   protoOf(Engine).usePalette = function (field, crates) {
     // Inline function 'kotlin.collections.copyOf' call
@@ -8756,7 +8770,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp0_safe_receiver = board.p9(y);
       var tmp1_safe_receiver = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.v8_1;
       var tmp2_elvis_lhs = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.d1_1;
-      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % this.zh_1.fl(setRowBand(board, y)).length | 0;
+      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % this.zh_1.jm(setRowBand(board, y)).length | 0;
     }
     var tmp3_elvis_lhs = Companion_getInstance_9().f9(board.q9(x, y));
     var tmp;
@@ -8766,10 +8780,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp3_elvis_lhs;
     }
     var id = tmp;
-    return id.d1_1 % this.zh_1.fl(crateBand(board, x, y)).length | 0;
+    return id.d1_1 % this.zh_1.jm(crateBand(board, x, y)).length | 0;
   };
   protoOf(Engine).handSlot = function (shapeOrdinal) {
-    return shapeOrdinal % this.zh_1.fl(TowerBands_getInstance().xk(this.yh_1.jd_1)).length | 0;
+    return shapeOrdinal % this.zh_1.jm(TowerBands_getInstance().xk(this.yh_1.jd_1)).length | 0;
   };
   protoOf(Engine).completingRows = function (slot, originX) {
     var tmp0_elvis_lhs = this.yh_1.kd_1.le(slot);
@@ -8790,7 +8804,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.ve_1);
   };
-  protoOf(Engine).gl = function () {
+  protoOf(Engine).km = function () {
     return this.yh_1.zd_1.c8_1;
   };
   protoOf(Engine).d8 = function () {
@@ -8799,22 +8813,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).e8 = function () {
     return this.yh_1.de();
   };
-  protoOf(Engine).hl = function () {
+  protoOf(Engine).lm = function () {
     return this.yh_1.qd_1 - this.ci_1 | 0;
   };
-  protoOf(Engine).il = function () {
+  protoOf(Engine).mm = function () {
     return this.yh_1.sd_1;
   };
-  protoOf(Engine).jl = function () {
+  protoOf(Engine).nm = function () {
     return this.yh_1.td_1 - this.di_1 | 0;
   };
-  protoOf(Engine).kl = function () {
+  protoOf(Engine).om = function () {
     return this.yh_1.qd_1;
   };
-  protoOf(Engine).ll = function () {
+  protoOf(Engine).pm = function () {
     return Placement_instance.ug(this.yh_1.jd_1);
   };
-  protoOf(Engine).ml = function () {
+  protoOf(Engine).qm = function () {
     return this.yh_1.kd_1.je_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
@@ -8911,44 +8925,44 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.gi_1 = out.hd_1.ad_1;
     return this.ei_1.length;
   };
-  protoOf(Engine).nl = function () {
+  protoOf(Engine).rm = function () {
     return this.bi_1;
   };
   protoOf(Engine).rowsJustSet = function () {
     return this.ei_1;
   };
-  protoOf(Engine).ol = function () {
+  protoOf(Engine).sm = function () {
     return this.fi_1;
   };
-  protoOf(Engine).pl = function () {
+  protoOf(Engine).tm = function () {
     return this.gi_1;
   };
-  protoOf(Engine).ql = function () {
+  protoOf(Engine).um = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.rl(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).wi_1;
+    return PlayfieldGeometry_instance.vm(this.yh_1.jd_1.s8_1, numberToInt(playingRows)).wi_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.zl(progress, revealing);
+    return ResultsAnim_instance.dn(progress, revealing);
   };
   protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.am(revealing);
+    return ResultsAnim_instance.en(revealing);
   };
   protoOf(Engine).topplePhase = function (progress, revealing) {
-    return ResultsAnim_instance.bm(progress, revealing);
+    return ResultsAnim_instance.fn(progress, revealing);
   };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.cm(topple, tilt(this));
+    return ResultsAnim_instance.gn(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.dm(topple);
+    return ResultsAnim_instance.hn(topple);
   };
-  protoOf(Engine).em = function () {
-    return ResultsAnim_instance.fm(this.yh_1.jd_1);
+  protoOf(Engine).in = function () {
+    return ResultsAnim_instance.jn(this.yh_1.jd_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.yh_1.jd_1;
@@ -8970,10 +8984,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.q9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.gm(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.hm_1);
-            out.d(piece.im_1);
-            out.d(piece.jm_1);
+            var piece = ResultsAnim_instance.kn(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
+            out.d(piece.ln_1);
+            out.d(piece.mn_1);
+            out.d(piece.nn_1);
             out.d(board.m9(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8983,15 +8997,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().mm(combo, rows, index);
+    return SoundLadder_getInstance().qn(combo, rows, index);
   };
-  protoOf(Engine).nm = function () {
+  protoOf(Engine).rn = function () {
     return (new Long(300, 0)).u1();
   };
-  protoOf(Engine).om = function () {
-    return ResultsAnim_instance.pm(true, false);
+  protoOf(Engine).sn = function () {
+    return ResultsAnim_instance.tn(true, false);
   };
-  protoOf(Engine).qm = function () {
+  protoOf(Engine).un = function () {
     return get_entries().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
@@ -9272,10 +9286,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp;
   }
   function Companion_16() {
-    this.rm_1 = 20;
-    this.sm_1 = 1.0E-4;
+    this.vn_1 = 20;
+    this.wn_1 = 1.0E-4;
   }
-  protoOf(Companion_16).tm = function (packed) {
+  protoOf(Companion_16).xn = function (packed) {
     var r = linear(this, packed >> 16 & 255);
     var g = linear(this, packed >> 8 & 255);
     var b = linear(this, packed & 255);
@@ -9292,7 +9306,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp$ret$1 = Math.atan2(bb, a);
     return new Lab(l, tmp, tmp$ret$1);
   };
-  protoOf(Companion_16).um = function (l, chroma, hue) {
+  protoOf(Companion_16).yn = function (l, chroma, hue) {
     var lo = 0.0;
     var hi = chroma;
     if (inGamut(this, l, hi, hue))
@@ -9321,8 +9335,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function Role(name, ordinal, night, ink) {
     ink = ink === VOID ? false : ink;
     Enum.call(this, name, ordinal);
-    this.xm_1 = night;
-    this.ym_1 = ink;
+    this.bo_1 = night;
+    this.co_1 = ink;
   }
   function Companion_17() {
     Companion_instance_17 = this;
@@ -9332,31 +9346,31 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_2 = new Int32Array(tmp_1);
     while (tmp_0 < tmp_1) {
       var tmp_3 = tmp_0;
-      tmp_2[tmp_3] = get_entries_0().j(tmp_3).xm_1;
+      tmp_2[tmp_3] = get_entries_0().j(tmp_3).bo_1;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.zm_1 = new ChromePalette(tmp_2, 240.0);
-    this.an_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
-    this.bn_1 = 240.0;
-    this.cn_1 = 0.65;
-    this.dn_1 = 0.15;
-    this.en_1 = 360.0;
-    this.fn_1 = 180.0;
-    this.gn_1 = 0.015;
-    this.hn_1 = 0.6;
-    this.in_1 = 0.21;
-    this.jn_1 = 0.3;
-    this.kn_1 = 0.145;
-    this.ln_1 = Companion_instance_16.tm(Role_BACKGROUND_getInstance().xm_1).qn_1;
-    this.mn_1 = 0.7;
-    this.nn_1 = 0.05;
-    this.on_1 = 0.3;
-    this.pn_1 = 0.025;
+    tmp.do_1 = new ChromePalette(tmp_2, 240.0);
+    this.eo_1 = Companion_instance_16.xn(Role_BACKGROUND_getInstance().bo_1).uo_1;
+    this.fo_1 = 240.0;
+    this.go_1 = 0.65;
+    this.ho_1 = 0.15;
+    this.io_1 = 360.0;
+    this.jo_1 = 180.0;
+    this.ko_1 = 0.015;
+    this.lo_1 = 0.6;
+    this.mo_1 = 0.21;
+    this.no_1 = 0.3;
+    this.oo_1 = 0.145;
+    this.po_1 = Companion_instance_16.xn(Role_BACKGROUND_getInstance().bo_1).uo_1;
+    this.qo_1 = 0.7;
+    this.ro_1 = 0.05;
+    this.so_1 = 0.3;
+    this.to_1 = 0.025;
   }
-  protoOf(Companion_17).tn = function (field, crates) {
-    var f = Companion_instance_16.tm(field);
-    var hue = {_v: f.sn_1};
-    var chroma = f.rn_1;
+  protoOf(Companion_17).xo = function (field, crates) {
+    var f = Companion_instance_16.xn(field);
+    var hue = {_v: f.wo_1};
+    var chroma = f.vo_1;
     if (chroma < 0.015) {
       var tmp$ret$3;
       $l$block_0: {
@@ -9369,7 +9383,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         while (inductionVariable < last) {
           var item = crates[inductionVariable];
           inductionVariable = inductionVariable + 1 | 0;
-          var tmp$ret$0 = Companion_instance_16.tm(item);
+          var tmp$ret$0 = Companion_instance_16.xn(item);
           destination.d(tmp$ret$0);
         }
         var iterator = destination.f();
@@ -9383,11 +9397,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           break $l$block_0;
         }
         // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
-        var maxValue = maxElem.rn_1;
+        var maxValue = maxElem.vo_1;
         do {
           var e = iterator.h();
           // Inline function 'com.boxstack.presentation.Companion.of.<anonymous>' call
-          var v = e.rn_1;
+          var v = e.vo_1;
           if (compareTo(maxValue, v) < 0) {
             maxElem = e;
             maxValue = v;
@@ -9397,14 +9411,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         tmp$ret$3 = maxElem;
       }
       var vivid = tmp$ret$3;
-      if (!(vivid == null) && vivid.rn_1 > 0.015 * 2) {
-        hue._v = vivid.sn_1;
+      if (!(vivid == null) && vivid.vo_1 > 0.015 * 2) {
+        hue._v = vivid.wo_1;
         chroma = 0.015;
       } else {
         chroma = 0.0;
       }
     }
-    var base = f.qn_1 >= 0.6 ? this.an_1 : coerceIn_1(this.an_1 + (f.qn_1 - 0.21) * 0.3, 0.145, this.ln_1);
+    var base = f.uo_1 >= 0.6 ? this.eo_1 : coerceIn_1(this.eo_1 + (f.uo_1 - 0.21) * 0.3, 0.145, this.po_1);
     // Inline function 'kotlin.comparisons.minOf' call
     var a = chroma * 0.7;
     var surfaceChroma = Math.min(a, 0.05);
@@ -9417,18 +9431,18 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     while (tmp < tmp_0) {
       var tmp_2 = tmp;
       var role = get_entries_0().j(tmp_2);
-      var night = Companion_instance_16.tm(role.xm_1);
+      var night = Companion_instance_16.xn(role.bo_1);
       var tmp_3;
-      if (role.ym_1) {
-        tmp_3 = Companion_instance_16.um(night.qn_1, inkChroma, hue._v);
+      if (role.co_1) {
+        tmp_3 = Companion_instance_16.yn(night.uo_1, inkChroma, hue._v);
       } else {
-        tmp_3 = Companion_instance_16.um(base + (night.qn_1 - Companion_getInstance_17().an_1), surfaceChroma, hue._v);
+        tmp_3 = Companion_instance_16.yn(base + (night.uo_1 - Companion_getInstance_17().eo_1), surfaceChroma, hue._v);
       }
       tmp_1[tmp_2] = tmp_3;
       tmp = tmp + 1 | 0;
     }
     var colours = tmp_1;
-    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.um(0.65, 0.15, hue._v));
+    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.yn(0.65, 0.15, hue._v));
     return new ChromePalette(colours, glow);
   };
   var Companion_instance_17;
@@ -9438,9 +9452,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_17;
   }
   function Lab(l, chroma, hue) {
-    this.qn_1 = l;
-    this.rn_1 = chroma;
-    this.sn_1 = hue;
+    this.uo_1 = l;
+    this.vo_1 = chroma;
+    this.wo_1 = hue;
   }
   function Role_BACKGROUND_getInstance() {
     Role_initEntries();
@@ -9532,30 +9546,71 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function ChromePalette(colours, glowHue) {
     Companion_getInstance_17();
-    this.cl_1 = colours;
-    this.dl_1 = glowHue;
+    this.gm_1 = colours;
+    this.hm_1 = glowHue;
   }
-  protoOf(ChromePalette).el = function (role) {
-    return this.cl_1[role.d1_1];
+  protoOf(ChromePalette).im = function (role) {
+    return this.gm_1[role.d1_1];
   };
   protoOf(ChromePalette).equals = function (other) {
     var tmp;
     var tmp_0;
     if (other instanceof ChromePalette) {
-      tmp_0 = contentEquals(this.cl_1, other.cl_1);
+      tmp_0 = contentEquals(this.gm_1, other.gm_1);
     } else {
       tmp_0 = false;
     }
     if (tmp_0) {
-      tmp = this.dl_1 === other.dl_1;
+      tmp = this.hm_1 === other.hm_1;
     } else {
       tmp = false;
     }
     return tmp;
   };
   protoOf(ChromePalette).hashCode = function () {
-    return imul(31, contentHashCode(this.cl_1)) + getNumberHashCode(this.dl_1) | 0;
+    return imul(31, contentHashCode(this.gm_1)) + getNumberHashCode(this.hm_1) | 0;
   };
+  function Water(surface, top, bottom, line) {
+    this.cl_1 = surface;
+    this.dl_1 = top;
+    this.el_1 = bottom;
+    this.fl_1 = line;
+  }
+  function DockMaterial() {
+    this.gl_1 = 0.54;
+    this.hl_1 = 0.03;
+    this.il_1 = 14.0;
+    this.jl_1 = 0.07;
+    this.kl_1 = 0.1;
+    this.ll_1 = 0.06;
+    this.ml_1 = 0.2;
+    this.nl_1 = 0.24;
+    this.ol_1 = 1.34;
+    this.pl_1 = 0.075;
+    this.ql_1 = 0.9;
+    this.rl_1 = 0.14;
+    this.sl_1 = 0.3;
+    this.tl_1 = 0.12;
+    this.ul_1 = 0.3;
+    this.vl_1 = 0.78;
+    this.wl_1 = 0.5;
+    this.xl_1 = 0.51;
+    this.yl_1 = 16777215;
+    this.zl_1 = 0;
+    this.am_1 = 7400;
+  }
+  protoOf(DockMaterial).bm = function (field) {
+    var r = field >> 16 & 255;
+    var g = field >> 8 & 255;
+    var b = field & 255;
+    var light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
+    var across = light < 0.3 ? 16777215 : 0;
+    return new Water(TowerBands_getInstance().yo(field, across, 0.12), TowerBands_getInstance().yo(field, 0, 0.3), TowerBands_getInstance().yo(field, 0, 0.78), TowerBands_getInstance().yo(field, 16777215, 0.5));
+  };
+  var DockMaterial_instance;
+  function DockMaterial_getInstance() {
+    return DockMaterial_instance;
+  }
   function PlayfieldAnim() {
     PlayfieldAnim_instance = this;
     this.sj_1 = 180;
@@ -9621,7 +9676,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return true;
   };
   function Companion_19() {
-    this.un_1 = 0.001;
+    this.zo_1 = 0.001;
   }
   var Companion_instance_19;
   function Companion_getInstance_19() {
@@ -9648,9 +9703,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   protoOf(TowerViewport).aj = function (rows, summit, minimumBottom) {
     var current = this.zi(summit, minimumBottom).vi_1;
-    return this.vn(current + rows, summit, minimumBottom);
+    return this.ap(current + rows, summit, minimumBottom);
   };
-  protoOf(TowerViewport).vn = function (bottomRow, summit, minimumBottom) {
+  protoOf(TowerViewport).ap = function (bottomRow, summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
     var b = summit.vi_1;
     var minimum = Math.min(minimumBottom, b);
@@ -9691,14 +9746,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.nj_1 = 1;
     this.oj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).wn = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+  protoOf(PlayfieldGeometry).bp = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
     return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
   };
   protoOf(PlayfieldGeometry).pj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
     gain = gain === VOID ? 1.25 : gain;
-    return $super === VOID ? this.wn(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.wn.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+    return $super === VOID ? this.bp(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.bp.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
   };
-  protoOf(PlayfieldGeometry).rl = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).vm = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -9710,61 +9765,61 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.xn_1 = startX;
-    this.yn_1 = startY;
-    this.zn_1 = pivotX;
-    this.ao_1 = pivotY;
-    this.bo_1 = cellPx;
-    this.co_1 = groundY;
-    this.do_1 = cellX;
-    this.eo_1 = cellY;
-    this.fo_1 = impact;
-    this.go_1 = direction;
+    this.cp_1 = startX;
+    this.dp_1 = startY;
+    this.ep_1 = pivotX;
+    this.fp_1 = pivotY;
+    this.gp_1 = cellPx;
+    this.hp_1 = groundY;
+    this.ip_1 = cellX;
+    this.jp_1 = cellY;
+    this.kp_1 = impact;
+    this.lp_1 = direction;
   }
   protoOf(FragmentInput).x7 = function () {
-    return this.xn_1;
+    return this.cp_1;
   };
   protoOf(FragmentInput).y7 = function () {
-    return this.yn_1;
+    return this.dp_1;
   };
-  protoOf(FragmentInput).ho = function () {
-    return this.zn_1;
+  protoOf(FragmentInput).mp = function () {
+    return this.ep_1;
   };
-  protoOf(FragmentInput).io = function () {
-    return this.ao_1;
+  protoOf(FragmentInput).np = function () {
+    return this.fp_1;
   };
-  protoOf(FragmentInput).jo = function () {
-    return this.bo_1;
+  protoOf(FragmentInput).op = function () {
+    return this.gp_1;
   };
-  protoOf(FragmentInput).ko = function () {
-    return this.co_1;
+  protoOf(FragmentInput).pp = function () {
+    return this.hp_1;
   };
-  protoOf(FragmentInput).lo = function () {
-    return this.do_1;
+  protoOf(FragmentInput).qp = function () {
+    return this.ip_1;
   };
-  protoOf(FragmentInput).mo = function () {
-    return this.eo_1;
+  protoOf(FragmentInput).rp = function () {
+    return this.jp_1;
   };
-  protoOf(FragmentInput).no = function () {
-    return this.fo_1;
+  protoOf(FragmentInput).sp = function () {
+    return this.kp_1;
   };
-  protoOf(FragmentInput).oo = function () {
-    return this.go_1;
+  protoOf(FragmentInput).tp = function () {
+    return this.lp_1;
   };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.xn_1 + ', startY=' + this.yn_1 + ', pivotX=' + this.zn_1 + ', pivotY=' + this.ao_1 + ', cellPx=' + this.bo_1 + ', groundY=' + this.co_1 + ', cellX=' + this.do_1 + ', cellY=' + this.eo_1 + ', impact=' + this.fo_1 + ', direction=' + this.go_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.cp_1 + ', startY=' + this.dp_1 + ', pivotX=' + this.ep_1 + ', pivotY=' + this.fp_1 + ', cellPx=' + this.gp_1 + ', groundY=' + this.hp_1 + ', cellX=' + this.ip_1 + ', cellY=' + this.jp_1 + ', impact=' + this.kp_1 + ', direction=' + this.lp_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.xn_1);
-    result = imul(result, 31) + getNumberHashCode(this.yn_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.zn_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.ao_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.bo_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.co_1) | 0;
-    result = imul(result, 31) + this.do_1 | 0;
-    result = imul(result, 31) + this.eo_1 | 0;
-    result = imul(result, 31) + getNumberHashCode(this.fo_1) | 0;
-    result = imul(result, 31) + this.go_1.hashCode() | 0;
+    var result = getNumberHashCode(this.cp_1);
+    result = imul(result, 31) + getNumberHashCode(this.dp_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.ep_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.fp_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.gp_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.hp_1) | 0;
+    result = imul(result, 31) + this.ip_1 | 0;
+    result = imul(result, 31) + this.jp_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.kp_1) | 0;
+    result = imul(result, 31) + this.lp_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
@@ -9773,40 +9828,40 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof FragmentInput))
       return false;
     var tmp0_other_with_cast = other instanceof FragmentInput ? other : THROW_CCE();
-    if (!equals(this.xn_1, tmp0_other_with_cast.xn_1))
+    if (!equals(this.cp_1, tmp0_other_with_cast.cp_1))
       return false;
-    if (!equals(this.yn_1, tmp0_other_with_cast.yn_1))
+    if (!equals(this.dp_1, tmp0_other_with_cast.dp_1))
       return false;
-    if (!equals(this.zn_1, tmp0_other_with_cast.zn_1))
+    if (!equals(this.ep_1, tmp0_other_with_cast.ep_1))
       return false;
-    if (!equals(this.ao_1, tmp0_other_with_cast.ao_1))
+    if (!equals(this.fp_1, tmp0_other_with_cast.fp_1))
       return false;
-    if (!equals(this.bo_1, tmp0_other_with_cast.bo_1))
+    if (!equals(this.gp_1, tmp0_other_with_cast.gp_1))
       return false;
-    if (!equals(this.co_1, tmp0_other_with_cast.co_1))
+    if (!equals(this.hp_1, tmp0_other_with_cast.hp_1))
       return false;
-    if (!(this.do_1 === tmp0_other_with_cast.do_1))
+    if (!(this.ip_1 === tmp0_other_with_cast.ip_1))
       return false;
-    if (!(this.eo_1 === tmp0_other_with_cast.eo_1))
+    if (!(this.jp_1 === tmp0_other_with_cast.jp_1))
       return false;
-    if (!equals(this.fo_1, tmp0_other_with_cast.fo_1))
+    if (!equals(this.kp_1, tmp0_other_with_cast.kp_1))
       return false;
-    if (!this.go_1.equals(tmp0_other_with_cast.go_1))
+    if (!this.lp_1.equals(tmp0_other_with_cast.lp_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.hm_1 = x;
-    this.im_1 = y;
-    this.jm_1 = degrees;
+    this.ln_1 = x;
+    this.mn_1 = y;
+    this.nn_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.hm_1 + ', y=' + this.im_1 + ', degrees=' + this.jm_1 + ')';
+    return 'Fragment(x=' + this.ln_1 + ', y=' + this.mn_1 + ', degrees=' + this.nn_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.hm_1);
-    result = imul(result, 31) + getNumberHashCode(this.im_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.jm_1) | 0;
+    var result = getNumberHashCode(this.ln_1);
+    result = imul(result, 31) + getNumberHashCode(this.mn_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.nn_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -9815,11 +9870,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(other instanceof Fragment))
       return false;
     var tmp0_other_with_cast = other instanceof Fragment ? other : THROW_CCE();
-    if (!equals(this.hm_1, tmp0_other_with_cast.hm_1))
+    if (!equals(this.ln_1, tmp0_other_with_cast.ln_1))
       return false;
-    if (!equals(this.im_1, tmp0_other_with_cast.im_1))
+    if (!equals(this.mn_1, tmp0_other_with_cast.mn_1))
       return false;
-    if (!equals(this.jm_1, tmp0_other_with_cast.jm_1))
+    if (!equals(this.nn_1, tmp0_other_with_cast.nn_1))
       return false;
     return true;
   };
@@ -9834,22 +9889,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.sl_1 = 1725;
-    this.tl_1 = 0.42;
-    this.ul_1 = 62.0;
-    this.vl_1 = 620;
-    this.wl_1 = 260;
-    this.xl_1 = 271;
-    this.yl_1 = 0.35;
+    this.wm_1 = 1725;
+    this.xm_1 = 0.42;
+    this.ym_1 = 62.0;
+    this.zm_1 = 620;
+    this.an_1 = 260;
+    this.bn_1 = 271;
+    this.cn_1 = 0.35;
   }
-  protoOf(ResultsAnim).po = function (revealing) {
+  protoOf(ResultsAnim).up = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).pm = function (revealing, reducedMotion) {
-    var impactAt = this.qo((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).tn = function (revealing, reducedMotion) {
+    var impactAt = this.vp((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).qo = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).vp = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -9860,35 +9915,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).zl = function (progress, revealing) {
+  protoOf(ResultsAnim).dn = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.po(true);
+    var share = 620 / this.up(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).am = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.po(true);
+  protoOf(ResultsAnim).en = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.up(true);
   };
-  protoOf(ResultsAnim).bm = function (progress, revealing) {
+  protoOf(ResultsAnim).fn = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.po(true);
+    var start = 880 / this.up(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).ro = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).wp = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).cm = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).gn = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.ro(progress, direction, maxDegrees) : $super.ro.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.wp(progress, direction, maxDegrees) : $super.wp.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).dm = function (topple) {
+  protoOf(ResultsAnim).hn = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).fm = function (board) {
+  protoOf(ResultsAnim).jn = function (board) {
     var lowest = board.h8_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -9911,17 +9966,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).gm = function (input) {
+  protoOf(ResultsAnim).kn = function (input) {
     var startX = input.x7();
     var startY = input.y7();
-    var pivotX = input.ho();
-    var pivotY = input.io();
-    var cellPx = input.jo();
-    var groundY = input.ko();
-    var cellX = input.lo();
-    var cellY = input.mo();
-    var impact = input.no();
-    var direction = input.oo();
+    var pivotX = input.mp();
+    var pivotY = input.np();
+    var cellPx = input.op();
+    var groundY = input.pp();
+    var cellX = input.qp();
+    var cellY = input.rp();
+    var impact = input.sp();
+    var direction = input.tp();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -9957,19 +10012,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.km_1 = 12;
-    this.lm_1 = new Long(300, 0);
+    this.on_1 = 12;
+    this.pn_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).so = function (combo) {
+  protoOf(SoundLadder).xp = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).to = function (combo) {
+  protoOf(SoundLadder).yp = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.so(combo) / 12.0;
+    var x = this.xp(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).mm = function (combo, rows, index) {
-    return this.to(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).qn = function (combo, rows, index) {
+    return this.yp(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -9978,8 +10033,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.uo_1 = field;
-    this.vo_1 = crates;
+    this.zp_1 = field;
+    this.aq_1 = crates;
   }
   function Stop(at, color) {
     this.uk_1 = at;
@@ -10012,9 +10067,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.si_1 = 1.0E-4;
   }
   protoOf(TowerBands).ti = function (runSeed) {
-    return this.xo(runSeed, TowerPaletteBank_getInstance().wo_1);
+    return this.cq(runSeed, TowerPaletteBank_getInstance().bq_1);
   };
-  protoOf(TowerBands).xo = function (runSeed, bank) {
+  protoOf(TowerBands).cq = function (runSeed, bank) {
     var deck = ArrayList_init_$Create$();
     var bands = ArrayList_init_$Create$_0(this.ki_1);
     var seed = runSeed;
@@ -10037,13 +10092,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     bands.d(this.ni_1);
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).yo = function (placedOn, platformRows) {
-    return this.zo(placedOn - platformRows | 0);
+  protoOf(TowerBands).dq = function (placedOn, platformRows) {
+    return this.eq(placedOn - platformRows | 0);
   };
   protoOf(TowerBands).xk = function (board) {
-    return this.yo(board.s8_1, board.k8_1);
+    return this.dq(board.s8_1, board.k8_1);
   };
-  protoOf(TowerBands).ap = function (platformRows) {
+  protoOf(TowerBands).fq = function (platformRows) {
     var tmp = 0;
     var tmp_0 = this.ji_1.k();
     var tmp_1 = new Int32Array(tmp_0);
@@ -10054,11 +10109,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp_1;
   };
-  protoOf(TowerBands).bp = function (from, to, t) {
+  protoOf(TowerBands).yo = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).zo = function (boxes) {
+  protoOf(TowerBands).eq = function (boxes) {
     var band = 0;
     while (band < this.ji_1.k() && boxes >= this.ji_1.j(band)) {
       band = band + 1 | 0;
@@ -10072,10 +10127,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().yo(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().dq(_this__u8e3s4.r9(x, y), _this__u8e3s4.k8_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().yo(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
+    return TowerBands_getInstance().dq(_this__u8e3s4.s9(row), _this__u8e3s4.k8_1);
   }
   function shaft$positionOf($camera, row) {
     return 1.0 - (row - $camera.vi_1) / $camera.wi_1;
@@ -10088,9 +10143,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     tmp.sk_1 = fillArrayVal(Array(size), null);
   }
   protoOf(TowerPalette).tk = function (camera, board) {
-    return this.cp(camera, TowerBands_getInstance().ap(board.k8_1));
+    return this.gq(camera, TowerBands_getInstance().fq(board.k8_1));
   };
-  protoOf(TowerPalette).cp = function (camera, starts) {
+  protoOf(TowerPalette).gq = function (camera, starts) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 0;
     var last = starts.length;
@@ -10120,11 +10175,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       if (tmp)
         continue $l$loop;
       var row_0 = camera.vi_1 + (1.0 - at_0) * camera.wi_1;
-      stops.d(new Stop(at_0, this.dp(row_0, starts)));
+      stops.d(new Stop(at_0, this.hq(row_0, starts)));
     }
     return stops;
   };
-  protoOf(TowerPalette).dp = function (row, starts) {
+  protoOf(TowerPalette).hq = function (row, starts) {
     var band = 0;
     while (band < starts.length && row >= starts[band]) {
       band = band + 1 | 0;
@@ -10134,10 +10189,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
       return this.al(band);
-    return TowerBands_getInstance().bp(this.al(band), this.al(band + 1 | 0), into / 2.0);
+    return TowerBands_getInstance().yo(this.al(band), this.al(band + 1 | 0), into / 2.0);
   };
   protoOf(TowerPalette).al = function (band) {
-    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).uo_1;
+    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).zp_1;
   };
   protoOf(TowerPalette).wk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
@@ -10147,21 +10202,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     // Inline function 'kotlin.let' call
     // Inline function 'kotlin.contracts.contract' call
     // Inline function 'com.boxstack.presentation.TowerPalette.crateSlot.<anonymous>' call
-    var it = this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).vo_1;
+    var it = this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).aq_1;
     return it[slot % it.length | 0];
   };
-  protoOf(TowerPalette).fl = function (band) {
+  protoOf(TowerPalette).jm = function (band) {
     // Inline function 'kotlin.collections.copyOf' call
     // Inline function 'kotlin.js.asDynamic' call
-    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).vo_1.slice();
+    return this.rk_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0)).aq_1.slice();
   };
-  protoOf(TowerPalette).bl = function (band) {
+  protoOf(TowerPalette).fm = function (band) {
     var index = coerceIn_0(band, 0, TowerBands_getInstance().ki_1 - 1 | 0);
     var tmp0_elvis_lhs = this.sk_1[index];
     var tmp;
     if (tmp0_elvis_lhs == null) {
       // Inline function 'kotlin.also' call
-      var this_0 = Companion_getInstance_17().tn(this.rk_1.j(index).uo_1, this.rk_1.j(index).vo_1);
+      var this_0 = Companion_getInstance_17().xo(this.rk_1.j(index).zp_1, this.rk_1.j(index).aq_1);
       // Inline function 'kotlin.contracts.contract' call
       // Inline function 'com.boxstack.presentation.TowerPalette.chrome.<anonymous>' call
       this.sk_1[index] = this_0;
@@ -10308,7 +10363,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_43 = new Band_0(4785157, tmp$ret$43);
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$44 = new Int32Array([7294519, 7294519, 9132587, 11892282, 11892282, 13148794, 13148794, 14267788, 15392974, 15392974]);
-    tmp.wo_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, new Band_0(3875864, tmp$ret$44)]);
+    tmp.bq_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, new Band_0(3875864, tmp$ret$44)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -10332,23 +10387,27 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).ee);
   defineProp(protoOf(Engine), 'foundation', protoOf(Engine).qk);
   defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).zk);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).gl);
+  defineProp(protoOf(Engine), 'waterSurface', protoOf(Engine).bl);
+  defineProp(protoOf(Engine), 'waterTop', protoOf(Engine).cm);
+  defineProp(protoOf(Engine), 'waterBottom', protoOf(Engine).dm);
+  defineProp(protoOf(Engine), 'waterLine', protoOf(Engine).em);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).km);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).d8);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).e8);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).hl);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).il);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).jl);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).kl);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).ll);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).ml);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).nl);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).ol);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).pl);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).ql);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).em);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).nm);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).om);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).qm);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).lm);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).mm);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).nm);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).om);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).pm);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).qm);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).rm);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).sm);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).tm);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).um);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).in);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).rn);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).sn);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).un);
   //endregion
   //region block: init
   Unit_instance = new Unit();
@@ -10375,6 +10434,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   Companion_instance_14 = new Companion_14();
   Companion_instance_15 = new Companion_15();
   Companion_instance_16 = new Companion_16();
+  DockMaterial_instance = new DockMaterial();
   Companion_instance_18 = new Companion_18();
   Companion_instance_19 = new Companion_19();
   PlayfieldGeometry_instance = new PlayfieldGeometry();
@@ -10444,6 +10504,14 @@ if (HOST_WEB) document.documentElement.style.touchAction = document.body.style.t
    (`boxstack:pick`, from 1) and a tap on the sky says the background (0). */
 var HOST_PALETTE = /[?&]host=palette/.test(location.search);
 var PICK = HOST_PALETTE && /[?&]pick=1/.test(location.search);
+/* **Google's copy carries none of the advert's own chrome.** Google Ads flagged the network
+   creative as misleading ad design: its result button said BUILD AGAIN and opened the store, and
+   an INSTALL pill and a speaker glyph read as controls that are not the game's. Google wraps an
+   HTML5 app ad that does not load its ExitApi in an Install button of its own, so here the
+   creative has no way out, no speaker and no sound, and its one button does what it says: builds
+   again. `playable/google/index.html` sets `BOXSTACK_HOST` before this runs, because an uploaded
+   file has no query string; `?host=google` previews it. */
+var HOST_GOOGLE = window.BOXSTACK_HOST === "google" || /[?&]host=google/.test(location.search);
 /* The start screen: WELCOME TO BOX STACK, playful and rainbow, over the dealt board, with TAP TO
    START under it. The customer asked for a hook the ad opens on, and the tap is also the gesture
    every browser needs before it will play a sound, so the opening tune always gets to play.
@@ -10513,7 +10581,8 @@ var C = {
   action: "#C8CFDC", onAction: "#101420",
   shaftTop: "#0D1421", shaftBottom: "#03060B",
   sunriseOuter: "rgba(224,138,69,0.14902)", sunriseCore: "rgba(255,192,104,0.211765)",
-  waterSurface: "#163B4C", waterTop: "#0B2739", waterBottom: "#030B15",
+  // The water itself wears the band's field (`E.waterSurface` and the rest); this cool teal is
+  // left only as the STILL STANDING verdict's colour.
   waterLine: "#76BDC8",
   platform: "#586778", hullLit: "#91A0AE", hullDark: "#202B39", hullKeel: "#131B27",
   porthole: "#F1C268",
@@ -10578,7 +10647,7 @@ var SOUND_B64 = {
   topple: "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EErKnINQSkqZcxBKSSmUkkpKrYVSSkqptQIAAAocAAACbNCUWByg0JCVAEAqAIDBcSzL80RRNWXZsSTPE0XTVFXbdizL80TRNFXVti3PE0XTVFXX1XXL80TRVFXVdXXdE0XVVFXXlWXf90TRNFXVdWXZ903TdFXXlWXb9n3TNFXXdWVZtn1hdVXXlWXb1m1jWFXXdWXZtm1dOW7d1nXhF4ZhmNq67vu+LwzH8EwDAMATHACACmxYHeGkaCyw0JCVAEAGAABhDEIGIYUMQkghhZRCSCklAABgwAEAIMCEMlBoyEoAIBUAACDEWmuttdZaYqm11lprrbWGSmuttdZaa6211lprrbXWWmuttdZaa6211lprrbXWWmuttZRSSimllFJKKaWUUkoppZRSSimllFJKKaWUUkoppZRSSimllFJKKaWUUkoppZRSSimllFJKKRUA6FfhAOD/YMPqCCdFY4GFhqwEAMIBAABjlGIMOukkpNQw5RiEUlJJpZVGMecglJJSSq1VzklIpaXWWouxck5KSSm1FluMHYSUWmotxhhj7CCklFprMcYYYyilpRhjrDHWWkNJqbUYY4w111pSai3GWmutufeSUosxxlxr7rmX1mKsteacc849tRZjrTXn3HPwqbUYY8619957UK3FWGuuOQfhewEA3A0OABAJNs6wknRWOBpcaMhKACAkAIBAiDHGnHMOQgghREox5pxzEEIIIYRIKcaccw5CCCGEkDHmnHMQQgihlFIyxpxzDkIIJZRQSuaccxBCCKGUUkrJnHMOQgghlFJKKR10EEIIoZRSSimlcw5CCKGUUkoppYQQQiillFJKKaWUEEIIpZRSSimllBJCCKWUUkoppZRSQgihlFJKKaWkUkoIoZRSSimllFJKCSGUUkoppZRSSimhhFJKKaWUUkopJZRQSimllFJKKqUUAABw4AAAEGAEnWRUWYSNJlx4AAoNWQkAAAEAIM5abClGRjHnIIbIIMQghgopxZy1DCmDHKZMKYSUlc4xhoiTFlsLFQMAAEAQAEAgZAKBAigwkAEABwgJUgBAYYGhQ4QIEKPAwLi4tAEACEJkhkhELAaJCdVAUTEdACwuMOQDQIbGRtrFBXQZ4IIu7joQQhCCEMTiAApIwMEJNzzxhifc4ASdolIHAQAAAABwAAAPAADHBhAR0RxHh8cHSIjICElJ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"
 };
 var audio = null;          // null untried, false unavailable, else the context
-var muted = HOST_PALETTE;  // the palette vote is about how it looks, and is silent
+var muted = HOST_PALETTE || HOST_GOOGLE;  // the palette vote is about how it looks; Google's is silent
 
 /* **Built at load, started on the first touch.** Constructing a context and
    decoding into it needs no gesture — only *starting* a sound does — and doing
@@ -10587,7 +10656,7 @@ var muted = HOST_PALETTE;  // the palette vote is about how it looks, and is sil
    is the one pickup that has to say the advert has a voice. Nothing is audible
    any earlier for it; the context is created suspended and stays that way. */
 function startAudio() {
-  if (audio !== null) return;
+  if (audio !== null || HOST_GOOGLE) return;
   audio = false;
   try {
     var Ctx = window.AudioContext || window.webkitAudioContext;
@@ -10699,7 +10768,7 @@ function report(name, extra) {
     placements: E.placedCount, rows: E.rowsCompleted, score: E.score,
     placementMode: PLACEMENT_MODE, endsOn: ENDS_ON,
     ctaStyle: CTA_STYLE, welcome: WELCOME,
-    host: HOST_WEB ? "web" : HOST_PALETTE ? "palette" : "network"
+    host: HOST_WEB ? "web" : HOST_PALETTE ? "palette" : HOST_GOOGLE ? "google" : "network"
   };
   if (extra) for (var key in extra) if (Object.prototype.hasOwnProperty.call(extra, key)) {
     detail[key] = extra[key];
@@ -11065,10 +11134,12 @@ function drawWater() {
   var s = L.shaft, y = rowY(Math.max(0, E.deckRow - 1)) + L.cell * 0.54;
   if (y >= s.y + s.h) return;
   var water = ctx.createLinearGradient(0, y, 0, s.y + s.h);
-  water.addColorStop(0, C.waterSurface); water.addColorStop(0.16, C.waterTop); water.addColorStop(1, C.waterBottom);
+  // The band's own field seen through water, as the game has it: `DockMaterial.water`.
+  water.addColorStop(0, packedRgb(E.waterSurface)); water.addColorStop(0.16, packedRgb(E.waterTop));
+  water.addColorStop(1, packedRgb(E.waterBottom));
   ctx.fillStyle = water; ctx.fillRect(s.x, Math.max(s.y, y), s.w, s.y + s.h - Math.max(s.y, y));
   // One moving surface edge, and no decorative lines under it. Mirrors DockArt.
-  waterWave(s.x, y, s.w, L.cell * 0.08, alpha(C.waterLine, 0.51), Math.max(1, L.cell * 0.03));
+  waterWave(s.x, y, s.w, L.cell * 0.08, alpha(packedRgb(E.waterLine), 0.51), Math.max(1, L.cell * 0.03));
 }
 /* A finished row is eight crates in one colour, not one bar: every cell keeps
    its own inset, gap and light, and the row reads as one thing because they all
@@ -11721,7 +11792,7 @@ function endCardCopy() {
     support: scored ? E.towerHeight + " BOXES HIGH" : "BOXES HIGH",
     verdict: E.isToppled ? "TOWER TOPPLED" : "STILL STANDING",
     note: null,
-    action: E.isToppled || HOST_WEB ? "BUILD AGAIN" : "BUILD HIGHER"
+    action: E.isToppled || HOST_WEB || HOST_GOOGLE ? "BUILD AGAIN" : "BUILD HIGHER"
   };
   if (demoFinished()) {
     copy.verdict = "ALL " + CRATE_LIMIT + (CRATE_LIMIT === 1 ? " PIECE" : " PIECES") + " PLACED";
@@ -11939,7 +12010,7 @@ function muteX() { return 12; }
 function drawCta() {
   // The result has its own large install action. Keeping this one as well made
   // two controls compete for the same destination on the final impression.
-  if (HOST_WEB || HOST_PALETTE || G.ended || G.t < CTA_FROM) { G.ctaButton = null; return; }
+  if (HOST_WEB || HOST_PALETTE || HOST_GOOGLE || G.ended || G.t < CTA_FROM) { G.ctaButton = null; return; }
   var h = utilitySize(), w = ctaWidth(), x = ctaX(), y = 10;
   ctx.globalAlpha = 0.94;
   ctx.fillStyle = C.crane; rr(x, y, w, h, h / 2); ctx.fill();
@@ -11970,7 +12041,7 @@ function drawCta() {
    network's own mute, where there is one, sits outside the creative and this
    does not fight it. */
 function drawMute() {
-  if (G.ended || HOST_PALETTE) { G.muteButton = null; return; }
+  if (G.ended || HOST_PALETTE || HOST_GOOGLE) { G.muteButton = null; return; }
   var s = utilitySize(), x = muteX(), y = 10;
   ctx.globalAlpha = 0.85;
   ctx.fillStyle = C.panelRaised; rr(x, y, s, s, 8); ctx.fill();
@@ -12226,7 +12297,7 @@ function down(e) {
   if (G.ended) {
     if (inBox(G.endCtaButton, p, 8)) {
       take();
-      if (HOST_PALETTE || (HOST_WEB && !demoFinished())) buildAgain(); else openStore("result");
+      if (HOST_PALETTE || HOST_GOOGLE || (HOST_WEB && !demoFinished())) buildAgain(); else openStore("result");
     }
     return;
   }
@@ -12372,7 +12443,7 @@ function buildAgain() {
 
 var ctaFired = false;
 function openStore(source) {
-  if (ctaFired) return;
+  if (ctaFired || HOST_GOOGLE) return;
   ctaFired = true;
   report("cta", { source: source || "unknown", destination: "store" });
   try { if (window.FbPlayableAd && FbPlayableAd.onCTAClick) { FbPlayableAd.onCTAClick(); return; } } catch (err) {}
