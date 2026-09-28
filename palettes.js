@@ -126,12 +126,24 @@
     SHAPE.forEach(function (row) {
       for (var i = 0; i < row.length; i++) {
         var ch = row[i];
-        if (ch === ".") { cells.push('<i class="gap"></i>'); continue; }
+        if (ch === ".") { cells.push('<i class="gap" aria-hidden="true"></i>'); continue; }
         var slot = ch === "a" ? 0 : ch === "b" ? 3 : Number(ch);
-        cells.push('<i style="background:#' + p.crates[slot % p.crates.length] + '"></i>');
+        cells.push('<i aria-hidden="true" style="background:#' + p.crates[slot % p.crates.length] + '"></i>');
       }
     });
-    el.innerHTML = cells.join("");
+    var tower = document.createElement("span");
+    tower.className = "tower-cells";
+    tower.innerHTML = cells.join("");
+    var slots = document.createElement("span");
+    slots.className = "tower-palette";
+    slots.style.gridTemplateColumns = "repeat(" + p.crates.length + ", minmax(0, 1fr))";
+    p.crates.forEach(function (colour) {
+      var swatch = document.createElement("i");
+      swatch.setAttribute("aria-hidden", "true");
+      swatch.style.background = "#" + colour;
+      slots.appendChild(swatch);
+    });
+    el.replaceChildren(tower, slots);
     el.setAttribute("aria-label", "Background #" + p.field + " with crates #" + distinct(p.crates).join(", #"));
   }
 
