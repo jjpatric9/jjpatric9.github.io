@@ -595,7 +595,7 @@ a.promo:hover .go { transform: translateX(4px); }
 .way:disabled { cursor: default; box-shadow: none; opacity: 0.7; }
 .way:disabled .way-art { filter: grayscale(1); opacity: 0.6; }
 .way-art { display: grid; }
-.way-art.tower { width: 5.5rem; box-sizing: border-box; padding: 0.35rem; gap: 0.3rem; border-radius: 8px; }
+.way-art.tower { padding: 0.35rem; gap: 1px; border-radius: 8px; }
 .way-art.tower i { border-radius: 1px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }
 .way-text strong { display: block; font: 600 1.1rem/1.25 var(--display); }
 .way-text span { color: var(--ink-dim); font-size: 0.95rem; }
@@ -626,40 +626,19 @@ button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: non
 
 /* A small tower: eight columns of crates, square, with the game's bevel. */
 .tower {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  gap: 0.3rem;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1px;
   padding: 0.4rem;
   border-radius: 8px;
 }
-.tower-cells {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 1px;
-}
-.tower-cells i {
+.tower i {
   display: block;
   aspect-ratio: 1;
   border-radius: 1px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
-.tower-cells i.gap { visibility: hidden; }
-.tower-palette {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 2px;
-}
-.tower-palette i {
-  display: block;
-  aspect-ratio: 1.6;
-  min-width: 0;
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
-}
+.tower i.gap { visibility: hidden; }
 
 /* ------------------------------------------------------------------ the stage
    The whole screen, always at night like the game in it: Box Stack running in the frame, wearing
