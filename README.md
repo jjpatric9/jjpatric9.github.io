@@ -15,7 +15,7 @@ Cloudflare Worker, described below.
 | `style.css` | Shared styling, light and dark. Headings and buttons use the game's Chakra Petch from `fonts/`. |
 | `site.js` | What every page shares: copy buttons, the footer year, sections rising into view. |
 | `home.js` | The homepage's crane (deals one of the game's dark-sky palettes per boat) and the demo embed. |
-| `demo.html` | Box Stack's playable ad, copied from `playable/index.html` in the Boxstack repository. The homepage loads it as `demo.html?host=web`; the palette vote as `demo.html?host=palette`, wearing each palette full screen. Re-copy it after the playable is rebuilt. |
+| `demo.html` | Box Stack's playable ad, copied from `playable/index.html` in the Boxstack repository. The homepage loads it as `demo.html?host=web`; the palette vote as `demo.html?host=palette`, wearing each palette full screen on a built tower that shows every colour in exactly its share of the palette, with no dealer and nothing to play; it scrolls. Re-copy it after the playable is rebuilt. |
 | `fonts/` | Chakra Petch semibold and bold, subset to Latin as WOFF2, with its licence (`OFL.txt`). |
 | `img/` | The logo mark, app icon, favicon, the share card (`og.png`, from the Play feature graphic) and the demo's poster frame. |
 | `boxstacker.gif` | The original gameplay capture. No page loads it any more: the live demo replaced it, at a tenth of the weight. |
