@@ -589,8 +589,8 @@
         ? "That's all " + list.all.length + " in the game. Thank you!"
         : "There's nothing in the game to vote on right now",
         out ? "You'd take out " + out + ". Tap one to change your mind" : "You'd keep every one. Tap one to change your mind",
-        { label: "Go through them again", act: function () { list.build(true); paintRun(list, true); } },
-        { label: "Vote on new palettes", act: function () { show("new"); } });
+        { label: "Go again", act: function () { list.build(true); paintRun(list, true); } },
+        { label: "New palettes", act: function () { show("new"); } });
     } else {
       var yes = list.all.filter(function (p) { return list.answered(p) && list.yes(p); }).length;
       summary(list, list.all.length
@@ -598,7 +598,7 @@
         : "There are no new palettes to vote on yet",
         list.all.length ? "Yes to " + yes + ". Tap one to change your mind" : "Why not make the first?",
         { label: "Make your own", act: function () { show("make"); } },
-        list.all.length ? { label: "Go through them again", act: function () { list.build(true); paintRun(list, true); } } : null);
+        list.all.length ? { label: "Go again", act: function () { list.build(true); paintRun(list, true); } } : null);
     }
   }
 
