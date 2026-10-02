@@ -10800,11 +10800,13 @@ var HOST_WEB = /[?&]host=web/.test(location.search);
 if (HOST_WEB) document.documentElement.style.touchAction = document.body.style.touchAction = "pan-y";
 /* `?host=palette` is the game inside the website's palette vote, which fills the screen with it
    so a palette is judged on the game rather than on a swatch. The page sends the palette to wear
-   (`boxstack:palette`) whenever this says it is ready. Nothing of the advert's own is drawn — no
-   way out, no speaker, no lesson — and nothing is played: the tower is the palette's showcase,
-   every colour in exactly its share, with no dealer, and a drag or a wheel scrolls it (see the
-   opening). `&pick=1` is the palette maker: a tap on a crate says which of the colours it wears
-   (`boxstack:pick`, from 1) and a tap on the sky says the background (0). */
+   (`boxstack:palette`) whenever this says it is ready, and `fresh` with a palette that should
+   start again on its own tower. Nothing of the advert's own is drawn — no way out, no speaker, no
+   lesson. The tower is the palette's showcase, every colour in exactly its share, and the dealer
+   stays, because a palette is also judged on a crate in hand, its landing outline and its drop
+   (see the opening); a drag in the shaft or a wheel scrolls it. `&pick=1` is the palette maker: a
+   tap on a crate says which of the colours it wears (`boxstack:pick`, from 1) and a tap on the
+   sky or the mat says the background (0). */
 var HOST_PALETTE = /[?&]host=palette/.test(location.search);
 var PICK = HOST_PALETTE && /[?&]pick=1/.test(location.search);
 /* **Google's copy carries none of the advert's own chrome.** Google Ads flagged the network
@@ -11020,11 +11022,12 @@ var seed = (function () {
 /* The opening tower is *played*, not generated — see `Engine.deal`. Some seeds
    do not reach a tower worth arriving at, so this walks on until one does.
 
-   **Except in the palette vote, which is not played at all.** A played tower shows whichever
-   colours the dealer dealt, and its finished rows are all the colour of whatever closed them, so
-   a palette's rarer colours could be missing from the tower it was judged on. The vote stands a
-   built tower instead (`Engine.showcase`): every colour in exactly its share of the palette,
-   taller than the window, with no dealer and nothing to pick up — only the view to scroll. */
+   **Except in the palette vote, which does not open on a played tower.** A played tower shows
+   whichever colours the dealer dealt, and its finished rows are all the colour of whatever closed
+   them, so a palette's rarer colours could be missing from the tower it was judged on. The vote
+   stands a built tower instead (`Engine.showcase`): every colour in exactly its share of the
+   palette, taller than the window. The dealer is still there to play on top of it, because how a
+   crate looks in hand, on the crane and over its landing outline is part of the palette too. */
 var dealtSeed = seed, openLean = NaN;
 /* How many colours the showcase was built for: a palette with another number rebuilds it. */
 var showcaseSlots = -1;
@@ -11168,8 +11171,7 @@ function layout() {
 
   var landscape = W > H * 1.15;
   var pad = Math.round(Math.min(W, H) * 0.045);
-  // The palette vote has no dealer: its room goes to the tower. See the opening.
-  var trayH = HOST_PALETTE ? 0 : Math.min(H * 0.12, 96);
+  var trayH = Math.min(H * 0.12, 96);
   var headH = Math.min(H * 0.075, 62);
 
   var shaftLeft, shaftW, shaftTop, shaftH, gauge, head, tray, beam;
@@ -11199,7 +11201,7 @@ function layout() {
     var unit = shaftH / (LAND_ROWS + 0.78);
     shaftW = unit * E.boardWidth;
     var headW = Math.max(84, unit * 3.4);
-    var trayW = HOST_PALETTE ? 0 : unit * 3.0;
+    var trayW = unit * 3.0;
     shaftLeft = Math.round((W - (headW + gap + shaftW + gap + trayW)) / 2) + headW + gap;
     head = { x: shaftLeft - gap - headW, w: headW, column: true };
     gauge = { x: shaftLeft, y: pad, w: shaftW, h: gaugeH };
@@ -11850,7 +11852,6 @@ function traySlot(i) {
 }
 /** The bottom of the shaft carried down behind the hand, with the shaft's own border. */
 function drawTray() {
-  if (HOST_PALETTE) return;
   var t = L.tray, rail = Math.max(1, L.cell * 0.02), radius = Math.max(4, L.cell * 0.12);
   ctx.fillStyle = packedRgb(E.handBackdrop);
   rr(t.x, t.y, t.w, t.h, radius); ctx.fill();
@@ -12619,7 +12620,7 @@ function down(e) {
   // The run is over the moment the tower lets go: without this the tray stayed
   // live through the collapse and crates could be dropped into a falling tower.
   if (G.fall || G.falling) return;
-  for (var i = 0; i < (HOST_PALETTE ? 0 : E.handSize); i++) {
+  for (var i = 0; i < E.handSize; i++) {
     if (E.handOrdinal(i) >= 0 && inBox(traySlot(i), p, 8)) {
       take();
       wakeAudio();
@@ -12637,7 +12638,7 @@ function down(e) {
   if (inBox(L.shaft, p) && (!HOST_WEB || towerHidden())) {
     take();
     beginScroll(p);
-  } else if (PICK && !HOST_PALETTE && inBox(traySlotArea(), p)) {
+  } else if (PICK && inBox(traySlotArea(), p)) {
     take();
     pick(0);
   }
@@ -12840,12 +12841,18 @@ if (HOST_PALETTE) {
     if (field < 0 || crates.indexOf(-1) >= 0) return;
     E.usePalette(field, Int32Array.from(crates));
     // The showcase gives every colour the same number of crates, so a palette with another
-    // number of colours needs another tower. The same number keeps the tower and the view:
-    // editing a colour in the palette maker repaints what is there.
-    if (crates.length !== showcaseSlots) {
+    // number of colours needs another tower, and so does a new palette in the vote (`fresh`),
+    // which is judged on its own showcase rather than on what was played over the last one.
+    // Otherwise the tower and the view stay: editing a colour in the palette maker repaints
+    // what is there, crates played included.
+    if (crates.length !== showcaseSlots || d.fresh === true) {
+      // A tower that has gone over is a finished run with its card up: start the frame again,
+      // and the page sends the palette again when it says it is ready.
+      if (G.fall || G.ended) { location.reload(); return; }
       showcaseSlots = crates.length;
       E.showcase(dealtSeed | 0);
       G.summitTop = null; G.fling = 0; G.scroll = null;
+      G.carried = null; G.falling = null; G.projected = null; G.reward = null;
     }
     shapeCache = [null, null, null];
     wearChrome();

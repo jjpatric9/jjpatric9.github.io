@@ -161,7 +161,7 @@ code {
 /* A phone keeps the name, the game and support. "Play" is the homepage's first button and
    "Colours" is a card further down, and both are in the footer. */
 @media (max-width: 30rem) {
-  .topbar nav a[href$="#play"], .topbar nav a[href$="palettes.html"] { display: none; }
+  .topbar nav a[href$="#play"], .topbar nav a[href$="colours/"] { display: none; }
   .topbar nav a { padding: 0.55rem 0.45rem; }
   .brand { font-size: 1.05rem; }
 }
@@ -558,125 +558,114 @@ a.promo:hover .go { transform: translateX(4px); }
 .js [data-reveal].shown { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .js [data-reveal] { opacity: 1; transform: none; transition: none; } }
 
-/* ---------------------------------------------------------------- palettes.html
-   The palette vote. A tower is drawn on its palette's own background, so its colours are the
-   palette's rather than the theme's; everything around it follows the theme like every page. */
+/* ------------------------------------------------------------ box-stack/colours/
+   The colour vote: one screen, always at night like the game in it. Where you are and the three
+   things to do across the top, Box Stack running in the middle wearing the palette, and the
+   choice about it where the game's banner sits. A tower is drawn on its palette's own background,
+   so its colours are the palette's rather than the theme's. */
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-.palettes h1 { font-size: clamp(1.9rem, 8vw, 2.6rem); }
-.palettes h2 { margin: 0; font-size: 1.2rem; }
-.palettes .lede { margin-bottom: 0; }
-.palettes .intro { margin: 0 0 1rem; }
-/* The ways in: three big buttons, each with a little tower in a palette of its kind. */
-.ways { display: grid; gap: 0.75rem; margin: 1.5rem 0 0; }
-.way {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 0.75rem;
-  text-align: left;
-  background: var(--panel);
-  color: var(--ink);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  font: inherit;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: transform 0.15s, border-color 0.15s;
-}
-.way:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--crane); }
-.way:disabled { cursor: default; box-shadow: none; opacity: 0.7; }
-.way:disabled .way-art { filter: grayscale(1); opacity: 0.6; }
-.way-art { display: grid; }
-.way-art.tower { padding: 0.35rem; gap: 1px; border-radius: 8px; }
-.way-art.tower i { border-radius: 1px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }
-.way-text strong { display: block; font: 600 1.1rem/1.25 var(--display); }
-.way-text span { color: var(--ink-dim); font-size: 0.95rem; }
-
-button.link {
-  font: inherit;
-  font-size: 0.94rem;
-  background: none;
-  border: 0;
-  color: var(--link);
-  cursor: pointer;
-  padding: 0.6rem 0.35rem;
-  min-height: 44px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  touch-action: manipulation;
-}
-button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: none; cursor: default; }
-
-.palettes button:focus-visible, .stage button:focus-visible, .stage input:focus-visible {
-  outline: 3px solid var(--link);
-  outline-offset: 2px;
-}
-
-.choose { display: flex; gap: 0.75rem; margin: 1rem auto 0; max-width: 22rem; }
-.choose .btn { flex: 1; }
-.minor { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; margin-top: 0.25rem; }
-
-/* A small tower: eight columns of crates, square, with the game's bevel. */
-.tower {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 1px;
-  padding: 0.4rem;
-  border-radius: 8px;
-}
-.tower i {
-  display: block;
-  aspect-ratio: 1;
-  border-radius: 1px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-.tower i.gap { visibility: hidden; }
-
-/* ------------------------------------------------------------------ the stage
-   The whole screen, always at night like the game in it: Box Stack running in the frame, wearing
-   the palette, and the choice about it where the game's banner sits. */
-html.staged, html.staged body { overflow: hidden; }
-.stage {
+body.colours {
   --panel: #151a25;
+  --panel-lit: #232b3c;
   --ink: #eef0f6;
   --ink-dim: #a6b0c4;
   --rule: #2b3244;
   --link: #c9a3f7;
   --amber: #f0b04a;
   --bg: #0b0e15;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
+  --bg-deep: #07090e;
+  background: var(--bg-deep);
+  color: var(--ink);
+  color-scheme: dark;
+  overflow: hidden;
+}
+.colours .noscript { position: fixed; inset: auto 1rem 1rem; z-index: 200; background: var(--panel); padding: 1rem; border-radius: 12px; }
+
+.app {
   height: 100vh;
   height: 100dvh;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  background: #07090e;
-  color: var(--ink);
-  color-scheme: dark;
+  grid-template-rows: auto minmax(0, 1fr);
 }
-.stage[hidden] { display: none; }
-.stage-game { position: relative; min-height: 0; overflow: hidden; }
+
+/* Where you are, the three tabs, and what the page is. One row on a wide screen, two on a phone. */
+.app-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "crumbs info" "tabs tabs";
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 0.35rem) calc(env(safe-area-inset-right, 0px) + 0.6rem) 0.5rem calc(env(safe-area-inset-left, 0px) + 0.6rem);
+  background: var(--bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.crumbs { grid-area: crumbs; display: flex; align-items: center; gap: 0.45rem; min-width: 0; font: 600 1rem/1 var(--display); color: var(--ink-dim); }
+.crumbs a { color: var(--ink-dim); text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+.crumbs a:hover { color: var(--ink); }
+.crumbs .crumb-home img { display: block; width: 26px; height: 26px; }
+.crumbs h1 { margin: 0; font: 700 1.05rem/1 var(--display); color: var(--ink); letter-spacing: 0.01em; }
+.app-bar .info { grid-area: info; width: 40px; height: 40px; font-family: var(--display); }
+
+.tabs {
+  grid-area: tabs;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 13px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  min-height: 48px;
+  padding: 0.3rem 0.4rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--ink-dim);
+  font: 600 0.98rem/1.15 var(--display);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.15s, color 0.15s;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--panel-lit); color: var(--ink); box-shadow: inset 0 -3px 0 var(--crane); }
+.tab-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; letter-spacing: -0.01em; }
+.tab-count { font: 600 0.78rem/1 var(--display); font-variant-numeric: tabular-nums; color: var(--ink-dim); }
+.tab-count:empty { display: none; }
+@media (max-width: 30rem) { .tab { font-size: clamp(0.8rem, 3.7vw, 0.95rem); padding: 0.3rem 0.15rem; } }
+@media (min-width: 52rem) {
+  .app-bar { grid-template-columns: auto minmax(0, 36rem) auto; grid-template-areas: "crumbs tabs info"; justify-content: space-between; }
+  .tab { flex-direction: row; gap: 0.5rem; }
+}
+
+.app-body { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; min-height: 0; }
+.app-body:focus { outline: none; }
+
+.stage-game { position: relative; min-height: 0; overflow: hidden; background: var(--bg-deep); }
 .stage-game iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
 .stage-loading {
   position: absolute; inset: 0; margin: 0;
-  display: grid; place-items: center;
+  display: grid; place-items: center; padding: 1rem; text-align: center;
   font: 600 1rem var(--display); color: var(--ink-dim);
 }
 .stage-loading[hidden] { display: none; }
+body.dropping .stage-game { outline: 3px dashed var(--crane); outline-offset: -6px; }
 
-/* The corners the game leaves free in this mode: out on the left, the options on the right. */
+/* The corners the game leaves free in this mode: how far through, then undo and the options. */
 .stage-top {
   position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  top: 10px;
   left: 10px;
   right: 10px;
   display: flex;
@@ -700,6 +689,7 @@ html.staged, html.staged body { overflow: hidden; }
   touch-action: manipulation;
 }
 .round[hidden] { display: none; }
+.round:disabled { opacity: 0.4; cursor: default; }
 .count {
   font: 600 0.95rem var(--display);
   font-variant-numeric: tabular-nums;
@@ -712,27 +702,54 @@ html.staged, html.staged body { overflow: hidden; }
 
 .stage-options {
   position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + 60px);
+  top: 60px;
   right: 10px;
   z-index: 4;
   width: min(19rem, calc(100% - 20px));
   display: grid;
   justify-items: start;
-  padding: 0.75rem 0.9rem 0.4rem;
+  padding: 0.5rem 0.9rem 0.4rem;
   background: var(--panel);
   border: 1px solid var(--rule);
   border-radius: 14px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
 }
-.stage-options[hidden] { display: none; }
-.toggle { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start; font-size: 0.92rem; color: var(--ink-dim); cursor: pointer; margin-bottom: 0.3rem; }
+.stage-options[hidden], .stage-options [hidden] { display: none; }
+.toggle { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start; font-size: 0.92rem; color: var(--ink-dim); cursor: pointer; margin: 0.4rem 0 0.3rem; }
 .toggle b { color: var(--ink); font-weight: 600; }
 .toggle input { width: 22px; height: 22px; margin: 0.1rem 0 0; accent-color: var(--crane); }
 
+button.link {
+  font: inherit;
+  font-size: 0.94rem;
+  background: none;
+  border: 0;
+  color: var(--link);
+  cursor: pointer;
+  padding: 0.6rem 0.35rem;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  touch-action: manipulation;
+}
+button.link:disabled { color: var(--ink-dim); opacity: 0.6; text-decoration: none; cursor: default; }
+button.link[hidden] { display: none; }
+.colours button:focus-visible, .colours input:focus-visible, .colours a:focus-visible, .colours label:focus-within {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+.colours .swatch-picker:focus-within, .colours .slider:focus-within, .colours .hex-field:focus-within { outline: none; }
+
+/* Buttons on the stage are the night's, whatever the visitor's own setting. */
+.colours .btn { background: var(--panel); color: var(--ink); border-color: var(--rule); }
+.colours .btn.primary { color: #16181d; border-color: transparent; background: linear-gradient(180deg, var(--crane-lit), var(--crane) 55%); }
+.colours .btn.small { min-height: 48px; padding: 0.4rem 0.8rem; font-size: 0.92rem; }
+.colours .btn[hidden] { display: none; }
+
 /* Where the game's banner sits: what is being asked, and the two answers. */
 .stage-bar {
-  padding: 0.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-  background: #0b0e15;
+  padding: 0.5rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .stage-bar[hidden] { display: none; }
@@ -744,24 +761,25 @@ html.staged, html.staged body { overflow: hidden; }
 .ask .tag[hidden] { display: none; }
 .decide { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 30rem; margin: 0 auto; }
 .decide .btn { min-height: 54px; font-size: 1.08rem; }
-.stage .btn.skip { border-color: #b3475a; color: #ffc2cc; background: rgba(179, 71, 90, 0.18); }
-.stage .btn.keep { border-color: #2f8a55; color: #c8f5da; background: rgba(47, 138, 85, 0.28); }
-.stage .btn { background: var(--panel); color: var(--ink); border-color: var(--rule); }
-.stage .btn.primary { color: #16181d; border-color: transparent; background: linear-gradient(180deg, var(--crane-lit), var(--crane) 55%); }
-.stage .btn.small { min-height: 48px; padding: 0.4rem 0.8rem; font-size: 0.92rem; }
+.colours .btn.skip { border-color: #b3475a; color: #ffc2cc; background: rgba(179, 71, 90, 0.18); }
+.colours .btn.keep { border-color: #2f8a55; color: #c8f5da; background: rgba(47, 138, 85, 0.28); }
+.sync { margin: 0.4rem 0 0; text-align: center; font-size: 0.85rem; }
+/* With a list finished, its summary is the choice: the bar keeps only what it has to say. */
+.stage-bar.idle .ask, .stage-bar.idle .decide { visibility: hidden; }
+.sync:empty { display: none; }
 
-/* The summary between batches, over the game. */
+/* The summary at the end of a list, or of the choices so far, over the game. */
 .stage-done {
   position: absolute; inset: 0; z-index: 5;
   display: grid; place-items: center;
-  padding: 4.5rem 1rem 1rem;
-  background: rgba(5, 7, 12, 0.86);
+  padding: 1rem;
+  background: rgba(5, 7, 12, 0.88);
   overflow-y: auto;
 }
 .stage-done[hidden] { display: none; }
 .done-card {
-  width: 100%; max-width: 26rem;
-  padding: 1.25rem 1.1rem 0.6rem;
+  width: 100%; max-width: 30rem;
+  padding: 1.25rem 1.1rem 1rem;
   background: var(--panel);
   border: 1px solid var(--rule);
   border-radius: 18px;
@@ -769,8 +787,9 @@ html.staged, html.staged body { overflow: hidden; }
 }
 .done-card h2 { margin: 0; font-size: 1.25rem; }
 .done-card .meta { margin: 0.4rem 0 0; }
-.done-card .grid:not([hidden]) { margin: 1rem 0 0.25rem; }
-.done-card .minor[hidden] { display: none; }
+.done-card .grid:not([hidden]) { margin: 1rem 0 0.25rem; max-height: 46vh; overflow-y: auto; padding: 2px; }
+.choose { display: flex; gap: 0.75rem; margin: 1rem auto 0; max-width: 26rem; }
+.choose .btn { flex: 1; padding-left: 0.8rem; padding-right: 0.8rem; }
 
 .grid {
   display: grid;
@@ -779,11 +798,27 @@ html.staged, html.staged body { overflow: hidden; }
 }
 .grid[hidden] { display: none; }
 
-/* A palette voted out fades and says so; tapping it keeps it after all. */
+/* A small tower: eight columns of crates, square, with the game's bevel. */
+.tower {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1px;
+  padding: 0.4rem;
+  border-radius: 8px;
+}
+.tower i {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 1px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.tower i.gap { visibility: hidden; }
+
+/* An answered palette, marked with the answer; tapping it changes its mind. */
 .pick {
   position: relative;
   padding: 0;
-  border: 2px solid transparent;
+  border: 2px solid #2f8a55;
   border-radius: 10px;
   background: none;
   cursor: pointer;
@@ -791,21 +826,16 @@ html.staged, html.staged body { overflow: hidden; }
 }
 .pick .badge {
   position: absolute;
-  inset: 50% 0.25rem auto;
-  transform: translateY(-50%);
-  font-size: 0.75rem;
-  font-weight: 700;
-  line-height: 1.3;
-  padding: 0.15rem 0.2rem;
+  inset: auto 0.3rem 0.3rem;
+  font: 700 0.72rem/1.3 system-ui, sans-serif;
+  padding: 0.1rem 0.2rem;
   border-radius: 5px;
-  background: #b3274a;
+  background: #2f8a55;
   color: #fff;
-  display: none;
 }
-.pick .badge { inset: auto 0.3rem 0.3rem; transform: none; font-size: 0.72rem; }
-.pick[aria-pressed="true"] { border-color: #b3274a; }
-.pick[aria-pressed="true"] .tower { opacity: 0.7; }
-.pick[aria-pressed="true"] .badge { display: block; }
+.pick.no { border-color: #b3274a; }
+.pick.no .tower { opacity: 0.6; }
+.pick.no .badge { background: #b3274a; }
 
 /* The palette cleanser: plain mid-grey, on only when asked for. */
 .cleanser {
@@ -822,7 +852,7 @@ html.staged, html.staged body { overflow: hidden; }
 .cleanser.out { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .cleanser { transition: none; } }
 
-/* The maker's sheet, under the game: its colours, then what changes the chosen one. */
+/* ---- making one: its colours, then what changes the chosen one, under the game. */
 .stage-sheet {
   display: grid;
   gap: 0.35rem;
@@ -830,7 +860,7 @@ html.staged, html.staged body { overflow: hidden; }
   max-height: 58dvh;
   overflow-y: auto;
   padding: 0.6rem 0.9rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
-  background: #0b0e15;
+  background: var(--bg);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .stage-sheet[hidden] { display: none; }
@@ -856,8 +886,13 @@ html.staged, html.staged body { overflow: hidden; }
   font: 600 1.5rem/1 var(--display);
 }
 .chip.add:hover { box-shadow: inset 0 0 0 2px var(--amber); color: var(--amber); }
-.sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-.sheet-hint { margin: 0; font-size: 0.88rem; }
+@media (max-width: 22.5rem) {
+  .chips { grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 0.4rem; }
+  .chip { height: 40px; }
+}
+.sheet-row { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.sheet-row .spacer { flex: 1; }
+.sheet-hint { margin: 0.1rem 0 0; font-size: 0.88rem; }
 .sheet-row button.link { flex: none; min-width: 3.5rem; }
 .sheet-body[hidden] { display: none; }
 .sheet-body { display: grid; gap: 0.1rem; }
@@ -867,11 +902,11 @@ html.staged, html.staged body { overflow: hidden; }
   position: sticky; bottom: calc(-0.7rem - env(safe-area-inset-bottom, 0px));
   padding: 0.35rem 0 calc(0.7rem + env(safe-area-inset-bottom, 0px));
   margin-bottom: calc(-0.7rem - env(safe-area-inset-bottom, 0px));
-  background: #0b0e15;
+  background: var(--bg);
 }
 .sheet-foot .btn { width: 100%; min-height: 52px; }
-.sheet-foot .status { margin: 0; min-height: 1.4em; font-size: 0.9rem; }
-.editor-row { display: flex; gap: 0.6rem; margin: 0.25rem 0 0.1rem; }
+.sheet-foot .status { margin: 0; min-height: 1.4em; font-size: 0.9rem; text-align: center; }
+.editor-row { display: flex; gap: 0.5rem; margin: 0.25rem 0 0.1rem; }
 .swatch-picker input {
   display: block; width: 3.4rem; height: 48px; padding: 0;
   border: 1px solid var(--rule); border-radius: 8px; background: none; cursor: pointer;
@@ -879,7 +914,7 @@ html.staged, html.staged body { overflow: hidden; }
 .swatch-picker input::-webkit-color-swatch-wrapper { padding: 3px; }
 .swatch-picker input::-webkit-color-swatch { border: 0; border-radius: 5px; }
 .swatch-picker input::-moz-color-swatch { border: 0; border-radius: 5px; }
-.hex-field { flex: 1; min-width: 0; }
+.hex-field { flex: 1 1 6.5rem; min-width: 6.5rem; }
 .hex-field input {
   width: 100%;
   font: 1rem ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -888,10 +923,16 @@ html.staged, html.staged body { overflow: hidden; }
   height: 48px;
   border: 1px solid var(--rule);
   border-radius: 8px;
-  background: var(--bg);
+  background: var(--bg-deep);
   color: var(--ink);
   text-transform: uppercase;
 }
+.colours .btn.tool { flex: 0 1 auto; min-width: 0; gap: 0.4rem; letter-spacing: 0.03em; text-transform: none; font-size: 0.95rem; padding-left: 0.7rem; padding-right: 0.7rem; }
+.btn.tool span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The narrowest phones keep the tools as their icons, named for a screen reader and on hover. */
+@media (max-width: 22.5rem) { .btn.tool span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); } }
+.colours .btn.tool[aria-pressed="true"] { border-color: var(--crane); color: var(--amber); }
+.btn.tool svg { width: 20px; height: 20px; }
 
 /* Each slider's track is the colours it reaches, so the way to the colour you want is visible. */
 .slider { display: grid; grid-template-columns: 5.6rem 1fr; align-items: center; gap: 0.5rem; font-size: 0.9rem; min-height: 44px; }
@@ -907,19 +948,106 @@ html.staged, html.staged body { overflow: hidden; }
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--thumb, #fff); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.4);
 }
-.status { text-align: center; }
+.minor { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; margin-top: 0.25rem; }
+
+/* ---- the picture to take colours from. It shares the stage with the game rather than covering
+   it, so the game wears each colour as the finger moves: above it on a phone, beside it on a
+   wide screen. */
+.picker { display: grid; grid-template-rows: minmax(0, 1fr) auto; background: #0e121b; min-height: 0; min-width: 0; }
+.picker[hidden] { display: none; }
+body.picking .stage-game { display: flex; flex-direction: column; }
+body.picking .stage-game > .picker { flex: 1 1 55%; order: -1; }
+body.picking .stage-game > iframe { position: relative; inset: auto; flex: 1 1 45%; height: auto; min-height: 0; border-top: 1px solid var(--rule); }
+@media (orientation: landscape) {
+  body.picking .stage-game { flex-direction: row; }
+  body.picking .stage-game > .picker { flex-basis: 50%; }
+  body.picking .stage-game > iframe { flex-basis: 50%; width: auto; border-top: 0; border-left: 1px solid var(--rule); }
+}
+.picker-empty {
+  display: grid; align-content: center; justify-items: center; gap: 0.5rem;
+  padding: 1rem; text-align: center; min-height: 0; overflow-y: auto;
+}
+.picker-empty[hidden] { display: none; }
+.picker-empty h2 { margin: 0; font-size: 1.15rem; }
+.picker-empty .meta { margin: 0; max-width: 24rem; }
+.picker-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 0.4rem; }
+.file-btn { position: relative; overflow: hidden; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+.picker-status:empty { display: none; }
+.picker-view { position: relative; min-height: 0; overflow: hidden; }
+.picker-view[hidden] { display: none; }
+.picker-view canvas#picker-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: none; }
+.loupe {
+  position: absolute; left: 0; top: 0;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--picked, #fff);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+.loupe[hidden] { display: none; }
+.picker-bar {
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 0.5rem; border-top: 1px solid var(--rule); background: var(--bg);
+}
+/* What the next tap does, over the top of the picture, out of the finger's way. */
+.picker-hint {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%); z-index: 1;
+  max-width: calc(100% - 16px); margin: 0; padding: 0.2rem 0.7rem; border-radius: 999px;
+  font: 600 0.88rem var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--ink); background: rgba(8, 10, 16, 0.78); pointer-events: none;
+}
+.picker-buttons { display: flex; align-items: center; gap: 0 0.3rem; }
+@media (max-width: 22.5rem) { .picker-buttons button.link { font-size: 0.86rem; padding-left: 0.25rem; padding-right: 0.25rem; } }
+.picker-buttons #picker-close { font-weight: 700; }
 
 /* A wide screen gives the maker's sheet a column of its own beside the game. */
 @media (min-width: 56rem) and (min-aspect-ratio: 5/4) {
-  .stage.make { grid-template-columns: minmax(0, 1fr) 24rem; grid-template-rows: minmax(0, 1fr); }
-  .stage.make .stage-sheet {
+  body[data-mode="make"] .app-body { grid-template-columns: minmax(0, 1fr) 24rem; grid-template-rows: minmax(0, 1fr); }
+  body[data-mode="make"] .stage-sheet {
     grid-column: 2; grid-row: 1; max-height: none; align-content: start;
     border-top: 0; border-left: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+    padding-top: 1rem;
   }
+  body[data-mode="make"] .sheet-foot { bottom: 0; margin-bottom: 0; padding-bottom: 0.7rem; }
+  /* There the picture and the game side by side would both be narrow: the picture goes over
+     the top of the stage instead, and the game below it keeps the stage's full width. */
+  body.picking .stage-game { flex-direction: column; }
+  body.picking .stage-game > .picker { flex-basis: 55%; }
+  body.picking .stage-game > iframe { flex-basis: 45%; width: 100%; border-left: 0; border-top: 1px solid var(--rule); }
 }
 
-#sync:empty { display: none; }
-.privacy-note { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
-.privacy-note h2 { font-size: 1rem; margin-bottom: 0.25rem; }
-.privacy-note p { margin: 0; }
+/* ---- what the page is: a sheet over everything, on a first visit and from the ? */
+.about {
+  width: min(34rem, calc(100% - 1.5rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+.about::backdrop { background: rgba(3, 4, 8, 0.72); }
+.about-body { padding: 1.25rem 1.25rem 1rem; }
+.about h2 { font-size: 1.35rem; margin: 0 0 0.6rem; }
+.about h3 { font-size: 1rem; margin: 1rem 0 0.25rem; }
+.about p { margin: 0 0 0.6rem; }
+.about-list { margin: 0 0 0.6rem; padding-left: 1.1rem; }
+.about-list li { margin-bottom: 0.35rem; }
+.about kbd {
+  font: 600 0.8rem ui-monospace, monospace; padding: 0.05rem 0.35rem; border-radius: 5px;
+  border: 1px solid var(--rule); background: var(--bg-deep);
+}
+@media (hover: none) { .about .keys { display: none; } }
+.about-links { margin-top: 0.8rem; }
+.about form { margin: 0.6rem 0 0; }
+.about form .btn { width: 100%; }
+
+/* A short screen gives the bar across the top less height, so the game keeps more. */
+@media (max-height: 40rem) {
+  .app-bar { padding-top: calc(env(safe-area-inset-top, 0px) + 0.15rem); padding-bottom: 0.35rem; gap: 0.15rem 0.75rem; }
+  .crumbs a, .app-bar .info { min-height: 34px; height: 34px; }
+  .tab { min-height: 40px; padding-top: 0.15rem; padding-bottom: 0.15rem; gap: 0; }
+}
