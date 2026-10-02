@@ -105,13 +105,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
   initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
   initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
@@ -8557,7 +8557,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.ji_1 = new TowerViewport();
   }
   protoOf(Engine).deal = function (seed, minHeight, maxHeight, leanMin, leanMax) {
-    this.ai_1 = this.zh_1.dg(toLong(seed)).he(VOID, VOID, VOID, new Long(37493, 0));
+    this.ai_1 = this.zh_1.dg(toLong(seed)).he(VOID, VOID, VOID, new Long(37621, 0));
     var tmp = this;
     var tmp0_elvis_lhs = this.ci_1;
     tmp.bi_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().vi(this.ai_1.nd_1) : tmp0_elvis_lhs;
@@ -8652,7 +8652,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return lean;
   };
   protoOf(Engine).showcase = function (seed) {
-    this.ai_1 = this.zh_1.dg(toLong(seed)).he(VOID, VOID, VOID, new Long(37493, 0));
+    this.ai_1 = this.zh_1.dg(toLong(seed)).he(VOID, VOID, VOID, new Long(37621, 0));
     var tmp = this;
     var tmp0_elvis_lhs = this.ci_1;
     tmp.bi_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().vi(this.ai_1.nd_1) : tmp0_elvis_lhs;
@@ -10349,7 +10349,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function TowerBands() {
     TowerBands_instance = this;
-    this.ki_1 = new Long(37493, 0);
+    this.ki_1 = new Long(37621, 0);
     this.li_1 = Medal_SUMMIT_getInstance().qg_1;
     this.mi_1 = this.li_1.k() + 1 | 0;
     this.ni_1 = 10;
@@ -10364,7 +10364,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     tmp.pi_1 = new Band_0(16777215, tmp_1);
     this.qi_1 = new Long(1284865837, 1481765933);
     this.ri_1 = new Long(-144211633, 335903614);
-    this.si_1 = this.vi(new Long(37493, 0));
+    this.si_1 = this.vi(new Long(37621, 0));
     this.ti_1 = 2.0;
     this.ui_1 = 1.0E-4;
   }
@@ -10535,137 +10535,41 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp$ret$0 = new Int32Array([2083038, 9099578, 4166389, 10185714, 14577622, 2083038, 9099578, 4166389, 10185714, 14577622]);
     var tmp_0 = new Band_0(857121, tmp$ret$0);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$1 = new Int32Array([16634368, 16634368, 16634368, 16634368, 16634368, 16634368, 16634368, 1315344, 15597597, 7811607]);
-    var tmp_1 = new Band_0(12430969, tmp$ret$1);
+    var tmp$ret$1 = new Int32Array([5617992, 5617992, 5617992, 3704625, 3704625, 3704625, 8573047, 8573047, 13621193, 1315344]);
+    var tmp_1 = new Band_0(1333002, tmp$ret$1);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$2 = new Int32Array([15760128, 15760128, 15760128, 15760128, 15760128, 15760128, 16116607, 16661528, 15781376, 15395562]);
-    var tmp_2 = new Band_0(7617549, tmp$ret$2);
+    var tmp$ret$2 = new Int32Array([11173222, 11173222, 11173222, 11173222, 2759949, 2759949, 4602533, 4602533, 44975, 44975]);
+    var tmp_2 = new Band_0(8015931, tmp$ret$2);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$3 = new Int32Array([6997225, 6997225, 6997225, 6997225, 6997225, 6997225, 14273958, 14273958, 1315344, 11689229]);
-    var tmp_3 = new Band_0(3511222, tmp$ret$3);
+    var tmp$ret$3 = new Int32Array([3930600, 3930600, 3930600, 3132859, 3132859, 3132859, 933686, 933686, 10615784, 2800296]);
+    var tmp_3 = new Band_0(1148540, tmp$ret$3);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$4 = new Int32Array([8703938, 8703938, 8703938, 8703938, 8703938, 8703938, 5088562, 5212279, 15829634, 13052463]);
-    var tmp_4 = new Band_0(13369333, tmp$ret$4);
+    var tmp$ret$4 = new Int32Array([16767037, 16767037, 16767037, 14725680, 14725680, 14725680, 8543510, 8543510, 13866546, 16646006]);
+    var tmp_4 = new Band_0(4404997, tmp$ret$4);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$5 = new Int32Array([15566848, 15566848, 15566848, 15566848, 15566848, 22123, 22123, 22123, 14668653, 16730666]);
-    var tmp_5 = new Band_0(4728581, tmp$ret$5);
+    var tmp$ret$5 = new Int32Array([13452040, 13452040, 13452040, 13452040, 13849614, 13849614, 14314265, 14314265, 14913071, 15378752]);
+    var tmp_5 = new Band_0(8201474, tmp$ret$5);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$6 = new Int32Array([14194245, 14194245, 14194245, 14194245, 14194245, 14194245, 14194245, 15655598, 7487772, 1447446]);
-    var tmp_6 = new Band_0(11036930, tmp$ret$6);
+    var tmp$ret$6 = new Int32Array([997391, 997391, 997391, 997391, 997391, 997391, 997391, 3170864, 3170864, 3170864]);
+    var tmp_6 = new Band_0(10206223, tmp$ret$6);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$7 = new Int32Array([7693729, 7693729, 7693729, 7693729, 7693729, 7693729, 7693729, 7693729, 15461099, 16736346]);
-    var tmp_7 = new Band_0(10654417, tmp$ret$7);
+    var tmp$ret$7 = new Int32Array([15022389, 16011550, 16485376, 16635957, 8172354, 4431943, 44225, 2001125, 6174129, 9315498]);
+    var tmp_7 = new Band_0(1710638, tmp$ret$7);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$8 = new Int32Array([15976401, 15976401, 15976401, 15976401, 15976401, 15976401, 15976401, 3292489, 31112, 15395562]);
-    var tmp_8 = new Band_0(2624020, tmp$ret$8);
+    var tmp$ret$8 = new Int32Array([16740814, 16740814, 16740814, 118270, 118270, 118270, 12150783, 12150783, 393121, 16776086]);
+    var tmp_8 = new Band_0(2956110, tmp$ret$8);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$9 = new Int32Array([15392979, 15392979, 15392979, 15392979, 15392979, 15392979, 28309, 28309, 28309, 7364429]);
-    var tmp_9 = new Band_0(12103330, tmp$ret$9);
+    var tmp$ret$9 = new Int32Array([15132390, 13684944, 12303291, 10921638, 9539985, 8158332, 6842472, 5592405, 12895428, 10263708]);
+    var tmp_9 = new Band_0(1447446, tmp$ret$9);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$10 = new Int32Array([6990400, 6990400, 6990400, 7951674, 7951674, 7951674, 9486176, 9858122, 5848361, 12158300]);
-    var tmp_10 = new Band_0(11662730, tmp$ret$10);
+    var tmp$ret$10 = new Int32Array([16747136, 16732754, 16007990, 15022389, 13840175, 12986408, 12000284, 15684432, 15037299, 16764370]);
+    var tmp_10 = new Band_0(4785157, tmp$ret$10);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$11 = new Int32Array([5617992, 5617992, 5617992, 3704625, 3704625, 3704625, 8573047, 8573047, 13621193, 1315344]);
-    var tmp_11 = new Band_0(1333002, tmp$ret$11);
+    var tmp$ret$11 = new Int32Array([7294519, 7294519, 9132587, 11892282, 11892282, 13148794, 13148794, 14267788, 15392974, 15392974]);
+    var tmp_11 = new Band_0(3875864, tmp$ret$11);
     // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$12 = new Int32Array([11173222, 11173222, 11173222, 11173222, 2759949, 2759949, 4602533, 4602533, 44975, 44975]);
-    var tmp_12 = new Band_0(8015931, tmp$ret$12);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$13 = new Int32Array([11605287, 11605287, 11605287, 14364442, 14364442, 14364442, 14539225, 14539225, 1776188, 9342606]);
-    var tmp_13 = new Band_0(851969, tmp$ret$13);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$14 = new Int32Array([3930600, 3930600, 3930600, 3132859, 3132859, 3132859, 933686, 933686, 10615784, 2800296]);
-    var tmp_14 = new Band_0(1148540, tmp$ret$14);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$15 = new Int32Array([16767037, 16767037, 16767037, 14725680, 14725680, 14725680, 8543510, 8543510, 13866546, 16646006]);
-    var tmp_15 = new Band_0(4404997, tmp$ret$15);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$16 = new Int32Array([1447446, 1447446, 1447446, 1447446, 1447446, 1447446, 1447446, 1447446, 14711290, 13369594]);
-    var tmp_16 = new Band_0(3947580, tmp$ret$16);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$17 = new Int32Array([13452040, 13452040, 13452040, 13452040, 13849614, 13849614, 14314265, 14314265, 14913071, 15378752]);
-    var tmp_17 = new Band_0(8201474, tmp$ret$17);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$18 = new Int32Array([39372, 39372, 39372, 16765888, 16765888, 15395562, 15395562, 5219879, 91596, 1315344]);
-    var tmp_18 = new Band_0(1004398, tmp$ret$18);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$19 = new Int32Array([16693541, 16693541, 16693541, 16693541, 16693541, 16693541, 16693541, 16693541, 15395562, 1315344]);
-    var tmp_19 = new Band_0(12815105, tmp$ret$19);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$20 = new Int32Array([16737996, 16737996, 16737996, 16737996, 16737996, 16737996, 16712141, 16712141, 16699133, 16436284]);
-    var tmp_20 = new Band_0(11404164, tmp$ret$20);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$21 = new Int32Array([264735, 264735, 264735, 264735, 264735, 264735, 12572379, 1253481, 5135479, 5905709]);
-    var tmp_21 = new Band_0(8095909, tmp$ret$21);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$22 = new Int32Array([15395562, 15395562, 15395562, 15395562, 27315, 27315, 27315, 11918835, 16565504, 14955820]);
-    var tmp_22 = new Band_0(10855845, tmp$ret$22);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$23 = new Int32Array([6203287, 6203287, 6203287, 6203287, 6203287, 6203287, 12648396, 532016, 15597660, 15452714]);
-    var tmp_23 = new Band_0(514, tmp$ret$23);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$24 = new Int32Array([13472760, 13472760, 13472760, 13472760, 13472760, 13472760, 13472760, 13472760, 16768093, 3479878]);
-    var tmp_24 = new Band_0(15323390, tmp$ret$24);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$25 = new Int32Array([2181328, 2181328, 2181328, 14815248, 14815248, 14815248, 15903355, 15903355, 15395562, 5514519]);
-    var tmp_25 = new Band_0(459665, tmp$ret$25);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$26 = new Int32Array([3556720, 3556720, 3556720, 3556720, 1547029, 1547029, 15395562, 15395562, 15902586, 5712933]);
-    var tmp_26 = new Band_0(6320543, tmp$ret$26);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$27 = new Int32Array([16753874, 16753874, 16753874, 16753874, 16753874, 16735372, 16571184, 16765103, 15395562, 3237022]);
-    var tmp_27 = new Band_0(6822472, tmp$ret$27);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$28 = new Int32Array([5687624, 5687624, 5687624, 5687624, 5687624, 15395562, 16543532, 14269990, 14697014, 2105105]);
-    var tmp_28 = new Band_0(512, tmp$ret$28);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$29 = new Int32Array([16101632, 16101632, 16101632, 16101632, 16101632, 16101632, 16508595, 3417894, 16732228, 3372322]);
-    var tmp_29 = new Band_0(853761, tmp$ret$29);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$30 = new Int32Array([16693636, 16693636, 16693636, 10108049, 10108049, 15395562, 2654779, 16770350, 4466206, 15501784]);
-    var tmp_30 = new Band_0(1443328, tmp$ret$30);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$31 = new Int32Array([8931629, 8931629, 8931629, 8931629, 8931629, 8931629, 8931629, 14588778, 14588778, 13383209]);
-    var tmp_31 = new Band_0(5906176, tmp$ret$31);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$32 = new Int32Array([2171391, 2171391, 2171391, 2171391, 16758958, 16776960, 16711680, 16758865, 16759039, 65535]);
-    var tmp_32 = new Band_0(657930, tmp$ret$32);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$33 = new Int32Array([61680, 61680, 15790080, 15790080, 10486000, 10486000, 61440, 15728640, 240, 15769600]);
-    var tmp_33 = new Band_0(657930, tmp$ret$33);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$34 = new Int32Array([997391, 997391, 997391, 997391, 997391, 997391, 997391, 3170864, 3170864, 3170864]);
-    var tmp_34 = new Band_0(10206223, tmp$ret$34);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$35 = new Int32Array([6254205, 6254205, 6254205, 6254205, 6254205, 6254205, 14214892, 3286648, 8548606, 16761900]);
-    var tmp_35 = new Band_0(9149355, tmp$ret$35);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$36 = new Int32Array([16768290, 16768290, 16768290, 16768290, 16768290, 15615027, 15615027, 15615027, 15395562, 39389]);
-    var tmp_36 = new Band_0(5128973, tmp$ret$36);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$37 = new Int32Array([16708719, 16708719, 16708719, 16708719, 10642223, 10642223, 15395562, 8884272, 4369869, 1709846]);
-    var tmp_37 = new Band_0(13287217, tmp$ret$37);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$38 = new Int32Array([16168888, 16168888, 16168888, 16168888, 16168888, 16168888, 16168888, 12436799, 11440829, 15395562]);
-    var tmp_38 = new Band_0(10249061, tmp$ret$38);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$39 = new Int32Array([12639186, 12639186, 12639186, 12639186, 12639186, 12639186, 12639186, 12639186, 15183918, 15183918]);
-    var tmp_39 = new Band_0(9480609, tmp$ret$39);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$40 = new Int32Array([15022389, 16011550, 16485376, 16635957, 8172354, 4431943, 44225, 2001125, 6174129, 9315498]);
-    var tmp_40 = new Band_0(1710638, tmp$ret$40);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$41 = new Int32Array([16740814, 16740814, 16740814, 118270, 118270, 118270, 12150783, 12150783, 393121, 16776086]);
-    var tmp_41 = new Band_0(2956110, tmp$ret$41);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$42 = new Int32Array([15132390, 13684944, 12303291, 10921638, 9539985, 8158332, 6842472, 5592405, 12895428, 10263708]);
-    var tmp_42 = new Band_0(1447446, tmp$ret$42);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$43 = new Int32Array([16747136, 16732754, 16007990, 15022389, 13840175, 12986408, 12000284, 15684432, 15037299, 16764370]);
-    var tmp_43 = new Band_0(4785157, tmp$ret$43);
-    // Inline function 'kotlin.intArrayOf' call
-    var tmp$ret$44 = new Int32Array([7294519, 7294519, 9132587, 11892282, 11892282, 13148794, 13148794, 14267788, 15392974, 15392974]);
-    tmp.kq_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, tmp_13, tmp_14, tmp_15, tmp_16, tmp_17, tmp_18, tmp_19, tmp_20, tmp_21, tmp_22, tmp_23, tmp_24, tmp_25, tmp_26, tmp_27, tmp_28, tmp_29, tmp_30, tmp_31, tmp_32, tmp_33, tmp_34, tmp_35, tmp_36, tmp_37, tmp_38, tmp_39, tmp_40, tmp_41, tmp_42, tmp_43, new Band_0(3875864, tmp$ret$44)]);
+    var tmp$ret$12 = new Int32Array([8912816, 9631231, 16383892, 16761795, 8912816, 9631231, 16383892, 16761795, 8912816, 9631231]);
+    tmp.kq_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, new Band_0(16147910, tmp$ret$12)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
