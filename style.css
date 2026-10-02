@@ -957,6 +957,10 @@ button.link[hidden] { display: none; }
 .picker[hidden] { display: none; }
 body.picking .stage-game { display: flex; flex-direction: column; }
 body.picking .stage-game > .picker { flex: 1 1 55%; order: -1; }
+/* Until there is a picture there is nothing to try on the game: what to do, and what happens to
+   the picture, have the whole stage. */
+body.picking .stage-game > .picker.empty { flex-basis: 100%; }
+body.picking-empty .stage-game > iframe { display: none; }
 body.picking .stage-game > iframe { position: relative; inset: auto; flex: 1 1 45%; height: auto; min-height: 0; border-top: 1px solid var(--rule); }
 @media (orientation: landscape) {
   body.picking .stage-game { flex-direction: row; }
@@ -975,6 +979,26 @@ body.picking .stage-game > iframe { position: relative; inset: auto; flex: 1 1 4
 .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
 .picker-status:empty { display: none; }
 .picker-view { position: relative; min-height: 0; overflow: hidden; }
+/* **What happens to a picture is said where the picture is chosen and where it is shown**, not only
+   in the page's note: before any is chosen, in full; while one is open, as a badge on it. */
+.local-note {
+  display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; align-items: start;
+  max-width: 26rem; margin: 0.35rem 0 0.15rem; padding: 0.65rem 0.8rem;
+  text-align: left; font-size: 0.9rem; line-height: 1.45; color: var(--ink-dim);
+  border: 1px solid rgba(47, 138, 85, 0.7); border-radius: 12px; background: rgba(47, 138, 85, 0.14);
+}
+.local-note svg { width: 22px; height: 22px; color: #8be0ad; margin-top: 0.1rem; }
+.local-note p { margin: 0; }
+.local-note b { color: var(--ink); }
+.local-badge {
+  position: absolute; left: 8px; bottom: 8px; z-index: 1; margin: 0;
+  display: inline-flex; align-items: center; gap: 0.35rem; max-width: calc(100% - 16px);
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem; border-radius: 999px;
+  font: 600 0.8rem var(--display); color: #c8f5da; white-space: nowrap; overflow: hidden;
+  background: rgba(8, 10, 16, 0.82); border: 1px solid rgba(47, 138, 85, 0.8); pointer-events: none;
+}
+.local-badge svg { width: 15px; height: 15px; flex: none; }
+.local-badge span { overflow: hidden; text-overflow: ellipsis; }
 .picker-view[hidden] { display: none; }
 .picker-view canvas#picker-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: none; }
 .loupe {

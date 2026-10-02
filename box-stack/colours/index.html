@@ -80,7 +80,12 @@
       <div class="picker" id="picker" hidden>
         <div class="picker-empty" id="picker-empty">
           <h2>Take colours from a picture</h2>
-          <p class="meta">Choose one, paste one, or drop one here. It stays on your device and is never uploaded</p>
+          <div class="local-note" id="local-note">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></g></svg>
+            <p><b>Your picture stays on your device.</b> It's opened right here in your browser to read
+            its colours, and it's never uploaded to a server or saved anywhere. Only the colours you
+            pick are sent, and only when you add your palette to the vote</p>
+          </div>
           <div class="picker-actions">
             <label class="btn primary file-btn">
               <input type="file" id="picker-file" accept="image/*">
@@ -88,11 +93,13 @@
             </label>
             <button class="btn" id="picker-paste" hidden>Paste</button>
           </div>
+          <p class="meta">Or paste one, or drop one here</p>
           <p class="meta picker-status" id="picker-status" aria-live="polite"></p>
         </div>
         <div class="picker-view" id="picker-view" hidden>
           <canvas id="picker-canvas" aria-label="Your picture. Tap or drag on it to take a colour"></canvas>
           <p class="picker-hint" id="picker-hint" aria-live="polite">Tap the picture to set the background</p>
+          <p class="local-badge" id="local-badge" title="The picture is read in your browser. It is never uploaded or saved"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></g></svg><span>On your device only · not uploaded</span></p>
           <canvas class="loupe" id="loupe" width="120" height="120" aria-hidden="true" hidden></canvas>
         </div>
         <div class="picker-bar">
@@ -132,7 +139,7 @@
     <div class="stage-sheet" id="bar-make" hidden>
       <div class="chips" role="radiogroup" aria-label="Colour to change" id="make-slots"></div>
       <div class="sheet-row">
-        <button class="btn small tool" id="make-image" title="Take colours from a picture">
+        <button class="btn small tool" id="make-image" title="Take colours from a picture. It stays on your device and is never uploaded">
           <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></g></svg>
           <span>Picture</span>
         </button>
@@ -192,9 +199,9 @@
 
     <h3>What this page saves</h3>
     <p class="meta">
-      Your votes, the palettes you make and the ones you'd take out, along with a random ID your
-      browser makes up so each person only counts once. No name, no account, no cookies, and your
-      IP address isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's
+      Your votes, yes or no on new palettes and keep or remove on the game's, and the palettes you
+      make, along with a random ID your browser makes up so each person only counts once. No name,
+      no account, no cookies, and your IP address isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's
       colours. Your browser also remembers what you've already seen, on your device only, so you
       don't get the same palette twice. A picture you take colours from stays on your device: it
       is never uploaded or saved.

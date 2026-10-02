@@ -65,7 +65,8 @@ in the Boxstack repository under `tools/palette-votes/`; this repository has onl
 What it sends is the colours, the choice and a random ID the browser made up — no name, no
 cookies, no IP address stored — and the page's own "What this page saves" note, in its **?** sheet,
 says so. A picture opened in the maker to take colours from is read in the browser and never sent
-or saved; the note says that too. That note
+or saved; the note says that too, and so does the picker itself, in full before a picture is
+chosen and as a badge on it while it is open. That note
 is this page's privacy statement; `privacy.html` is the app's policy and is not about the website.
 If the page ever sends anything more, the note changes in the same commit.
 

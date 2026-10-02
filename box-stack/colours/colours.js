@@ -174,7 +174,7 @@
 
   var memory = {
     visitor: null, votes: {}, dislikes: {}, judged: {}, outbox: [], draft: null,
-    cleanser: false, introduced: false,
+    cleanser: false, introduced: false, keepsSent: false,
   };
   try {
     var saved = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -185,6 +185,7 @@
       memory.judged = saved.judged || {};
       memory.outbox = Array.isArray(saved.outbox) ? saved.outbox : [];
       memory.cleanser = saved.cleanser === true;
+      memory.keepsSent = saved.keepsSent === true;
       // Somebody who used the page before it was one page has already met it.
       memory.introduced = saved.introduced === true || Boolean(saved.visitor);
       var d = saved.draft;
@@ -226,13 +227,32 @@
    * Worker by a paste, so for a while one can be newer than the other; a vote refused in that time
    * would be gone. Until the Worker says it takes this page's names, votes wait on this device.
    */
-  var workerTakes = false;
+  var workerTakes = false, workerKeeps = false;
   async function workerReady() {
     if (!workerTakes) {
       var h = await getJSON("/health");
       workerTakes = Boolean(h && h.names >= NAMES);
+      workerKeeps = Boolean(h && h.keeps);
     }
     return workerTakes;
+  }
+
+  /*
+   * **Keeps said before the Worker recorded them are sent once it does.** A keep on a palette in
+   * the game used to reach the Worker only as a removal taken back, so one with no removal before
+   * it left no trace, and a palette kept looked the same as one never seen. Once the Worker says it
+   * records keeps, every answer this browser holds on the game's palettes is sent again, once: the
+   * Worker keeps the newest answer, so sending one it has already is harmless.
+   */
+  async function catchUpKeeps() {
+    if (memory.keepsSent || !(await workerReady()) || !workerKeeps) return;
+    Object.keys(memory.judged).forEach(function (name) {
+      if (!fromName(name)) return;     // a name from before palettes had ten slots
+      memory.outbox.push({ path: "/dislike", body: { palette: name, dislike: Boolean(memory.dislikes[name]), visitor: memory.visitor } });
+    });
+    memory.keepsSent = true;
+    remember();
+    flush();
   }
 
   var flushing = null;
@@ -900,6 +920,9 @@
   var view = null;          // where the picture is drawn in the canvas, in CSS pixels
 
   function openPicker() {
+    // With no picture yet it says what happens to one, in full, so it has the room for that.
+    pickerEl.classList.toggle("empty", !source);
+    document.body.classList.toggle("picking-empty", !source);
     pickerEl.hidden = false;
     document.body.classList.add("picking");
     $("make-image").setAttribute("aria-pressed", "true");
@@ -912,7 +935,7 @@
     if (pickerEl.hidden) return;
     pickerEl.hidden = true;
     loupe.hidden = true;
-    document.body.classList.remove("picking");
+    document.body.classList.remove("picking", "picking-empty");
     $("make-image").setAttribute("aria-pressed", "false");
   }
   $("make-image").addEventListener("click", function () { if (pickerEl.hidden) openPicker(); else closePicker(); });
@@ -997,6 +1020,8 @@
       pickerStatus("");
       $("picker-empty").hidden = true;
       $("picker-view").hidden = false;
+      pickerEl.classList.remove("empty");
+      document.body.classList.remove("picking-empty");
       $("picker-other").hidden = false;
       $("picker-suggest").disabled = false;
       if (pickerEl.hidden) openPicker();
@@ -1221,5 +1246,6 @@
     show(modeFromHash() || "current");
     if (!memory.introduced) about.showModal();
     flush();
+    catchUpKeeps();
   })();
 })();
