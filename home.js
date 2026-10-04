@@ -2,7 +2,8 @@
  *
  * The hero is a picture of the game rather than a recording of it. A crane lowers the game's own
  * pieces onto a little boat, dealt three at a time from the game's bag, and rows that fill up lock
- * in the colour of the box that finished them. The frame is about as many rows as a phone shows,
+ * in the colour of the box that finished them. The game's balance bar sits over it and the crane
+ * plays by it, so it never makes a drop the game would knock over. The frame is about as many rows as a phone shows,
  * and once the tower nears the top the view climbs with it, as the game's does. It builds until
  * somebody taps it: then the view pulls back to the whole tower, it rolls over into the harbour,
  * and a new boat comes in. Every boat is dealt one of the game's own palettes, and the sky behind
@@ -45,6 +46,16 @@
   function dock() {
     var ctx = canvas.getContext("2d");
     var COLS = 8, LOADED = 3;
+    // The game's balance, as it ships: every loose box pulls the tower toward its own side by its
+    // distance off centre, a half again for each row it stands above the highest finished row,
+    // which is the foundation. Finished rows weigh nothing. At a pull of 30 the tower goes over.
+    // The balance bar shows it, and the crane keeps to it: it never makes a drop the game would
+    // topple, and like a player it would rather finish rows and stay near the middle.
+    var LIFT = 0.5, TOPPLING = 30;
+    // The bar's colours and thresholds, as the game has them: steel, lemon from 0.45 and red from
+    // 0.72, where the game starts rescuing a player. The faint preview of a drop is shown, as in
+    // the game, only while the tower is short of 16 boxes tall.
+    var BAR = ["#8FA3B8", "#E4CF45", "#E0503F"], CAUTION = 0.45, DANGER = 0.72, GUIDE_UNTIL = 16;
     var HEADROOM = 5;        // rows kept clear over the tower, so the tallest piece on the crane clears it
     var REVEAL_AIR = 2;      // rows of sky over the tower when the view pulls back, as in the game
 
@@ -64,24 +75,29 @@
     ];
     var BAG = FAMILIES.reduce(function (n, f) { return n + f[0]; }, 0);
 
-    var W, H, c, dpr, deckY, railY, x0, rows;   // layout, in CSS pixels; rows of tower under the crane
-    var palette, colours, grid, heights, setRows, top, hand;
+    var W, H, c, dpr, deckY, railY, gaugeY, gaugeH, x0, rows;   // layout, in CSS pixels; rows of tower under the crane
+    var palette, colours, grid, heights, setRows, top, foundation, hand;
     var piece = null, trolleyX = 0, phase = null, splash = [];
     var cam = 0, knockLater = false, reveal = null;
+    var standing = 0, shown = 0, sweep = 0;     // the tower's lean, the bar's reading of it, its level flash
     var running = false, last = 0, clock = 0;
 
     function layout() {
       W = canvas.clientWidth || 300;
       c = W / 10;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      railY = 0.35 * c;
+      // The balance bar over the board, then the crane, as the game stacks them.
+      gaugeH = Math.max(10, 0.3 * c);
+      gaugeY = 0.2 * c;
+      railY = gaugeY + gaugeH + 0.3 * c;
+      var crown = railY + 0.55 * c;
       // About as many rows as a phone shows, fewer only where the window is too short for the
       // whole crane: beside the words on a wide screen, the hero is one screen tall.
       var beside = !matchMedia("(max-width: 52rem)").matches;
       var room = beside ? window.innerHeight - 61 - 40 : Infinity;
-      rows = Math.max(9, Math.min(13, Math.floor((room - 0.9 * c - 1.25 * c - 30) / c)));
-      // The rail, the rows under it, and the hull standing out of the water.
-      H = Math.round(0.9 * c + rows * c + 1.25 * c + 30);
+      rows = Math.max(9, Math.min(13, Math.floor((room - crown - 1.25 * c - 30) / c)));
+      // The bar and the rail, the rows under them, and the hull standing out of the water.
+      H = Math.round(crown + rows * c + 1.25 * c + 30);
       canvas.style.height = H + "px";
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
@@ -105,40 +121,109 @@
       var ways = FAMILIES[Math.min(i, FAMILIES.length - 1)][1];
       return ways[Math.floor(Math.random() * ways.length)];
     }
-    // How a placement leaves the tower: gaps it seals under itself, how ragged the top is, how
-    // high it reaches, and rows it finishes. Lower is better.
-    function judge(shape, x, y) {
-      var h = heights.slice(), low = {}, add = {}, holes = 0, finished = 0, bump = 0;
-      shape.forEach(function (d) {
-        var col = x + d[0], row = y + d[1];
-        low[col] = Math.min(low[col] === undefined ? 1e9 : low[col], row);
-        h[col] = Math.max(h[col], row + 1);
-        add[row] = (add[row] || 0) + 1;
-      });
-      for (var k in low) holes += low[k] - heights[k];
-      for (var r in add) if (!setRows[r] && filled(r) + add[r] === COLS) finished++;
+    // How a placement, or two in a row, leaves the tower: gaps sealed under them, how ragged the
+    // top is, how high the loose boxes stand over the foundation, rows finished, and how far it
+    // leans. A drop the game would knock over is never made. Lower is better.
+    function judge(moves) {
+      var h = heights.slice(), extra = {}, add = {}, holes = 0, finished = 0, bump = 0;
+      var base = foundation, high = top, lean = 0;
+      for (var n = 0; n < moves.length; n++) {
+        var shape = moves[n][0], x = moves[n][1], y = 0, low = {};
+        shape.forEach(function (d) { y = Math.max(y, h[x + d[0]] - d[1]); });
+        shape.forEach(function (d) {
+          var col = x + d[0], row = y + d[1];
+          low[col] = Math.min(low[col] === undefined ? 1e9 : low[col], row);
+          (extra[row] = extra[row] || {})[col] = true;
+          add[row] = (add[row] || 0) + 1;
+          high = Math.max(high, row + 1);
+        });
+        for (var k in low) holes += low[k] - h[k];
+        shape.forEach(function (d) { h[x + d[0]] = Math.max(h[x + d[0]], y + d[1] + 1); });
+        for (var r in add) {
+          if (!setRows[r] && Number(r) > base && filled(r) + add[r] === COLS) { finished++; base = Number(r); }
+        }
+        lean = tilt(base, extra, high);
+        if (Math.abs(lean) >= 1) return Infinity;            // the game would knock it over
+      }
       for (var i = 1; i < COLS; i++) bump += Math.abs(h[i] - h[i - 1]);
-      return holes * 8 + bump * 0.7 + (y + tall(shape)) * 1.1 - finished * 6 + Math.random() * 1.8;
+      var loose = Math.max.apply(null, h) - (base + 1);
+      return holes * 20 + bump * 0.7 + loose * 3 - finished * 12 +
+        Math.pow(Math.max(0, Math.abs(lean) - 0.5), 2) * 40 + Math.random() * 1.8;
+    }
+    // The lean the game's balance bar shows, from -1 to 1, where either end is over: every loose
+    // box above the foundation row, with any extra boxes laid over the tower.
+    function tilt(base, extra, high) {
+      var m = 0;
+      for (var row = base + 1; row < high; row++) {
+        var g = grid[row], e = extra && extra[row], weight = 1 + LIFT * (row - base);
+        if (!g && !e) continue;
+        for (var col = 0; col < COLS; col++) {
+          if ((g && g[col]) || (e && e[col])) m += (col + 0.5 - COLS / 2) * weight;
+        }
+      }
+      return m / TOPPLING;
     }
     function filled(row) {
       var n = 0, g = grid[row];
       if (g) for (var i = 0; i < COLS; i++) if (g[i]) n++;
       return n;
     }
-    // The bot plays the hand it is dealt: the best of the three pieces, until all three are down.
-    function choose() {
-      if (!hand.length) hand = [draw1(), draw1(), draw1()];
+    // The bot plays the hand it is dealt, like a careful player: the best of its pieces, with a
+    // thought for what the rest of the hand can do after it, until all three are down.
+    function bestOf(shapes) {
       var best = null;
-      hand.forEach(function (shape, i) {
-        var w = width(shape);
-        for (var x = 0; x + w <= COLS; x++) {
-          var y = landing(shape, x), score = judge(shape, x, y);
-          if (!best || score < best.score) best = { shape: shape, i: i, x: x, y: y, w: w, score: score };
+      shapes.forEach(function (shape, i) {
+        for (var x = 0; x + width(shape) <= COLS; x++) {
+          var score = judge([[shape, x]]);
+          if (score === Infinity) continue;
+          if (shapes.length > 1) {
+            var then = Infinity;
+            shapes.forEach(function (next, j) {
+              if (j === i) return;
+              for (var z = 0; z + width(next) <= COLS; z++) then = Math.min(then, judge([[shape, x], [next, z]]));
+            });
+            score = then === Infinity ? score + 50 : then;
+          }
+          if (!best || score < best.score) best = { shape: shape, i: i, x: x, score: score };
         }
       });
+      return best;
+    }
+    // The game's dealer promises a hand that can be played; this one looks at a few and deals the
+    // one that suits the tower best.
+    function dealHand() {
+      var keep = null, keepScore = Infinity;
+      for (var k = 0; k < 4; k++) {
+        var h = [draw1(), draw1(), draw1()], b = bestOf(h);
+        if (b && b.score < keepScore) { keep = h; keepScore = b.score; }
+      }
+      return keep || [draw1(), draw1(), draw1()];
+    }
+    function choose() {
+      if (!hand.length) hand = dealHand();
+      var best = bestOf(hand);
+      // Nothing safe left in the hand: a fresh one, as the game would rescue a tower in trouble.
+      // A single box always has a safe place.
+      for (var tries = 0; !best && tries < 8; tries++) best = bestOf(hand = dealHand());
+      if (!best) best = bestOf(hand = [FAMILIES[0][1][0]]);
       hand.splice(best.i, 1);
+      best.y = landing(best.shape, best.x);
+      best.w = width(best.shape);
+      best.lean = leanAfter(best.shape, best.x, best.y);
       best.colour = 1 + Math.floor(Math.random() * (colours.length - 1));
       return best;
+    }
+    // Where the bar will stand once this piece is down, for the faint preview while it hangs.
+    function leanAfter(shape, x, y) {
+      var extra = {}, add = {}, base = foundation, high = top;
+      shape.forEach(function (d) {
+        var row = y + d[1];
+        (extra[row] = extra[row] || {})[x + d[0]] = true;
+        add[row] = (add[row] || 0) + 1;
+        high = Math.max(high, row + 1);
+      });
+      for (var r in add) if (!setRows[r] && filled(r) + add[r] === COLS) base = Math.max(base, Number(r));
+      return tilt(base, extra, high);
     }
     function place(p) {
       var closed = [];
@@ -157,7 +242,9 @@
       closed.forEach(function (row) {
         for (var i = 0; i < COLS; i++) grid[row][i] = p.colour;
         setRows[row] = { at: clock };
+        foundation = Math.max(foundation, row);
       });
+      standing = tilt(foundation, null, top);
       return closed.length;
     }
     // The view climbs with the tower and keeps HEADROOM rows clear over it, as the game's camera does.
@@ -169,12 +256,13 @@
       hero.style.setProperty("--field", colours[0]);
       if (bar) bar.style.setProperty("--field", colours[0]);   // the top bar wears the same sky
       if (themeMeta) themeMeta.setAttribute("content", colours[0]);
-      grid = []; heights = [0, 0, 0, 0, 0, 0, 0, 0]; setRows = {}; top = 0; hand = [];
+      grid = []; heights = [0, 0, 0, 0, 0, 0, 0, 0]; setRows = {}; top = 0; foundation = -1; hand = [];
       // It comes in with a little cargo already aboard, so the interesting part starts sooner.
       var guard = 0;
       while (top < loaded && guard++ < 200) place(choose());
       for (var r in setRows) setRows[r].at = -9;
       cam = camFor();
+      shown = standing;
     }
 
     // --- drawing
@@ -216,6 +304,54 @@
         }
       });
       ctx.restore();
+    }
+    // The balance bar: filled from the middle toward the side the tower leans, as far as it leans,
+    // in the colour of the risk. Square against the centre, rounded only at the far end.
+    function gauge() {
+      var g = { x: x0, y: gaugeY, w: COLS * c, h: gaugeH };
+      ctx.fillStyle = "rgba(6,8,14,0.55)"; rounded(g.x, g.y, g.w, g.h, g.h / 2); ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 1; rounded(g.x, g.y, g.w, g.h, g.h / 2); ctx.stroke();
+      var v = Math.max(-1, Math.min(1, shown));
+      fillBar(g, v, risk(Math.abs(v)), 1);
+      // Where the box on the crane will leave it, at a third strength, while the tower is young.
+      if (piece && piece.leaving === undefined && top < GUIDE_UNTIL) {
+        var p = Math.max(-1, Math.min(1, piece.lean));
+        fillBar(g, p, risk(Math.abs(p)), 0.34);
+      }
+      if (sweep > 0) {                                        // landed level: a flash out from the middle
+        var q = 1 - sweep, half = g.w / 2, reach = half * Math.min(1, q * 1.25);
+        ctx.globalAlpha = Math.sin(Math.PI * Math.min(1, q * 1.1)) * 0.85;
+        ctx.fillStyle = "#F3C877";
+        ctx.fillRect(g.x + half - reach, g.y, reach * 2, g.h);
+        ctx.globalAlpha = 1;
+      }
+    }
+    function fillBar(g, v, colour, alpha) {
+      var half = g.w / 2, mid = g.x + half, len = Math.abs(v) * half, r = g.h / 2;
+      if (len < 1) return;
+      var far = v > 0 ? mid + len : mid - len;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = colour;
+      ctx.beginPath();
+      ctx.moveTo(mid, g.y);
+      ctx.lineTo(far - (v > 0 ? r : -r), g.y);
+      ctx.arcTo(far, g.y, far, g.y + g.h, r);
+      ctx.arcTo(far, g.y + g.h, mid, g.y + g.h, r);
+      ctx.lineTo(mid, g.y + g.h);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    function risk(r) {
+      return r <= CAUTION ? mix(BAR[0], BAR[1], r / CAUTION)
+        : r < DANGER ? mix(BAR[1], BAR[2], (r - CAUTION) / (DANGER - CAUTION)) : BAR[2];
+    }
+    function mix(a, b, t) {
+      var x = parseInt(a.slice(1), 16), y = parseInt(b.slice(1), 16), out = "#";
+      [16, 8, 0].forEach(function (s) {
+        var u = (x >> s) & 255, w = (y >> s) & 255;
+        out += ("0" + Math.round(u + (w - u) * t).toString(16)).slice(-2);
+      });
+      return out;
     }
     // The gantry's two legs, down into the water either side of the boat.
     function legs() {
@@ -291,7 +427,7 @@
     // How small the boat is drawn to get the whole tower, with a little sky, between the water
     // and the crane. The game's pull-back does the same: the frame stays, the tower shrinks.
     function pulledBack() {
-      var room = H - 30 - 1.1 * c;
+      var room = H - 30 - (railY + 0.75 * c);
       var need = 1.25 * c + (top + REVEAL_AIR) * c;
       return Math.min(1, room / need);
     }
@@ -320,6 +456,7 @@
       } else if (phase.name === "drop") {
         if (k >= 1) {
           place(piece);
+          if (Math.abs(standing) <= 0.06) sweep = 1;          // landed it level
           piece = null;
           if (knockLater) { knockLater = false; knock(); }
           else phase = { name: "rest", t: 0, dur: 0.3 };
@@ -339,16 +476,16 @@
         if (k >= 1) phase = null;
       }
       if (!reveal) cam += (camFor() - cam) * (1 - Math.exp(-dt * 5));
+      // The bar follows the tower, and when it is knocked, runs out to the side it goes over on.
+      var going = reveal && (phase.name === "hold" || phase.name === "topple" || phase.name === "empty");
+      shown += ((going ? reveal.dir : standing) - shown) * Math.min(1, dt * 7);
+      sweep = Math.max(0, sweep - dt * 1.55);
       splash = splash.filter(function (s) { s.t += dt; return s.t < s.life; });
     }
-    // Which way it goes over: toward the heavier side of whatever is not locked into a row.
+    // Which way it goes over: the way it leans, or either way if it stands dead straight.
     function lean() {
-      var m = 0, n = 0;
-      for (var row = 0; row < grid.length; row++) {
-        if (!grid[row] || setRows[row]) continue;
-        for (var col = 0; col < COLS; col++) if (grid[row][col]) { m += col - 3.5; n++; }
-      }
-      return n && m !== 0 ? Math.sign(m) : (Math.random() < 0.5 ? -1 : 1);
+      var m = tilt(foundation, null, top);
+      return m !== 0 ? Math.sign(m) : (Math.random() < 0.5 ? -1 : 1);
     }
     function spray(dir) {
       var waterY = H - 34;
@@ -374,6 +511,7 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
       legs();
+      gauge();
       rail();
 
       var p = phase ? phase.name : "";
