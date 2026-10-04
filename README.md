@@ -36,7 +36,7 @@ Links between pages are relative, so every page works under both hostnames.
 
 ## The App Store badge
 
-The App Store badges (homepage and Play page) have `href="#"` and `data-soon`, so it shows "Coming soon" instead of
+The App Store badges (homepage, Box Stack page twice, Play page) have `href="#"` and `data-soon`, so it shows "Coming soon" instead of
 going anywhere. When the listing is live, put its address in each `href` and delete `data-soon`; the
 Support page's "Is it on iPhone?" answer (and its JSON-LD) changes in the same commit.
 
