@@ -104,20 +104,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -161,7 +161,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -6336,23 +6336,23 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var _destruct__k2r9zo = this.oe_1.ve(board, Difficulty_instance.ub(beat), Companion_instance_10.v9(seed), Random_0(waveSeed));
     var dealer = _destruct__k2r9zo.i7();
     var dealt = _destruct__k2r9zo.j7();
-    var opening = teaching ? Tutorial_getInstance().jf(board.s7_1) : null;
+    var opening = teaching ? Tutorial_getInstance().kf(board.s7_1) : null;
     var wave = opening == null ? dealt : opening;
-    return new GameState(board, wave, dealer, seed, waveSeed, 1, beat, 0, puzzleFrom, 0, 0, 0, board.d8_1, 0, 0, 0, BalanceModel_instance.r7(board, this.me_1), Companion_instance_14.nf(board.d8_1, this.ne_1, board.v7_1), Playing_instance, !(opening == null));
+    return new GameState(board, wave, dealer, seed, waveSeed, 1, beat, 0, puzzleFrom, 0, 0, 0, board.d8_1, 0, 0, 0, BalanceModel_instance.r7(board, this.me_1), Companion_instance_14.of(board.d8_1, this.ne_1, board.v7_1), Playing_instance, !(opening == null));
   };
-  protoOf(GameEngine).of = function (seed, teaching, bestScore, $super) {
+  protoOf(GameEngine).pf = function (seed, teaching, bestScore, $super) {
     teaching = teaching === VOID ? false : teaching;
     bestScore = bestScore === VOID ? 0 : bestScore;
     return $super === VOID ? this.af(seed, teaching, bestScore) : $super.af.call(this, seed, teaching, bestScore);
   };
-  protoOf(GameEngine).pf = function (state) {
+  protoOf(GameEngine).qf = function (state) {
     if (state.pd())
       return emptyList();
     // Inline function 'kotlin.collections.buildList' call
     // Inline function 'kotlin.collections.buildListInternal' call
     // Inline function 'kotlin.apply' call
     var this_0 = ArrayList_init_$Create$();
-    var _iterator__ex2g4s = state.wc_1.qf().f();
+    var _iterator__ex2g4s = state.wc_1.rf().f();
     while (_iterator__ex2g4s.g()) {
       var slot = _iterator__ex2g4s.h();
       var shape = state.wc_1.vd_1.j(slot);
@@ -6374,7 +6374,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return this_0.s2();
   };
-  protoOf(GameEngine).rf = function (state, handIndex, originX) {
+  protoOf(GameEngine).sf = function (state, handIndex, originX) {
     var tmp0_safe_receiver = rejectionFor(this, state, handIndex, originX);
     if (tmp0_safe_receiver == null)
       null;
@@ -6397,7 +6397,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     var shape = tmp$ret$2;
     var tmp = Placement_instance;
-    var tmp1_elvis_lhs = tmp.sf(state.vc_1, shape, originX, this.me_1, GameEngine$place$lambda);
+    var tmp1_elvis_lhs = tmp.tf(state.vc_1, shape, originX, this.me_1, GameEngine$place$lambda);
     var tmp_0;
     if (tmp1_elvis_lhs == null) {
       return new Rejected(RejectReason_NO_SUPPORT_getInstance());
@@ -6448,11 +6448,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     // Inline function 'kotlin.comparisons.maxOf' call
     var b_1 = tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs;
     var mostUnstable = Math.max(tmp0_1, b_1);
-    var scoreGained = imul(Scoring_instance.tf(rows), multiplier) + Scoring_instance.uf(state.hd_1, board.d8_1) | 0;
+    var scoreGained = imul(Scoring_instance.uf(rows), multiplier) + Scoring_instance.vf(state.hd_1, board.d8_1) | 0;
     var score = state.cd_1 + scoreGained | 0;
     var nextWave = waveAfter(this, state, handIndex, board, outcome, score);
     var status = statusAfter(this, outcome, nextWave.yd_1, board);
-    var next = state.sd(board, nextWave.yd_1, nextWave.zd_1, VOID, nextWave.ae_1, nextWave.be_1, nextWave.ce_1, score, VOID, combo, state.fd_1 + outcome.he_1.k() | 0, state.gd_1 + 1 | 0, bestHeight, tallestNeedle, bestCombo, mostUnstable, outcome.ie_1, Companion_instance_14.nf(board.d8_1, this.ne_1, board.v7_1), status);
+    var next = state.sd(board, nextWave.yd_1, nextWave.zd_1, VOID, nextWave.ae_1, nextWave.be_1, nextWave.ce_1, score, VOID, combo, state.fd_1 + outcome.he_1.k() | 0, state.gd_1 + 1 | 0, bestHeight, tallestNeedle, bestCombo, mostUnstable, outcome.ie_1, Companion_instance_14.of(board.d8_1, this.ne_1, board.v7_1), status);
     return new Placed(next, new PlacementEvent(shape, originX, outcome.ge_1, outcome.he_1, scoreGained, multiplier, multiplierRose && rows > 0, state.vc_1.d8_1));
   };
   function RejectReason_GAME_OVER_getInstance() {
@@ -6526,7 +6526,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   var Medal_SCORE_instance;
   var Medal_UNSTABLE_instance;
   function Companion_13() {
-    this.vf_1 = 5;
+    this.wf_1 = 5;
   }
   var Companion_instance_13;
   function Companion_getInstance_13() {
@@ -6545,11 +6545,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function Medal(name, ordinal, title, goal, figure, tiers, emblem) {
     Enum.call(this, name, ordinal);
-    this.yf_1 = title;
-    this.zf_1 = goal;
-    this.ag_1 = figure;
-    this.bg_1 = tiers;
-    this.cg_1 = emblem;
+    this.zf_1 = title;
+    this.ag_1 = goal;
+    this.bg_1 = figure;
+    this.cg_1 = tiers;
+    this.dg_1 = emblem;
   }
   function Figure_BOXES_getInstance() {
     Figure_initEntries();
@@ -6603,7 +6603,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   function Placement() {
   }
-  protoOf(Placement).sf = function (board, shape, originX, config, multiplierFor) {
+  protoOf(Placement).tf = function (board, shape, originX, config, multiplierFor) {
     if (originX < 0 || (originX + shape.i9_1 | 0) > board.s7_1)
       return null;
     var tmp0_elvis_lhs = board.n9(shape, originX);
@@ -6625,12 +6625,12 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var settled = placed.t9(completed, shape.g9_1, tmp_0);
     return new Outcome(settled, landingY, completed, BalanceModel_instance.r7(settled, config));
   };
-  protoOf(Placement).dg = function (board, shape, originX, config, multiplierFor, $super) {
+  protoOf(Placement).eg = function (board, shape, originX, config, multiplierFor, $super) {
     config = config === VOID ? new BalanceConfig() : config;
     multiplierFor = multiplierFor === VOID ? null : multiplierFor;
-    return $super === VOID ? this.sf(board, shape, originX, config, multiplierFor) : $super.sf.call(this, board, shape, originX, config, multiplierFor);
+    return $super === VOID ? this.tf(board, shape, originX, config, multiplierFor) : $super.tf.call(this, board, shape, originX, config, multiplierFor);
   };
-  protoOf(Placement).eg = function (board, shape) {
+  protoOf(Placement).fg = function (board, shape) {
     // Inline function 'kotlin.collections.filter' call
     var tmp0 = numberRangeToNumber(0, board.s7_1 - shape.i9_1 | 0);
     // Inline function 'kotlin.collections.filterTo' call
@@ -6649,7 +6649,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
        while (!(element === last));
     return destination;
   };
-  protoOf(Placement).fg = function (board, shape, originX, landingY) {
+  protoOf(Placement).gg = function (board, shape, originX, landingY) {
     var inductionVariable = 0;
     var last = shape.i9_1;
     if (inductionVariable < last)
@@ -6699,7 +6699,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
        while (inductionVariable < last);
     return false;
   };
-  protoOf(Placement).gg = function (board) {
+  protoOf(Placement).hg = function (board) {
     var holes = 0;
     var inductionVariable = 0;
     var last = board.s7_1;
@@ -6725,7 +6725,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
        while (inductionVariable < last);
     return holes;
   };
-  protoOf(Placement).hg = function (board) {
+  protoOf(Placement).ig = function (board) {
     var base = board.z7_1;
     var tmp = 0;
     var tmp_0 = board.s7_1;
@@ -6781,17 +6781,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.xe_1 = 12;
     this.ye_1 = 10;
   }
-  protoOf(Scoring).tf = function (rows) {
+  protoOf(Scoring).uf = function (rows) {
     return rows <= 0 ? 0 : rows === 1 ? 100 : rows === 2 ? 300 : rows === 3 ? 600 : rows === 4 ? 1000 : 1000 + imul(rows - 4 | 0, 400) | 0;
   };
   protoOf(Scoring).ze = function (combo) {
     // Inline function 'kotlin.comparisons.maxOf' call
     return Math.max(combo, 1);
   };
-  protoOf(Scoring).ig = function (multiplier) {
+  protoOf(Scoring).jg = function (multiplier) {
     return coerceIn((multiplier - 1 | 0) / 11, 0.0, 1.0);
   };
-  protoOf(Scoring).uf = function (previousBest, newHeight) {
+  protoOf(Scoring).vf = function (previousBest, newHeight) {
     return newHeight > previousBest ? imul(newHeight - previousBest | 0, 10) : 0;
   };
   var Scoring_instance;
@@ -6799,36 +6799,36 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Scoring_instance;
   }
   function Companion_14() {
-    this.kf_1 = 11;
-    this.lf_1 = 6;
-    this.mf_1 = 3;
+    this.lf_1 = 11;
+    this.mf_1 = 6;
+    this.nf_1 = 3;
   }
-  protoOf(Companion_14).nf = function (stackHeight, visibleRows, platformRows) {
+  protoOf(Companion_14).of = function (stackHeight, visibleRows, platformRows) {
     var floor = coerceAtLeast(platformRows - 3 | 0, 0);
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 6 | 0) - visibleRows | 0;
     var tmp$ret$0 = Math.max(floor, b);
     return new Camera(tmp$ret$0, visibleRows);
   };
-  protoOf(Companion_14).jg = function (stackHeight, visibleRows, platformRows, $super) {
+  protoOf(Companion_14).kg = function (stackHeight, visibleRows, platformRows, $super) {
     visibleRows = visibleRows === VOID ? 11 : visibleRows;
     platformRows = platformRows === VOID ? 1 : platformRows;
-    return $super === VOID ? this.nf(stackHeight, visibleRows, platformRows) : $super.nf.call(this, stackHeight, visibleRows, platformRows);
+    return $super === VOID ? this.of(stackHeight, visibleRows, platformRows) : $super.of.call(this, stackHeight, visibleRows, platformRows);
   };
   var Companion_instance_14;
   function Companion_getInstance_14() {
     return Companion_instance_14;
   }
   function Camera(bottomRow, visibleRows) {
-    this.kg_1 = bottomRow;
-    this.lg_1 = visibleRows;
+    this.lg_1 = bottomRow;
+    this.mg_1 = visibleRows;
   }
   protoOf(Camera).toString = function () {
-    return 'Camera(bottomRow=' + this.kg_1 + ', visibleRows=' + this.lg_1 + ')';
+    return 'Camera(bottomRow=' + this.lg_1 + ', visibleRows=' + this.mg_1 + ')';
   };
   protoOf(Camera).hashCode = function () {
-    var result = this.kg_1;
-    result = imul(result, 31) + this.lg_1 | 0;
+    var result = this.lg_1;
+    result = imul(result, 31) + this.mg_1 | 0;
     return result;
   };
   protoOf(Camera).equals = function (other) {
@@ -6836,9 +6836,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof Camera))
       return false;
-    if (!(this.kg_1 === other.kg_1))
-      return false;
     if (!(this.lg_1 === other.lg_1))
+      return false;
+    if (!(this.mg_1 === other.mg_1))
       return false;
     return true;
   };
@@ -7285,20 +7285,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function Tutorial() {
     Tutorial_instance = this;
-    this.bf_1 = 8;
-    this.cf_1 = listOf_0([ShapeId_I3_H_getInstance(), ShapeId_I3_H_getInstance(), ShapeId_DOMINO_H_getInstance()]);
-    this.df_1 = 1000.0;
-    this.ef_1 = 400.0;
-    this.ff_1 = 40.0;
-    this.gf_1 = 100.0;
-    this.hf_1 = 250.0;
-    this.if_1 = 5.0;
+    this.bf_1 = 5;
+    this.cf_1 = 8;
+    this.df_1 = listOf_0([ShapeId_I3_H_getInstance(), ShapeId_I3_H_getInstance(), ShapeId_DOMINO_H_getInstance()]);
+    this.ef_1 = 1000.0;
+    this.ff_1 = 400.0;
+    this.gf_1 = 40.0;
+    this.hf_1 = 100.0;
+    this.if_1 = 250.0;
+    this.jf_1 = 5.0;
   }
-  protoOf(Tutorial).jf = function (boardWidth) {
+  protoOf(Tutorial).kf = function (boardWidth) {
     var tmp;
     if (boardWidth === 8) {
       // Inline function 'kotlin.collections.map' call
-      var this_0 = this.cf_1;
+      var this_0 = this.df_1;
       // Inline function 'kotlin.collections.mapTo' call
       var destination = ArrayList_init_$Create$_0(collectionSizeOrDefault(this_0, 10));
       var _iterator__ex2g4s = this_0.f();
@@ -7351,7 +7352,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Wave).xd = function (slot) {
     return !(0 <= slot ? slot <= (this.vd_1.k() - 1 | 0) : false) || this.wd_1.j(slot) ? null : this.vd_1.j(slot);
   };
-  protoOf(Wave).qf = function () {
+  protoOf(Wave).rf = function () {
     // Inline function 'kotlin.collections.filter' call
     var tmp0 = get_indices(this.vd_1);
     // Inline function 'kotlin.collections.filterTo' call
@@ -7372,7 +7373,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   protoOf(Wave).we = function () {
     // Inline function 'kotlin.collections.map' call
-    var this_0 = this.qf();
+    var this_0 = this.rf();
     // Inline function 'kotlin.collections.mapTo' call
     var destination = ArrayList_init_$Create$_0(collectionSizeOrDefault(this_0, 10));
     var _iterator__ex2g4s = this_0.f();
@@ -7424,15 +7425,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     // Inline function 'kotlin.also' call
     var this_0 = toMutableList(this.wd_1);
     this_0.r(slot, true);
-    return this.mg(VOID, this_0);
+    return this.ng(VOID, this_0);
   };
-  protoOf(Wave).ng = function (shapes, used) {
+  protoOf(Wave).og = function (shapes, used) {
     return new Wave(shapes, used);
   };
-  protoOf(Wave).mg = function (shapes, used, $super) {
+  protoOf(Wave).ng = function (shapes, used, $super) {
     shapes = shapes === VOID ? this.vd_1 : shapes;
     used = used === VOID ? this.wd_1 : used;
-    return $super === VOID ? this.ng(shapes, used) : $super.ng.call(this, shapes, used);
+    return $super === VOID ? this.og(shapes, used) : $super.og.call(this, shapes, used);
   };
   protoOf(Wave).toString = function () {
     return 'Wave(shapes=' + toString_1(this.vd_1) + ', used=' + toString_1(this.wd_1) + ')';
@@ -7455,25 +7456,25 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   function WaveAssessment(survivalRate, clearRate, forcedDebt, bestRowsCompleted, solvable, offersRowNow, cleanLine) {
     cleanLine = cleanLine === VOID ? false : cleanLine;
-    this.og_1 = survivalRate;
-    this.pg_1 = clearRate;
-    this.qg_1 = forcedDebt;
-    this.rg_1 = bestRowsCompleted;
-    this.sg_1 = solvable;
-    this.tg_1 = offersRowNow;
-    this.ug_1 = cleanLine;
+    this.pg_1 = survivalRate;
+    this.qg_1 = clearRate;
+    this.rg_1 = forcedDebt;
+    this.sg_1 = bestRowsCompleted;
+    this.tg_1 = solvable;
+    this.ug_1 = offersRowNow;
+    this.vg_1 = cleanLine;
   }
   protoOf(WaveAssessment).toString = function () {
-    return 'WaveAssessment(survivalRate=' + this.og_1 + ', clearRate=' + this.pg_1 + ', forcedDebt=' + this.qg_1 + ', bestRowsCompleted=' + this.rg_1 + ', solvable=' + this.sg_1 + ', offersRowNow=' + this.tg_1 + ', cleanLine=' + this.ug_1 + ')';
+    return 'WaveAssessment(survivalRate=' + this.pg_1 + ', clearRate=' + this.qg_1 + ', forcedDebt=' + this.rg_1 + ', bestRowsCompleted=' + this.sg_1 + ', solvable=' + this.tg_1 + ', offersRowNow=' + this.ug_1 + ', cleanLine=' + this.vg_1 + ')';
   };
   protoOf(WaveAssessment).hashCode = function () {
-    var result = getNumberHashCode(this.og_1);
-    result = imul(result, 31) + getNumberHashCode(this.pg_1) | 0;
-    result = imul(result, 31) + this.qg_1 | 0;
+    var result = getNumberHashCode(this.pg_1);
+    result = imul(result, 31) + getNumberHashCode(this.qg_1) | 0;
     result = imul(result, 31) + this.rg_1 | 0;
-    result = imul(result, 31) + getBooleanHashCode(this.sg_1) | 0;
+    result = imul(result, 31) + this.sg_1 | 0;
     result = imul(result, 31) + getBooleanHashCode(this.tg_1) | 0;
     result = imul(result, 31) + getBooleanHashCode(this.ug_1) | 0;
+    result = imul(result, 31) + getBooleanHashCode(this.vg_1) | 0;
     return result;
   };
   protoOf(WaveAssessment).equals = function (other) {
@@ -7481,11 +7482,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof WaveAssessment))
       return false;
-    if (!equals(this.og_1, other.og_1))
-      return false;
     if (!equals(this.pg_1, other.pg_1))
       return false;
-    if (!(this.qg_1 === other.qg_1))
+    if (!equals(this.qg_1, other.qg_1))
       return false;
     if (!(this.rg_1 === other.rg_1))
       return false;
@@ -7494,6 +7493,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (!(this.tg_1 === other.tg_1))
       return false;
     if (!(this.ug_1 === other.ug_1))
+      return false;
+    if (!(this.vg_1 === other.vg_1))
       return false;
     return true;
   };
@@ -7528,8 +7529,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             }
              while (inductionVariable_0 < size);
           var shapes = list;
-          var assessment = $this.vg(board, shapes, random);
-          if (assessment.sg_1 && (assessment.ug_1 || !($this.wg(board, shapes) == null))) {
+          var assessment = $this.wg(board, shapes, random);
+          if (assessment.tg_1 && (assessment.vg_1 || !($this.xg(board, shapes) == null))) {
             return to(pool, Wave_init_$Create$(shapes));
           }
         }
@@ -7539,17 +7540,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function CandidateSearch(dealer, options, viable) {
     viable = viable === VOID ? emptyList() : viable;
-    this.xg_1 = dealer;
-    this.yg_1 = options;
-    this.zg_1 = viable;
+    this.yg_1 = dealer;
+    this.zg_1 = options;
+    this.ah_1 = viable;
   }
   protoOf(CandidateSearch).toString = function () {
-    return 'CandidateSearch(dealer=' + this.xg_1.toString() + ', options=' + toString_1(this.yg_1) + ', viable=' + toString_1(this.zg_1) + ')';
+    return 'CandidateSearch(dealer=' + this.yg_1.toString() + ', options=' + toString_1(this.zg_1) + ', viable=' + toString_1(this.ah_1) + ')';
   };
   protoOf(CandidateSearch).hashCode = function () {
-    var result = this.xg_1.hashCode();
-    result = imul(result, 31) + hashCode_0(this.yg_1) | 0;
+    var result = this.yg_1.hashCode();
     result = imul(result, 31) + hashCode_0(this.zg_1) | 0;
+    result = imul(result, 31) + hashCode_0(this.ah_1) | 0;
     return result;
   };
   protoOf(CandidateSearch).equals = function (other) {
@@ -7557,11 +7558,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof CandidateSearch))
       return false;
-    if (!this.xg_1.equals(other.xg_1))
-      return false;
-    if (!equals(this.yg_1, other.yg_1))
+    if (!this.yg_1.equals(other.yg_1))
       return false;
     if (!equals(this.zg_1, other.zg_1))
+      return false;
+    if (!equals(this.ah_1, other.ah_1))
       return false;
     return true;
   };
@@ -7582,7 +7583,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         var next = _destruct__k2r9zo.i7();
         var shapes = _destruct__k2r9zo.j7();
         pool = next;
-        this_0.d(to(shapes, $this.vg(board, shapes, random)));
+        this_0.d(to(shapes, $this.wg(board, shapes, random)));
       }
        while (inductionVariable < times);
     var options = this_0.s2();
@@ -7591,7 +7592,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function keepCleanCandidates($this, board, search, random) {
     var tmp = search;
     // Inline function 'kotlin.collections.filter' call
-    var tmp0 = search.yg_1;
+    var tmp0 = search.zg_1;
     // Inline function 'kotlin.collections.filterTo' call
     var destination = ArrayList_init_$Create$();
     var _iterator__ex2g4s = tmp0.f();
@@ -7599,13 +7600,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var element = _iterator__ex2g4s.h();
       var shapes = element.i7();
       var assessment = element.j7();
-      if (assessment.sg_1 && (assessment.ug_1 || !($this.wg(board, shapes) == null))) {
+      if (assessment.tg_1 && (assessment.vg_1 || !($this.xg(board, shapes) == null))) {
         destination.d(element);
       }
     }
-    tmp.zg_1 = destination;
+    tmp.ah_1 = destination;
     // Inline function 'kotlin.collections.isNotEmpty' call
-    if (!search.zg_1.i())
+    if (!search.ah_1.i())
       return Unit_instance;
     // Inline function 'kotlin.repeat' call
     var times = $this.te_1;
@@ -7614,39 +7615,39 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       do {
         var index = inductionVariable;
         inductionVariable = inductionVariable + 1 | 0;
-        var _destruct__k2r9zo = search.xg_1.gb($this.qe_1);
+        var _destruct__k2r9zo = search.yg_1.gb($this.qe_1);
         var next = _destruct__k2r9zo.i7();
         var shapes_0 = _destruct__k2r9zo.j7();
-        search.xg_1 = next;
-        if (!($this.wg(board, shapes_0) == null)) {
-          search.zg_1 = listOf(to(shapes_0, $this.vg(board, shapes_0, random)));
+        search.yg_1 = next;
+        if (!($this.xg(board, shapes_0) == null)) {
+          search.ah_1 = listOf(to(shapes_0, $this.wg(board, shapes_0, random)));
           return Unit_instance;
         }
       }
        while (inductionVariable < times);
     var tmp_0 = search;
     // Inline function 'kotlin.collections.filter' call
-    var tmp0_0 = search.yg_1;
+    var tmp0_0 = search.zg_1;
     // Inline function 'kotlin.collections.filterTo' call
     var destination_0 = ArrayList_init_$Create$();
     var _iterator__ex2g4s_0 = tmp0_0.f();
     while (_iterator__ex2g4s_0.g()) {
       var element_0 = _iterator__ex2g4s_0.h();
-      if (element_0.h7_1.sg_1) {
+      if (element_0.h7_1.tg_1) {
         destination_0.d(element_0);
       }
     }
-    tmp_0.zg_1 = destination_0;
+    tmp_0.ah_1 = destination_0;
   }
   function keepRowCandidates($this, board, search, random) {
     // Inline function 'kotlin.collections.filter' call
-    var tmp0 = search.zg_1;
+    var tmp0 = search.ah_1;
     // Inline function 'kotlin.collections.filterTo' call
     var destination = ArrayList_init_$Create$();
     var _iterator__ex2g4s = tmp0.f();
     while (_iterator__ex2g4s.g()) {
       var element = _iterator__ex2g4s.h();
-      if (element.h7_1.tg_1) {
+      if (element.h7_1.ug_1) {
         destination.d(element);
       }
     }
@@ -7658,14 +7659,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         $l$loop_0: do {
           var attempt = inductionVariable;
           inductionVariable = inductionVariable + 1 | 0;
-          var _destruct__k2r9zo = search.xg_1.gb($this.qe_1);
+          var _destruct__k2r9zo = search.yg_1.gb($this.qe_1);
           var next = _destruct__k2r9zo.i7();
           var shapes = _destruct__k2r9zo.j7();
-          search.xg_1 = next;
-          if (!$this.ah(board, shapes))
+          search.yg_1 = next;
+          if (!$this.bh(board, shapes))
             continue $l$loop_0;
-          var assessment = $this.vg(board, shapes, random);
-          if (assessment.sg_1 && !($this.wg(board, shapes) == null)) {
+          var assessment = $this.wg(board, shapes, random);
+          if (assessment.tg_1 && !($this.xg(board, shapes) == null)) {
             withRows = listOf(to(shapes, assessment));
             break $l$loop_0;
           }
@@ -7674,7 +7675,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     // Inline function 'kotlin.collections.isNotEmpty' call
     if (!withRows.i())
-      search.zg_1 = withRows;
+      search.ah_1 = withRows;
   }
   function findAnySurvivingWave($this, board, search) {
     // Inline function 'kotlin.repeat' call
@@ -7684,12 +7685,12 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       do {
         var index = inductionVariable;
         inductionVariable = inductionVariable + 1 | 0;
-        var _destruct__k2r9zo = search.xg_1.gb($this.qe_1);
+        var _destruct__k2r9zo = search.yg_1.gb($this.qe_1);
         var next = _destruct__k2r9zo.i7();
         var shapes = _destruct__k2r9zo.j7();
-        search.xg_1 = next;
-        if (!($this.bh(board, shapes) == null)) {
-          return to(search.xg_1, Wave_init_$Create$(shapes));
+        search.yg_1 = next;
+        if (!($this.ch(board, shapes) == null)) {
+          return to(search.yg_1, Wave_init_$Create$(shapes));
         }
       }
        while (inductionVariable < times);
@@ -7741,28 +7742,28 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function fit($this, assessment, target) {
     // Inline function 'kotlin.math.abs' call
-    var x = assessment.og_1 - target.hb_1;
+    var x = assessment.pg_1 - target.hb_1;
     var tmp = Math.abs(x);
     // Inline function 'kotlin.math.abs' call
-    var x_0 = assessment.qg_1 - target.ib_1;
+    var x_0 = assessment.rg_1 - target.ib_1;
     var tmp_0 = tmp + 0.1 * Math.abs(x_0);
     // Inline function 'kotlin.math.abs' call
-    var x_1 = assessment.pg_1 - target.jb_1;
+    var x_1 = assessment.qg_1 - target.jb_1;
     return tmp_0 + 0.6 * Math.abs(x_1);
   }
   function Line(board, rowsCompleted, sealedNothing) {
     sealedNothing = sealedNothing === VOID ? true : sealedNothing;
-    this.ch_1 = board;
-    this.dh_1 = rowsCompleted;
-    this.eh_1 = sealedNothing;
+    this.dh_1 = board;
+    this.eh_1 = rowsCompleted;
+    this.fh_1 = sealedNothing;
   }
   protoOf(Line).toString = function () {
-    return 'Line(board=' + toString_1(this.ch_1) + ', rowsCompleted=' + this.dh_1 + ', sealedNothing=' + this.eh_1 + ')';
+    return 'Line(board=' + toString_1(this.dh_1) + ', rowsCompleted=' + this.eh_1 + ', sealedNothing=' + this.fh_1 + ')';
   };
   protoOf(Line).hashCode = function () {
-    var result = hashCode_0(this.ch_1);
-    result = imul(result, 31) + this.dh_1 | 0;
-    result = imul(result, 31) + getBooleanHashCode(this.eh_1) | 0;
+    var result = hashCode_0(this.dh_1);
+    result = imul(result, 31) + this.eh_1 | 0;
+    result = imul(result, 31) + getBooleanHashCode(this.fh_1) | 0;
     return result;
   };
   protoOf(Line).equals = function (other) {
@@ -7770,11 +7771,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof Line))
       return false;
-    if (!equals(this.ch_1, other.ch_1))
-      return false;
-    if (!(this.dh_1 === other.dh_1))
+    if (!equals(this.dh_1, other.dh_1))
       return false;
     if (!(this.eh_1 === other.eh_1))
+      return false;
+    if (!(this.fh_1 === other.fh_1))
       return false;
     return true;
   };
@@ -7785,15 +7786,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var _iterator__ex2g4s = shuffled(shapes, random_0).f();
     while (_iterator__ex2g4s.g()) {
       var shape = _iterator__ex2g4s.h();
-      var columns = Placement_instance.eg(current, shape);
+      var columns = Placement_instance.fg(current, shape);
       if (columns.i())
         return null;
       var column = random(columns, random_0);
       var landing = current.n9(shape, column);
-      if (!(landing == null) && Placement_instance.fg(current, shape, column, landing)) {
+      if (!(landing == null) && Placement_instance.gg(current, shape, column, landing)) {
         sealed = true;
       }
-      var tmp0_elvis_lhs = Placement_instance.dg(current, shape, column, $this.pe_1);
+      var tmp0_elvis_lhs = Placement_instance.eg(current, shape, column, $this.pe_1);
       var tmp;
       if (tmp0_elvis_lhs == null) {
         return null;
@@ -7829,7 +7830,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var this_0 = toMutableList(left);
       this_0.n1(shape);
       var rest = this_0;
-      var _iterator__ex2g4s_1 = Placement_instance.eg(current, shape).f();
+      var _iterator__ex2g4s_1 = Placement_instance.fg(current, shape).f();
       $l$loop: while (_iterator__ex2g4s_1.g()) {
         var column = _iterator__ex2g4s_1.h();
         var tmp0_elvis_lhs = searchablePlacement($this, current, shape, column, clean);
@@ -7857,10 +7858,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         tmp = tmp0_elvis_lhs;
       }
       var landing = tmp;
-      if (Placement_instance.fg(board, shape, column, landing))
+      if (Placement_instance.gg(board, shape, column, landing))
         return null;
     }
-    var tmp1_safe_receiver = Placement_instance.dg(board, shape, column, $this.pe_1);
+    var tmp1_safe_receiver = Placement_instance.eg(board, shape, column, $this.pe_1);
     var tmp_0;
     if (tmp1_safe_receiver == null) {
       tmp_0 = null;
@@ -7877,10 +7878,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp_0;
   }
   function Companion_15() {
-    this.fh_1 = 6;
-    this.gh_1 = 0.12;
-    this.hh_1 = 0.1;
-    this.ih_1 = 0.6;
+    this.gh_1 = 6;
+    this.hh_1 = 0.12;
+    this.ih_1 = 0.1;
+    this.jh_1 = 0.6;
   }
   var Companion_instance_15;
   function Companion_getInstance_15() {
@@ -7911,20 +7912,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     if (target.lb()) {
       keepRowCandidates(this, board, search, random);
     }
-    if (search.zg_1.i()) {
+    if (search.ah_1.i()) {
       var tmp0_elvis_lhs = findAnySurvivingWave(this, board, search);
-      return tmp0_elvis_lhs == null ? to(search.xg_1, Wave_init_$Create$(first(search.yg_1).g7_1)) : tmp0_elvis_lhs;
+      return tmp0_elvis_lhs == null ? to(search.yg_1, Wave_init_$Create$(first(search.zg_1).g7_1)) : tmp0_elvis_lhs;
     }
-    return to(search.xg_1, Wave_init_$Create$(bestFit(this, search.zg_1, target, random)));
+    return to(search.yg_1, Wave_init_$Create$(bestFit(this, search.ah_1, target, random)));
   };
-  protoOf(WaveGenerator).vg = function (board, shapes, random) {
+  protoOf(WaveGenerator).wg = function (board, shapes, random) {
     var survived = 0;
     var cleared = 0;
     var bestRows = 0;
     var cleanLine = false;
     var leastDebt = 2147483647;
-    var debtBefore = Placement_instance.gg(board);
-    var offersRowNow = this.ah(board, shapes);
+    var debtBefore = Placement_instance.hg(board);
+    var offersRowNow = this.bh(board, shapes);
     // Inline function 'kotlin.repeat' call
     var times = this.se_1;
     var inductionVariable = 0;
@@ -7935,18 +7936,18 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         var line = playCarelessly(this, board, shapes, random);
         if (!(line == null)) {
           survived = survived + 1 | 0;
-          if (line.dh_1 > 0) {
+          if (line.eh_1 > 0) {
             cleared = cleared + 1 | 0;
           }
-          if (line.eh_1)
+          if (line.fh_1)
             cleanLine = true;
           var tmp0 = bestRows;
           // Inline function 'kotlin.comparisons.maxOf' call
-          var b = line.dh_1;
+          var b = line.eh_1;
           bestRows = Math.max(tmp0, b);
           var tmp0_0 = leastDebt;
           // Inline function 'kotlin.comparisons.minOf' call
-          var b_0 = Placement_instance.gg(line.ch_1) - debtBefore | 0;
+          var b_0 = Placement_instance.hg(line.dh_1) - debtBefore | 0;
           leastDebt = Math.min(tmp0_0, b_0);
         }
       }
@@ -7959,22 +7960,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp$ret$4 = Math.max(0, b_1);
       return new WaveAssessment(tmp, tmp_0, tmp$ret$4, bestRows, true, offersRowNow, cleanLine);
     }
-    var found = this.bh(board, shapes);
+    var found = this.ch(board, shapes);
     var tmp_1;
     if (found == null) {
       tmp_1 = null;
     } else {
       // Inline function 'kotlin.let' call
       // Inline function 'kotlin.comparisons.maxOf' call
-      var b_2 = Placement_instance.gg(found.ch_1) - debtBefore | 0;
+      var b_2 = Placement_instance.hg(found.dh_1) - debtBefore | 0;
       tmp_1 = Math.max(0, b_2);
     }
     var tmp1_elvis_lhs = tmp_1;
     var tmp_2 = tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs;
-    var tmp3_elvis_lhs = found == null ? null : found.dh_1;
+    var tmp3_elvis_lhs = found == null ? null : found.eh_1;
     return new WaveAssessment(0.0, 0.0, tmp_2, tmp3_elvis_lhs == null ? 0 : tmp3_elvis_lhs, !(found == null), offersRowNow, false);
   };
-  protoOf(WaveGenerator).ah = function (board, shapes) {
+  protoOf(WaveGenerator).bh = function (board, shapes) {
     // Inline function 'kotlin.collections.distinctBy' call
     var set = HashSet_init_$Create$();
     var list = ArrayList_init_$Create$();
@@ -8002,7 +8003,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var _iterator__ex2g4s_0 = list.f();
       while (_iterator__ex2g4s_0.g()) {
         var element = _iterator__ex2g4s_0.h();
-        var tmp0 = Placement_instance.eg(board, element);
+        var tmp0 = Placement_instance.fg(board, element);
         var tmp$ret$3;
         $l$block_1: {
           // Inline function 'kotlin.collections.any' call
@@ -8019,7 +8020,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           var _iterator__ex2g4s_1 = tmp0.f();
           while (_iterator__ex2g4s_1.g()) {
             var element_0 = _iterator__ex2g4s_1.h();
-            var tmp0_safe_receiver = Placement_instance.dg(board, element, element_0, this.pe_1);
+            var tmp0_safe_receiver = Placement_instance.eg(board, element, element_0, this.pe_1);
             var tmp_1;
             if (tmp0_safe_receiver == null) {
               tmp_1 = null;
@@ -8050,22 +8051,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp$ret$2;
   };
-  protoOf(WaveGenerator).jh = function (board, shapes, clean) {
+  protoOf(WaveGenerator).kh = function (board, shapes, clean) {
     return search(this, board, shapes, 0, clean);
   };
-  protoOf(WaveGenerator).bh = function (board, shapes, clean, $super) {
+  protoOf(WaveGenerator).ch = function (board, shapes, clean, $super) {
     clean = clean === VOID ? false : clean;
-    return $super === VOID ? this.jh(board, shapes, clean) : $super.jh.call(this, board, shapes, clean);
+    return $super === VOID ? this.kh(board, shapes, clean) : $super.kh.call(this, board, shapes, clean);
   };
-  protoOf(WaveGenerator).wg = function (board, shapes) {
-    return this.jh(board, shapes, true);
+  protoOf(WaveGenerator).xg = function (board, shapes) {
+    return this.kh(board, shapes, true);
   };
   function handIsFull($this) {
-    return $this.lh_1.wc_1.qf().k() === $this.lh_1.wc_1.vd_1.k();
+    return $this.mh_1.wc_1.rf().k() === $this.mh_1.wc_1.vd_1.k();
   }
   function hasVisibleCompletingMove($this, maxHeight) {
-    var topRow = ($this.lh_1.vc_1.v7_1 + maxHeight | 0) + 1 | 0;
-    var tmp0 = $this.kh_1.pf($this.lh_1);
+    var topRow = ($this.mh_1.vc_1.v7_1 + maxHeight | 0) + 1 | 0;
+    var tmp0 = $this.lh_1.qf($this.mh_1);
     var tmp$ret$0;
     $l$block_0: {
       // Inline function 'kotlin.collections.any' call
@@ -8082,7 +8083,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var _iterator__ex2g4s = tmp0.f();
       while (_iterator__ex2g4s.g()) {
         var element = _iterator__ex2g4s.h();
-        var out = Engine_getInstance().kh_1.rf(Engine_getInstance().lh_1, element.hc_1, element.ic_1);
+        var out = Engine_getInstance().lh_1.sf(Engine_getInstance().mh_1, element.hc_1, element.ic_1);
         var tmp_0;
         var tmp_1;
         if (out instanceof Placed) {
@@ -8135,15 +8136,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
            while (!(y === last_0));
       }
        while (inductionVariable < last);
-    return 760.0 * out.tc_1.nc_1.k() - 510.0 * heightSum - 360.0 * Placement_instance.gg(board) - 180.0 * Placement_instance.hg(board) - 500.0 * out.sc_1.ld_1.o7();
+    return 760.0 * out.tc_1.nc_1.k() - 510.0 * heightSum - 360.0 * Placement_instance.hg(board) - 180.0 * Placement_instance.ig(board) - 500.0 * out.sc_1.ld_1.o7();
   }
   function playBest($this, score) {
     var best = null;
     var bestScore = -Infinity;
-    var _iterator__ex2g4s = $this.kh_1.pf($this.lh_1).f();
+    var _iterator__ex2g4s = $this.lh_1.qf($this.mh_1).f();
     $l$loop: while (_iterator__ex2g4s.g()) {
       var move = _iterator__ex2g4s.h();
-      var out = $this.kh_1.rf($this.lh_1, move.hc_1, move.ic_1);
+      var out = $this.lh_1.sf($this.mh_1, move.hc_1, move.ic_1);
       if (!(out instanceof Placed))
         continue $l$loop;
       var s = score(out);
@@ -8160,14 +8161,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     } else {
       tmp_0 = tmp0_elvis_lhs;
     }
-    tmp.lh_1 = tmp_0;
+    tmp.mh_1 = tmp_0;
     return true;
   }
   function summitOf($this, summitBottom, visibleRows) {
     return new ViewCamera(summitBottom, visibleRows);
   }
   function tilt($this) {
-    return $this.lh_1.ld_1.q7();
+    return $this.mh_1.ld_1.q7();
   }
   function deathMs($this) {
     return 2605;
@@ -8187,30 +8188,30 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function Engine() {
     Engine_instance = this;
-    this.kh_1 = new GameEngine();
-    this.lh_1 = this.kh_1.of(new Long(1, 0));
-    this.mh_1 = TowerBands_getInstance().hi(this.lh_1.yc_1);
-    this.nh_1 = null;
-    this.oh_1 = 0;
+    this.lh_1 = new GameEngine();
+    this.mh_1 = this.lh_1.pf(new Long(1, 0));
+    this.nh_1 = TowerBands_getInstance().ii(this.mh_1.yc_1);
+    this.oh_1 = null;
     this.ph_1 = 0;
     this.qh_1 = 0;
-    this.rh_1 = new Int32Array(0);
-    this.sh_1 = 0;
-    this.th_1 = -1;
-    this.uh_1 = new TowerViewport();
+    this.rh_1 = 0;
+    this.sh_1 = new Int32Array(0);
+    this.th_1 = 0;
+    this.uh_1 = -1;
+    this.vh_1 = new TowerViewport();
   }
   protoOf(Engine).deal = function (seed, minHeight, maxHeight, leanMin, leanMax) {
-    this.lh_1 = this.kh_1.of(fromInt(seed)).sd(VOID, VOID, VOID, new Long(37621, 0));
+    this.mh_1 = this.lh_1.pf(fromInt(seed)).sd(VOID, VOID, VOID, new Long(37621, 0));
     var tmp = this;
-    var tmp0_elvis_lhs = this.nh_1;
-    tmp.mh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().hi(this.lh_1.yc_1) : tmp0_elvis_lhs;
-    this.oh_1 = 0;
-    this.uh_1 = new TowerViewport();
-    this.rh_1 = new Int32Array(0);
+    var tmp0_elvis_lhs = this.oh_1;
+    tmp.nh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().ii(this.mh_1.yc_1) : tmp0_elvis_lhs;
+    this.ph_1 = 0;
+    this.vh_1 = new TowerViewport();
+    this.sh_1 = new Int32Array(0);
     var guard = 0;
     $l$loop_0: while (true) {
       var tmp_0;
-      if (this.lh_1.qd() < minHeight && !this.lh_1.pd()) {
+      if (this.mh_1.qd() < minHeight && !this.mh_1.pd()) {
         var _unary__edvuaz = guard;
         guard = _unary__edvuaz + 1 | 0;
         tmp_0 = _unary__edvuaz < 160;
@@ -8224,10 +8225,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         break $l$loop_0;
     }
     var tmp_1;
-    if (this.lh_1.pd()) {
+    if (this.mh_1.pd()) {
       tmp_1 = true;
     } else {
-      var containsArg = this.lh_1.qd();
+      var containsArg = this.mh_1.qd();
       tmp_1 = !(minHeight <= containsArg ? containsArg <= maxHeight : false);
     }
     if (tmp_1)
@@ -8238,9 +8239,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp_2;
       var tmp_3;
       // Inline function 'kotlin.math.abs' call
-      var x = this.lh_1.ld_1.n7_1;
+      var x = this.mh_1.ld_1.n7_1;
       if (Math.abs(x) < leanMin) {
-        tmp_3 = !this.lh_1.pd();
+        tmp_3 = !this.mh_1.pd();
       } else {
         tmp_3 = false;
       }
@@ -8260,7 +8261,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     guard = 0;
     $l$loop_4: while (true) {
       var tmp_4;
-      if (!handIsFull(this) && !this.lh_1.pd()) {
+      if (!handIsFull(this) && !this.mh_1.pd()) {
         var _unary__edvuaz_1 = guard;
         guard = _unary__edvuaz_1 + 1 | 0;
         tmp_4 = _unary__edvuaz_1 < 4;
@@ -8274,10 +8275,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         break $l$loop_4;
       }
     }
-    var lean = this.lh_1.ld_1.n7_1;
-    if (this.lh_1.pd() || !handIsFull(this))
+    var lean = this.mh_1.ld_1.n7_1;
+    if (this.mh_1.pd() || !handIsFull(this))
       return NaN;
-    if (this.lh_1.qd() > maxHeight || !hasVisibleCompletingMove(this, maxHeight)) {
+    if (this.mh_1.qd() > maxHeight || !hasVisibleCompletingMove(this, maxHeight)) {
       return NaN;
     }
     var tmp_5;
@@ -8290,92 +8291,92 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     if (tmp_5)
       return NaN;
-    this.ph_1 = this.lh_1.cd_1;
-    this.qh_1 = this.lh_1.fd_1;
+    this.qh_1 = this.mh_1.cd_1;
+    this.rh_1 = this.mh_1.fd_1;
     return lean;
   };
   protoOf(Engine).showcase = function (seed) {
-    this.lh_1 = this.kh_1.of(fromInt(seed)).sd(VOID, VOID, VOID, new Long(37621, 0));
+    this.mh_1 = this.lh_1.pf(fromInt(seed)).sd(VOID, VOID, VOID, new Long(37621, 0));
     var tmp = this;
-    var tmp0_elvis_lhs = this.nh_1;
-    tmp.mh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().hi(this.lh_1.yc_1) : tmp0_elvis_lhs;
-    this.oh_1 = 0;
-    this.uh_1 = new TowerViewport();
-    this.rh_1 = new Int32Array(0);
-    var board = PaletteShowcase_instance.oi(this.mh_1.ki(0).length, seed, this.lh_1.vc_1.s7_1);
-    this.lh_1 = this.lh_1.sd(board, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, board.d8_1, VOID, VOID, VOID, BalanceModel_instance.f8(board), Companion_instance_14.jg(board.d8_1, VOID, board.v7_1));
-    this.ph_1 = this.lh_1.cd_1;
-    this.qh_1 = this.lh_1.fd_1;
+    var tmp0_elvis_lhs = this.oh_1;
+    tmp.nh_1 = tmp0_elvis_lhs == null ? TowerBands_getInstance().ii(this.mh_1.yc_1) : tmp0_elvis_lhs;
+    this.ph_1 = 0;
+    this.vh_1 = new TowerViewport();
+    this.sh_1 = new Int32Array(0);
+    var board = PaletteShowcase_instance.pi(this.nh_1.li(0).length, seed, this.mh_1.vc_1.s7_1);
+    this.mh_1 = this.mh_1.sd(board, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, VOID, board.d8_1, VOID, VOID, VOID, BalanceModel_instance.f8(board), Companion_instance_14.kg(board.d8_1, VOID, board.v7_1));
+    this.qh_1 = this.mh_1.cd_1;
+    this.rh_1 = this.mh_1.fd_1;
   };
-  protoOf(Engine).pi = function () {
-    return hasVisibleCompletingMove(this, (2147483647 - this.lh_1.vc_1.v7_1 | 0) - 1 | 0);
+  protoOf(Engine).qi = function () {
+    return hasVisibleCompletingMove(this, (2147483647 - this.mh_1.vc_1.v7_1 | 0) - 1 | 0);
   };
   protoOf(Engine).viewBottom = function (summitBottom, visibleRows) {
-    return this.uh_1.ui(summitOf(this, summitBottom, visibleRows), -1).qi_1;
+    return this.vh_1.vi(summitOf(this, summitBottom, visibleRows), -1).ri_1;
   };
   protoOf(Engine).scrollView = function (rows, summitBottom, visibleRows) {
-    this.uh_1 = this.uh_1.vi(rows, summitOf(this, summitBottom, visibleRows), -1);
-  };
-  protoOf(Engine).wi = function () {
-    return this.uh_1.ti_1;
+    this.vh_1 = this.vh_1.wi(rows, summitOf(this, summitBottom, visibleRows), -1);
   };
   protoOf(Engine).xi = function () {
+    return this.vh_1.ui_1;
+  };
+  protoOf(Engine).yi = function () {
     return 28.0;
   };
   protoOf(Engine).carriedCellX = function (anchorCellX, anchorFingerX, fingerX, cell) {
-    return PlayfieldGeometry_instance.kj(anchorCellX, anchorFingerX, fingerX, cell);
-  };
-  protoOf(Engine).lj = function () {
-    return 1.25;
+    return PlayfieldGeometry_instance.lj(anchorCellX, anchorFingerX, fingerX, cell);
   };
   protoOf(Engine).mj = function () {
-    return PlayfieldAnim_getInstance().tj_1;
+    return 1.25;
   };
-  protoOf(Engine).gk = function () {
-    return this.lh_1.vc_1.s7_1;
+  protoOf(Engine).nj = function () {
+    return PlayfieldAnim_getInstance().uj_1;
   };
   protoOf(Engine).hk = function () {
-    return this.lh_1.vc_1.v7_1;
+    return this.mh_1.vc_1.s7_1;
   };
   protoOf(Engine).ik = function () {
-    return 6;
+    return this.mh_1.vc_1.v7_1;
   };
   protoOf(Engine).jk = function () {
-    return this.lh_1.vc_1.y7_1;
-  };
-  protoOf(Engine).e8 = function () {
-    return this.lh_1.vc_1.e8();
+    return 6;
   };
   protoOf(Engine).kk = function () {
-    return this.lh_1.vc_1.d8_1;
+    return this.mh_1.vc_1.y7_1;
   };
-  protoOf(Engine).qd = function () {
-    return this.lh_1.qd();
+  protoOf(Engine).e8 = function () {
+    return this.mh_1.vc_1.e8();
   };
   protoOf(Engine).lk = function () {
-    return this.lh_1.vc_1.z7_1;
+    return this.mh_1.vc_1.d8_1;
+  };
+  protoOf(Engine).qd = function () {
+    return this.mh_1.qd();
+  };
+  protoOf(Engine).mk = function () {
+    return this.mh_1.vc_1.z7_1;
   };
   protoOf(Engine).cellAt = function (x, y) {
-    return this.lh_1.vc_1.b9(x, y);
+    return this.mh_1.vc_1.b9(x, y);
   };
   protoOf(Engine).isSolid = function (y) {
-    return this.lh_1.vc_1.x8(y);
+    return this.mh_1.vc_1.x8(y);
   };
   protoOf(Engine).shaft = function (view) {
     // Inline function 'kotlin.collections.flatMap' call
-    var tmp0 = this.mh_1.mk(new ViewCamera(view[0], view[1]), this.lh_1.vc_1);
+    var tmp0 = this.nh_1.nk(new ViewCamera(view[0], view[1]), this.mh_1.vc_1);
     // Inline function 'kotlin.collections.flatMapTo' call
     var destination = ArrayList_init_$Create$();
     var _iterator__ex2g4s = tmp0.f();
     while (_iterator__ex2g4s.g()) {
       var element = _iterator__ex2g4s.h();
-      var list = listOf_0([element.nk_1, element.ok_1]);
+      var list = listOf_0([element.ok_1, element.pk_1]);
       addAll(destination, list);
     }
     return toDoubleArray(destination);
   };
   protoOf(Engine).cellColor = function (x, y) {
-    var tmp0_elvis_lhs = Companion_getInstance_9().q8(this.lh_1.vc_1.b9(x, y));
+    var tmp0_elvis_lhs = Companion_getInstance_9().q8(this.mh_1.vc_1.b9(x, y));
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return 0;
@@ -8383,33 +8384,33 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var id = tmp;
-    return this.mh_1.pk(id, crateBand(this.lh_1.vc_1, x, y));
+    return this.nh_1.qk(id, crateBand(this.mh_1.vc_1, x, y));
   };
   protoOf(Engine).setRowColor = function (y) {
-    var tmp = this.mh_1;
-    var tmp0_safe_receiver = this.lh_1.vc_1.a9(y);
-    return tmp.pk(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.g8_1, setRowBand(this.lh_1.vc_1, y));
+    var tmp = this.nh_1;
+    var tmp0_safe_receiver = this.mh_1.vc_1.a9(y);
+    return tmp.qk(tmp0_safe_receiver == null ? null : tmp0_safe_receiver.g8_1, setRowBand(this.mh_1.vc_1, y));
   };
   protoOf(Engine).handColor = function (shapeOrdinal) {
-    return this.mh_1.rk(shapeOrdinal, TowerBands_getInstance().qk(this.lh_1.vc_1));
+    return this.nh_1.sk(shapeOrdinal, TowerBands_getInstance().rk(this.mh_1.vc_1));
   };
-  protoOf(Engine).sk = function () {
-    return this.mh_1.tk(TowerBands_getInstance().qk(this.lh_1.vc_1));
+  protoOf(Engine).tk = function () {
+    return this.nh_1.uk(TowerBands_getInstance().rk(this.mh_1.vc_1));
   };
-  protoOf(Engine).uk = function () {
-    return DockMaterial_instance.ul(this.mh_1.tk(0)).vk_1;
-  };
-  protoOf(Engine).vl = function () {
-    return DockMaterial_instance.ul(this.mh_1.tk(0)).wk_1;
+  protoOf(Engine).vk = function () {
+    return DockMaterial_instance.vl(this.nh_1.uk(0)).wk_1;
   };
   protoOf(Engine).wl = function () {
-    return DockMaterial_instance.ul(this.mh_1.tk(0)).xk_1;
+    return DockMaterial_instance.vl(this.nh_1.uk(0)).xk_1;
   };
   protoOf(Engine).xl = function () {
-    return DockMaterial_instance.ul(this.mh_1.tk(0)).yk_1;
+    return DockMaterial_instance.vl(this.nh_1.uk(0)).yk_1;
+  };
+  protoOf(Engine).yl = function () {
+    return DockMaterial_instance.vl(this.nh_1.uk(0)).zk_1;
   };
   protoOf(Engine).chrome = function (role) {
-    return this.mh_1.yl(TowerBands_getInstance().qk(this.lh_1.vc_1)).bm(valueOf(role));
+    return this.nh_1.zl(TowerBands_getInstance().rk(this.mh_1.vc_1)).cm(valueOf(role));
   };
   protoOf(Engine).usePalette = function (field, crates) {
     // Inline function 'kotlin.collections.copyOf' call
@@ -8418,7 +8419,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var band = new Band_0(field, tmp$ret$1);
     // Inline function 'kotlin.collections.List' call
     // Inline function 'kotlin.collections.MutableList' call
-    var size = TowerBands_getInstance().xh_1 - 1 | 0;
+    var size = TowerBands_getInstance().yh_1 - 1 | 0;
     var list = ArrayList_init_$Create$_0(size);
     // Inline function 'kotlin.repeat' call
     var inductionVariable = 0;
@@ -8429,19 +8430,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         list.d(band);
       }
        while (inductionVariable < size);
-    var worn = new TowerPalette(plus(list, TowerBands_getInstance().ai_1));
+    var worn = new TowerPalette(plus(list, TowerBands_getInstance().bi_1));
+    this.oh_1 = worn;
     this.nh_1 = worn;
-    this.mh_1 = worn;
   };
   protoOf(Engine).cellSlot = function (x, y) {
-    var board = this.lh_1.vc_1;
+    var board = this.mh_1.vc_1;
     if (y < board.v7_1 || y >= board.e8())
       return -1;
     if (board.x8(y)) {
       var tmp0_safe_receiver = board.a9(y);
       var tmp1_safe_receiver = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.g8_1;
       var tmp2_elvis_lhs = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.d1_1;
-      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % this.mh_1.ki(setRowBand(board, y)).length | 0;
+      return (tmp2_elvis_lhs == null ? 0 : tmp2_elvis_lhs) % this.nh_1.li(setRowBand(board, y)).length | 0;
     }
     var tmp3_elvis_lhs = Companion_getInstance_9().q8(board.b9(x, y));
     var tmp;
@@ -8451,13 +8452,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp3_elvis_lhs;
     }
     var id = tmp;
-    return id.d1_1 % this.mh_1.ki(crateBand(board, x, y)).length | 0;
+    return id.d1_1 % this.nh_1.li(crateBand(board, x, y)).length | 0;
   };
   protoOf(Engine).handSlot = function (shapeOrdinal) {
-    return shapeOrdinal % this.mh_1.ki(TowerBands_getInstance().qk(this.lh_1.vc_1)).length | 0;
+    return shapeOrdinal % this.nh_1.li(TowerBands_getInstance().rk(this.mh_1.vc_1)).length | 0;
   };
   protoOf(Engine).completingRows = function (slot, originX) {
-    var tmp0_elvis_lhs = this.lh_1.wc_1.xd(slot);
+    var tmp0_elvis_lhs = this.mh_1.wc_1.xd(slot);
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return new Int32Array(0);
@@ -8465,7 +8466,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var shape = tmp;
-    var tmp1_elvis_lhs = Placement_instance.dg(this.lh_1.vc_1, shape, originX);
+    var tmp1_elvis_lhs = Placement_instance.eg(this.mh_1.vc_1, shape, originX);
     var tmp_0;
     if (tmp1_elvis_lhs == null) {
       return new Int32Array(0);
@@ -8475,51 +8476,51 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.he_1);
   };
-  protoOf(Engine).cm = function () {
-    return this.lh_1.ld_1.n7_1;
+  protoOf(Engine).dm = function () {
+    return this.mh_1.ld_1.n7_1;
   };
   protoOf(Engine).o7 = function () {
-    return this.lh_1.ld_1.o7();
+    return this.mh_1.ld_1.o7();
   };
   protoOf(Engine).p7 = function () {
-    return this.lh_1.pd();
-  };
-  protoOf(Engine).dm = function () {
-    return this.lh_1.cd_1 - this.ph_1 | 0;
+    return this.mh_1.pd();
   };
   protoOf(Engine).em = function () {
-    return this.lh_1.ed_1;
+    return this.mh_1.cd_1 - this.qh_1 | 0;
   };
   protoOf(Engine).fm = function () {
-    return this.lh_1.fd_1 - this.qh_1 | 0;
+    return this.mh_1.ed_1;
   };
   protoOf(Engine).gm = function () {
-    return this.lh_1.cd_1;
+    return this.mh_1.fd_1 - this.rh_1 | 0;
   };
   protoOf(Engine).hm = function () {
-    return Placement_instance.gg(this.lh_1.vc_1);
+    return this.mh_1.cd_1;
   };
   protoOf(Engine).im = function () {
-    return this.lh_1.wc_1.vd_1.k();
+    return Placement_instance.hg(this.mh_1.vc_1);
+  };
+  protoOf(Engine).jm = function () {
+    return this.mh_1.wc_1.vd_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
-    var tmp0_safe_receiver = this.lh_1.wc_1.xd(slot);
+    var tmp0_safe_receiver = this.mh_1.wc_1.xd(slot);
     var tmp1_safe_receiver = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.g9_1;
     var tmp2_elvis_lhs = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.d1_1;
     return tmp2_elvis_lhs == null ? -1 : tmp2_elvis_lhs;
   };
   protoOf(Engine).handWidth = function (slot) {
-    var tmp0_safe_receiver = this.lh_1.wc_1.xd(slot);
+    var tmp0_safe_receiver = this.mh_1.wc_1.xd(slot);
     var tmp1_elvis_lhs = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.i9_1;
     return tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs;
   };
   protoOf(Engine).handHeight = function (slot) {
-    var tmp0_safe_receiver = this.lh_1.wc_1.xd(slot);
+    var tmp0_safe_receiver = this.mh_1.wc_1.xd(slot);
     var tmp1_elvis_lhs = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.j9_1;
     return tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs;
   };
   protoOf(Engine).handCells = function (slot) {
-    var tmp0_elvis_lhs = this.lh_1.wc_1.xd(slot);
+    var tmp0_elvis_lhs = this.mh_1.wc_1.xd(slot);
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return new Int32Array(0);
@@ -8541,7 +8542,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return out;
   };
   protoOf(Engine).landingY = function (slot, column) {
-    var tmp0_elvis_lhs = this.lh_1.wc_1.xd(slot);
+    var tmp0_elvis_lhs = this.mh_1.wc_1.xd(slot);
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return -1;
@@ -8549,11 +8550,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var shape = tmp;
-    var tmp1_elvis_lhs = this.lh_1.vc_1.n9(shape, column);
+    var tmp1_elvis_lhs = this.mh_1.vc_1.n9(shape, column);
     return tmp1_elvis_lhs == null ? -1 : tmp1_elvis_lhs;
   };
   protoOf(Engine).projectedLean = function (slot, column) {
-    var tmp0_elvis_lhs = this.lh_1.wc_1.xd(slot);
+    var tmp0_elvis_lhs = this.mh_1.wc_1.xd(slot);
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return NaN;
@@ -8561,7 +8562,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var shape = tmp;
-    var tmp1_elvis_lhs = Placement_instance.dg(this.lh_1.vc_1, shape, column);
+    var tmp1_elvis_lhs = Placement_instance.eg(this.mh_1.vc_1, shape, column);
     var tmp_0;
     if (tmp1_elvis_lhs == null) {
       return NaN;
@@ -8572,7 +8573,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return outcome.ie_1.n7_1;
   };
   protoOf(Engine).projectedRows = function (slot, column) {
-    var tmp0_elvis_lhs = this.lh_1.wc_1.xd(slot);
+    var tmp0_elvis_lhs = this.mh_1.wc_1.xd(slot);
     var tmp;
     if (tmp0_elvis_lhs == null) {
       return 0;
@@ -8580,63 +8581,63 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp = tmp0_elvis_lhs;
     }
     var shape = tmp;
-    var tmp1_safe_receiver = Placement_instance.dg(this.lh_1.vc_1, shape, column);
+    var tmp1_safe_receiver = Placement_instance.eg(this.mh_1.vc_1, shape, column);
     var tmp2_safe_receiver = tmp1_safe_receiver == null ? null : tmp1_safe_receiver.he_1;
     var tmp3_elvis_lhs = tmp2_safe_receiver == null ? null : tmp2_safe_receiver.k();
     return tmp3_elvis_lhs == null ? 0 : tmp3_elvis_lhs;
   };
   protoOf(Engine).place = function (slot, column) {
-    var out = this.kh_1.rf(this.lh_1, slot, column);
+    var out = this.lh_1.sf(this.mh_1, slot, column);
     if (!(out instanceof Placed))
       return -1;
-    this.lh_1 = out.sc_1;
-    this.oh_1 = this.oh_1 + 1 | 0;
-    this.rh_1 = toIntArray(out.tc_1.nc_1);
-    this.sh_1 = out.tc_1.oc_1;
-    this.th_1 = out.tc_1.mc_1;
-    return this.rh_1.length;
-  };
-  protoOf(Engine).jm = function () {
-    return this.oh_1;
-  };
-  protoOf(Engine).rowsJustSet = function () {
-    return this.rh_1;
+    this.mh_1 = out.sc_1;
+    this.ph_1 = this.ph_1 + 1 | 0;
+    this.sh_1 = toIntArray(out.tc_1.nc_1);
+    this.th_1 = out.tc_1.oc_1;
+    this.uh_1 = out.tc_1.mc_1;
+    return this.sh_1.length;
   };
   protoOf(Engine).km = function () {
+    return this.ph_1;
+  };
+  protoOf(Engine).rowsJustSet = function () {
     return this.sh_1;
   };
   protoOf(Engine).lm = function () {
     return this.th_1;
   };
   protoOf(Engine).mm = function () {
+    return this.uh_1;
+  };
+  protoOf(Engine).nm = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.nm(this.lh_1.vc_1.d8_1, numberToInt(playingRows)).ri_1;
+    return PlayfieldGeometry_instance.om(this.mh_1.vc_1.d8_1, numberToInt(playingRows)).si_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.vm(progress, revealing);
+    return ResultsAnim_instance.wm(progress, revealing);
   };
   protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.wm(revealing);
+    return ResultsAnim_instance.xm(revealing);
   };
   protoOf(Engine).topplePhase = function (progress, revealing) {
-    return ResultsAnim_instance.xm(progress, revealing);
+    return ResultsAnim_instance.ym(progress, revealing);
   };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.ym(topple, tilt(this));
+    return ResultsAnim_instance.zm(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.zm(topple);
+    return ResultsAnim_instance.an(topple);
   };
-  protoOf(Engine).an = function () {
-    return ResultsAnim_instance.bn(this.lh_1.vc_1);
+  protoOf(Engine).bn = function () {
+    return ResultsAnim_instance.cn(this.mh_1.vc_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
-    var board = this.lh_1.vc_1;
+    var board = this.mh_1.vc_1;
     var cell = cellPx;
     var groundY = pivotY - cell;
     var out = ArrayList_init_$Create$_0(256);
@@ -8655,10 +8656,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.b9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.cn(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.dn_1);
+            var piece = ResultsAnim_instance.dn(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
             out.d(piece.en_1);
             out.d(piece.fn_1);
+            out.d(piece.gn_1);
             out.d(board.x8(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8668,22 +8669,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().in(combo, rows, index);
-  };
-  protoOf(Engine).jn = function () {
-    return toNumber(new Long(300, 0));
+    return SoundLadder_getInstance().jn(combo, rows, index);
   };
   protoOf(Engine).kn = function () {
-    return ResultsAnim_instance.ln(true, false);
+    return toNumber(new Long(300, 0));
   };
-  protoOf(Engine).mn = function () {
+  protoOf(Engine).ln = function () {
+    return ResultsAnim_instance.mn(true, false);
+  };
+  protoOf(Engine).nn = function () {
     return get_entries().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
-    return Scoring_instance.ig(multiplier);
+    return Scoring_instance.jg(multiplier);
   };
   protoOf(Engine).hullCourses = function () {
-    var board = this.lh_1.vc_1;
+    var board = this.mh_1.vc_1;
     var out = new Int32Array(board.v7_1);
     var inductionVariable = 0;
     var last = board.v7_1;
@@ -8949,10 +8950,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp;
   }
   function Companion_16() {
-    this.nn_1 = 20;
-    this.on_1 = 1.0E-4;
+    this.on_1 = 20;
+    this.pn_1 = 1.0E-4;
   }
-  protoOf(Companion_16).pn = function (packed) {
+  protoOf(Companion_16).qn = function (packed) {
     var r = linear(this, packed >> 16 & 255);
     var g = linear(this, packed >> 8 & 255);
     var b = linear(this, packed & 255);
@@ -8969,7 +8970,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp$ret$1 = Math.atan2(bb, a);
     return new Lab(l, tmp, tmp$ret$1);
   };
-  protoOf(Companion_16).qn = function (l, chroma, hue) {
+  protoOf(Companion_16).rn = function (l, chroma, hue) {
     var lo = 0.0;
     var hi = chroma;
     if (inGamut(this, l, hi, hue))
@@ -8996,8 +8997,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function Role(name, ordinal, night, ink) {
     ink = ink === VOID ? false : ink;
     Enum.call(this, name, ordinal);
-    this.tn_1 = night;
-    this.un_1 = ink;
+    this.un_1 = night;
+    this.vn_1 = ink;
   }
   function Companion_17() {
     Companion_instance_17 = this;
@@ -9007,31 +9008,31 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_2 = new Int32Array(tmp_1);
     while (tmp_0 < tmp_1) {
       var tmp_3 = tmp_0;
-      tmp_2[tmp_3] = get_entries_0().j(tmp_3).tn_1;
+      tmp_2[tmp_3] = get_entries_0().j(tmp_3).un_1;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.vn_1 = new ChromePalette(tmp_2, 240.0);
-    this.wn_1 = Companion_instance_16.pn(Role_BACKGROUND_getInstance().tn_1).mo_1;
-    this.xn_1 = 240.0;
-    this.yn_1 = 0.65;
-    this.zn_1 = 0.15;
-    this.ao_1 = 360.0;
-    this.bo_1 = 180.0;
-    this.co_1 = 0.015;
-    this.do_1 = 0.6;
-    this.eo_1 = 0.21;
-    this.fo_1 = 0.3;
-    this.go_1 = 0.145;
-    this.ho_1 = Companion_instance_16.pn(Role_BACKGROUND_getInstance().tn_1).mo_1;
-    this.io_1 = 0.7;
-    this.jo_1 = 0.05;
-    this.ko_1 = 0.3;
-    this.lo_1 = 0.025;
+    tmp.wn_1 = new ChromePalette(tmp_2, 240.0);
+    this.xn_1 = Companion_instance_16.qn(Role_BACKGROUND_getInstance().un_1).no_1;
+    this.yn_1 = 240.0;
+    this.zn_1 = 0.65;
+    this.ao_1 = 0.15;
+    this.bo_1 = 360.0;
+    this.co_1 = 180.0;
+    this.do_1 = 0.015;
+    this.eo_1 = 0.6;
+    this.fo_1 = 0.21;
+    this.go_1 = 0.3;
+    this.ho_1 = 0.145;
+    this.io_1 = Companion_instance_16.qn(Role_BACKGROUND_getInstance().un_1).no_1;
+    this.jo_1 = 0.7;
+    this.ko_1 = 0.05;
+    this.lo_1 = 0.3;
+    this.mo_1 = 0.025;
   }
-  protoOf(Companion_17).po = function (field, crates) {
-    var f = Companion_instance_16.pn(field);
-    var hue = {_v: f.oo_1};
-    var chroma = f.no_1;
+  protoOf(Companion_17).qo = function (field, crates) {
+    var f = Companion_instance_16.qn(field);
+    var hue = {_v: f.po_1};
+    var chroma = f.oo_1;
     if (chroma < 0.015) {
       // Inline function 'kotlin.collections.map' call
       // Inline function 'kotlin.collections.mapTo' call
@@ -9041,7 +9042,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       while (inductionVariable < last) {
         var item = crates[inductionVariable];
         inductionVariable = inductionVariable + 1 | 0;
-        var tmp$ret$0 = Companion_instance_16.pn(item);
+        var tmp$ret$0 = Companion_instance_16.qn(item);
         destination.d(tmp$ret$0);
       }
       var tmp$ret$3;
@@ -9057,10 +9058,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           tmp$ret$3 = maxElem;
           break $l$block_0;
         }
-        var maxValue = maxElem.no_1;
+        var maxValue = maxElem.oo_1;
         do {
           var e = iterator.h();
-          var v = e.no_1;
+          var v = e.oo_1;
           if (compareTo(maxValue, v) < 0) {
             maxElem = e;
             maxValue = v;
@@ -9070,14 +9071,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         tmp$ret$3 = maxElem;
       }
       var vivid = tmp$ret$3;
-      if (!(vivid == null) && vivid.no_1 > 0.015 * 2) {
-        hue._v = vivid.oo_1;
+      if (!(vivid == null) && vivid.oo_1 > 0.015 * 2) {
+        hue._v = vivid.po_1;
         chroma = 0.015;
       } else {
         chroma = 0.0;
       }
     }
-    var base = f.mo_1 >= 0.6 ? this.wn_1 : coerceIn_1(this.wn_1 + (f.mo_1 - 0.21) * 0.3, 0.145, this.ho_1);
+    var base = f.no_1 >= 0.6 ? this.xn_1 : coerceIn_1(this.xn_1 + (f.no_1 - 0.21) * 0.3, 0.145, this.io_1);
     // Inline function 'kotlin.comparisons.minOf' call
     var a = chroma * 0.7;
     var surfaceChroma = Math.min(a, 0.05);
@@ -9090,18 +9091,18 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     while (tmp < tmp_0) {
       var tmp_2 = tmp;
       var role = get_entries_0().j(tmp_2);
-      var night = Companion_instance_16.pn(role.tn_1);
+      var night = Companion_instance_16.qn(role.un_1);
       var tmp_3;
-      if (role.un_1) {
-        tmp_3 = Companion_instance_16.qn(night.mo_1, inkChroma, hue._v);
+      if (role.vn_1) {
+        tmp_3 = Companion_instance_16.rn(night.no_1, inkChroma, hue._v);
       } else {
-        tmp_3 = Companion_instance_16.qn(base + (night.mo_1 - Companion_getInstance_17().wn_1), surfaceChroma, hue._v);
+        tmp_3 = Companion_instance_16.rn(base + (night.no_1 - Companion_getInstance_17().xn_1), surfaceChroma, hue._v);
       }
       tmp_1[tmp_2] = tmp_3;
       tmp = tmp + 1 | 0;
     }
     var colours = tmp_1;
-    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.qn(0.65, 0.15, hue._v));
+    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_16.rn(0.65, 0.15, hue._v));
     return new ChromePalette(colours, glow);
   };
   var Companion_instance_17;
@@ -9111,9 +9112,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_17;
   }
   function Lab(l, chroma, hue) {
-    this.mo_1 = l;
-    this.no_1 = chroma;
-    this.oo_1 = hue;
+    this.no_1 = l;
+    this.oo_1 = chroma;
+    this.po_1 = hue;
   }
   function Role_BACKGROUND_getInstance() {
     Role_initEntries();
@@ -9205,66 +9206,66 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function ChromePalette(colours, glowHue) {
     Companion_getInstance_17();
-    this.zl_1 = colours;
-    this.am_1 = glowHue;
+    this.am_1 = colours;
+    this.bm_1 = glowHue;
   }
-  protoOf(ChromePalette).bm = function (role) {
-    return this.zl_1[role.d1_1];
+  protoOf(ChromePalette).cm = function (role) {
+    return this.am_1[role.d1_1];
   };
   protoOf(ChromePalette).equals = function (other) {
     var tmp;
     var tmp_0;
     if (other instanceof ChromePalette) {
-      tmp_0 = contentEquals(this.zl_1, other.zl_1);
+      tmp_0 = contentEquals(this.am_1, other.am_1);
     } else {
       tmp_0 = false;
     }
     if (tmp_0) {
-      tmp = this.am_1 === other.am_1;
+      tmp = this.bm_1 === other.bm_1;
     } else {
       tmp = false;
     }
     return tmp;
   };
   protoOf(ChromePalette).hashCode = function () {
-    return imul(31, contentHashCode(this.zl_1)) + getNumberHashCode(this.am_1) | 0;
+    return imul(31, contentHashCode(this.am_1)) + getNumberHashCode(this.bm_1) | 0;
   };
   function Water(surface, top, bottom, line) {
-    this.vk_1 = surface;
-    this.wk_1 = top;
-    this.xk_1 = bottom;
-    this.yk_1 = line;
+    this.wk_1 = surface;
+    this.xk_1 = top;
+    this.yk_1 = bottom;
+    this.zk_1 = line;
   }
   function DockMaterial() {
-    this.zk_1 = 0.54;
-    this.al_1 = 0.03;
-    this.bl_1 = 14.0;
-    this.cl_1 = 0.07;
-    this.dl_1 = 0.1;
-    this.el_1 = 0.06;
-    this.fl_1 = 0.2;
-    this.gl_1 = 0.24;
-    this.hl_1 = 1.34;
-    this.il_1 = 0.075;
-    this.jl_1 = 0.9;
-    this.kl_1 = 0.14;
-    this.ll_1 = 0.3;
-    this.ml_1 = 0.12;
-    this.nl_1 = 0.3;
-    this.ol_1 = 0.78;
-    this.pl_1 = 0.5;
-    this.ql_1 = 0.51;
-    this.rl_1 = 16777215;
-    this.sl_1 = 0;
-    this.tl_1 = 7400;
+    this.al_1 = 0.54;
+    this.bl_1 = 0.03;
+    this.cl_1 = 14.0;
+    this.dl_1 = 0.07;
+    this.el_1 = 0.1;
+    this.fl_1 = 0.06;
+    this.gl_1 = 0.2;
+    this.hl_1 = 0.24;
+    this.il_1 = 1.34;
+    this.jl_1 = 0.075;
+    this.kl_1 = 0.9;
+    this.ll_1 = 0.14;
+    this.ml_1 = 0.3;
+    this.nl_1 = 0.12;
+    this.ol_1 = 0.3;
+    this.pl_1 = 0.78;
+    this.ql_1 = 0.5;
+    this.rl_1 = 0.51;
+    this.sl_1 = 16777215;
+    this.tl_1 = 0;
+    this.ul_1 = 7400;
   }
-  protoOf(DockMaterial).ul = function (field) {
+  protoOf(DockMaterial).vl = function (field) {
     var r = field >> 16 & 255;
     var g = field >> 8 & 255;
     var b = field & 255;
     var light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
     var across = light < 0.3 ? 16777215 : 0;
-    return new Water(TowerBands_getInstance().qo(field, across, 0.12), TowerBands_getInstance().qo(field, 0, 0.3), TowerBands_getInstance().qo(field, 0, 0.78), TowerBands_getInstance().qo(field, 16777215, 0.5));
+    return new Water(TowerBands_getInstance().ro(field, across, 0.12), TowerBands_getInstance().ro(field, 0, 0.3), TowerBands_getInstance().ro(field, 0, 0.78), TowerBands_getInstance().ro(field, 16777215, 0.5));
   };
   var DockMaterial_instance;
   function DockMaterial_getInstance() {
@@ -9328,7 +9329,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp$ret$0;
   }
   function crate($this, slot) {
-    return new Shape($this.ro(slot), listOf(new Cell(0, 0)));
+    return new Shape($this.so(slot), listOf(new Cell(0, 0)));
   }
   function build$after(moment, lift, w, $width, start) {
     var tmp = moment._v;
@@ -9348,22 +9349,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp + lift * sum;
   }
   function PaletteShowcase() {
-    this.li_1 = 2;
-    this.mi_1 = 10;
+    this.mi_1 = 2;
     this.ni_1 = 10;
+    this.oi_1 = 10;
   }
-  protoOf(PaletteShowcase).so = function (slots) {
+  protoOf(PaletteShowcase).to = function (slots) {
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = roundToInt(10 / coerceIn_0(slots, 1, 10));
     return Math.max(1, b);
   };
-  protoOf(PaletteShowcase).oi = function (slots, seed, width) {
+  protoOf(PaletteShowcase).pi = function (slots, seed, width) {
     var n = coerceIn_0(slots, 1, 10);
     var random_0 = Random_1(seed);
     var board = Companion_getInstance_9().u8(width);
     // Inline function 'kotlin.collections.List' call
     // Inline function 'kotlin.collections.MutableList' call
-    var size = imul(n, this.so(n));
+    var size = imul(n, this.to(n));
     var list = ArrayList_init_$Create$_0(size);
     // Inline function 'kotlin.repeat' call
     var inductionVariable = 0;
@@ -9388,9 +9389,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           board = board.p9(crate(this, slot), x, y);
         }
          while (inductionVariable_0 < width);
-      board = board.u9(listOf(y), this.ro(slot));
+      board = board.u9(listOf(y), this.so(slot));
     }
-    var widths = this.to(imul(n, 2), capWidthLimit(this, width), random_0);
+    var widths = this.uo(imul(n, 2), capWidthLimit(this, width), random_0);
     var runs = ArrayList_init_$Create$();
     var below = until(0, width);
     var moment = {_v: 0.0};
@@ -9495,7 +9496,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return board;
   };
-  protoOf(PaletteShowcase).to = function (cells, widest, random) {
+  protoOf(PaletteShowcase).uo = function (cells, widest, random) {
     var rows = ArrayList_init_$Create$();
     var left = cells;
     // Inline function 'kotlin.comparisons.minOf' call
@@ -9515,7 +9516,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return rows;
   };
-  protoOf(PaletteShowcase).ro = function (slot) {
+  protoOf(PaletteShowcase).so = function (slot) {
     return get_entries().j(slot);
   };
   var PaletteShowcase_instance;
@@ -9524,31 +9525,31 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function PlayfieldAnim() {
     PlayfieldAnim_instance = this;
-    this.nj_1 = 180;
-    this.oj_1 = 260;
-    this.pj_1 = Shapes_getInstance().ab_1 + 0.5;
-    this.qj_1 = 225;
-    this.rj_1 = 260;
-    this.sj_1 = 0.74;
+    this.oj_1 = 180;
+    this.pj_1 = 260;
+    this.qj_1 = Shapes_getInstance().ab_1 + 0.5;
+    this.rj_1 = 225;
+    this.sj_1 = 260;
+    this.tj_1 = 0.74;
     var tmp = this;
     // Inline function 'kotlin.math.roundToInt' call
     var this_0 = 225 * 0.74;
-    tmp.tj_1 = roundToInt(this_0);
-    this.uj_1 = 0.13;
-    this.vj_1 = 0.28;
-    this.wj_1 = 0.17;
-    this.xj_1 = 770;
-    this.yj_1 = 1.7;
-    this.zj_1 = 0.14;
-    this.ak_1 = 0.42;
-    this.bk_1 = 90;
+    tmp.uj_1 = roundToInt(this_0);
+    this.vj_1 = 0.13;
+    this.wj_1 = 0.28;
+    this.xj_1 = 0.17;
+    this.yj_1 = 770;
+    this.zj_1 = 1.7;
+    this.ak_1 = 0.14;
+    this.bk_1 = 0.42;
+    this.ck_1 = 90;
     var tmp_0 = this;
     // Inline function 'kotlin.math.roundToInt' call
     var this_1 = 60000.0 / 90;
-    tmp_0.ck_1 = roundToInt(this_1);
-    this.dk_1 = 0.3;
-    this.ek_1 = 0.002;
-    this.fk_1 = 620;
+    tmp_0.dk_1 = roundToInt(this_1);
+    this.ek_1 = 0.3;
+    this.fk_1 = 0.002;
+    this.gk_1 = 620;
   }
   var PlayfieldAnim_instance;
   function PlayfieldAnim_getInstance() {
@@ -9563,15 +9564,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_18;
   }
   function ViewCamera(bottomRow, visibleRows) {
-    this.qi_1 = bottomRow;
-    this.ri_1 = visibleRows;
+    this.ri_1 = bottomRow;
+    this.si_1 = visibleRows;
   }
   protoOf(ViewCamera).toString = function () {
-    return 'ViewCamera(bottomRow=' + this.qi_1 + ', visibleRows=' + this.ri_1 + ')';
+    return 'ViewCamera(bottomRow=' + this.ri_1 + ', visibleRows=' + this.si_1 + ')';
   };
   protoOf(ViewCamera).hashCode = function () {
-    var result = getNumberHashCode(this.qi_1);
-    result = imul(result, 31) + getNumberHashCode(this.ri_1) | 0;
+    var result = getNumberHashCode(this.ri_1);
+    result = imul(result, 31) + getNumberHashCode(this.si_1) | 0;
     return result;
   };
   protoOf(ViewCamera).equals = function (other) {
@@ -9579,14 +9580,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof ViewCamera))
       return false;
-    if (!equals(this.qi_1, other.qi_1))
-      return false;
     if (!equals(this.ri_1, other.ri_1))
+      return false;
+    if (!equals(this.si_1, other.si_1))
       return false;
     return true;
   };
   function Companion_19() {
-    this.uo_1 = 0.001;
+    this.vo_1 = 0.001;
   }
   var Companion_instance_19;
   function Companion_getInstance_19() {
@@ -9595,39 +9596,39 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function TowerViewport(bottomRow, followsTop) {
     bottomRow = bottomRow === VOID ? 0.0 : bottomRow;
     followsTop = followsTop === VOID ? true : followsTop;
-    this.si_1 = bottomRow;
-    this.ti_1 = followsTop;
+    this.ti_1 = bottomRow;
+    this.ui_1 = followsTop;
   }
-  protoOf(TowerViewport).ui = function (summit, minimumBottom) {
+  protoOf(TowerViewport).vi = function (summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
-    var b = summit.qi_1;
+    var b = summit.ri_1;
     var minimum = Math.min(minimumBottom, b);
     var tmp;
-    if (this.ti_1) {
-      tmp = summit.qi_1;
+    if (this.ui_1) {
+      tmp = summit.ri_1;
     } else {
-      tmp = coerceIn(this.si_1, minimum, summit.qi_1);
+      tmp = coerceIn(this.ti_1, minimum, summit.ri_1);
     }
     var bottom = tmp;
-    return new ViewCamera(bottom, summit.ri_1);
+    return new ViewCamera(bottom, summit.si_1);
   };
-  protoOf(TowerViewport).vi = function (rows, summit, minimumBottom) {
-    var current = this.ui(summit, minimumBottom).qi_1;
-    return this.vo(current + rows, summit, minimumBottom);
+  protoOf(TowerViewport).wi = function (rows, summit, minimumBottom) {
+    var current = this.vi(summit, minimumBottom).ri_1;
+    return this.wo(current + rows, summit, minimumBottom);
   };
-  protoOf(TowerViewport).vo = function (bottomRow, summit, minimumBottom) {
+  protoOf(TowerViewport).wo = function (bottomRow, summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
-    var b = summit.qi_1;
+    var b = summit.ri_1;
     var minimum = Math.min(minimumBottom, b);
-    var next = coerceIn(bottomRow, minimum, summit.qi_1);
-    return new TowerViewport(next, next >= summit.qi_1 - 0.001);
+    var next = coerceIn(bottomRow, minimum, summit.ri_1);
+    return new TowerViewport(next, next >= summit.ri_1 - 0.001);
   };
   protoOf(TowerViewport).toString = function () {
-    return 'TowerViewport(bottomRow=' + this.si_1 + ', followsTop=' + this.ti_1 + ')';
+    return 'TowerViewport(bottomRow=' + this.ti_1 + ', followsTop=' + this.ui_1 + ')';
   };
   protoOf(TowerViewport).hashCode = function () {
-    var result = getNumberHashCode(this.si_1);
-    result = imul(result, 31) + getBooleanHashCode(this.ti_1) | 0;
+    var result = getNumberHashCode(this.ti_1);
+    result = imul(result, 31) + getBooleanHashCode(this.ui_1) | 0;
     return result;
   };
   protoOf(TowerViewport).equals = function (other) {
@@ -9635,34 +9636,34 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof TowerViewport))
       return false;
-    if (!equals(this.si_1, other.si_1))
+    if (!equals(this.ti_1, other.ti_1))
       return false;
-    if (!(this.ti_1 === other.ti_1))
+    if (!(this.ui_1 === other.ui_1))
       return false;
     return true;
   };
   function PlayfieldGeometry() {
-    this.yi_1 = 0.125;
-    this.zi_1 = 9.0;
-    this.aj_1 = 2;
-    this.bj_1 = 1.25;
-    this.cj_1 = 1.0;
-    this.dj_1 = 1.6;
-    this.ej_1 = 0.05;
-    this.fj_1 = 0.875;
-    this.gj_1 = 28.0;
-    this.hj_1 = 0.5;
-    this.ij_1 = 1;
-    this.jj_1 = -1;
+    this.zi_1 = 0.125;
+    this.aj_1 = 9.0;
+    this.bj_1 = 2;
+    this.cj_1 = 1.25;
+    this.dj_1 = 1.0;
+    this.ej_1 = 1.6;
+    this.fj_1 = 0.05;
+    this.gj_1 = 0.875;
+    this.hj_1 = 28.0;
+    this.ij_1 = 0.5;
+    this.jj_1 = 1;
+    this.kj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).wo = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+  protoOf(PlayfieldGeometry).xo = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
     return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
   };
-  protoOf(PlayfieldGeometry).kj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
+  protoOf(PlayfieldGeometry).lj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
     gain = gain === VOID ? 1.25 : gain;
-    return $super === VOID ? this.wo(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.wo.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+    return $super === VOID ? this.xo(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.xo.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
   };
-  protoOf(PlayfieldGeometry).nm = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).om = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -9674,24 +9675,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.xo_1 = startX;
-    this.yo_1 = startY;
-    this.zo_1 = pivotX;
-    this.ap_1 = pivotY;
-    this.bp_1 = cellPx;
-    this.cp_1 = groundY;
-    this.dp_1 = cellX;
-    this.ep_1 = cellY;
-    this.fp_1 = impact;
-    this.gp_1 = direction;
+    this.yo_1 = startX;
+    this.zo_1 = startY;
+    this.ap_1 = pivotX;
+    this.bp_1 = pivotY;
+    this.cp_1 = cellPx;
+    this.dp_1 = groundY;
+    this.ep_1 = cellX;
+    this.fp_1 = cellY;
+    this.gp_1 = impact;
+    this.hp_1 = direction;
   }
   protoOf(FragmentInput).i7 = function () {
-    return this.xo_1;
-  };
-  protoOf(FragmentInput).j7 = function () {
     return this.yo_1;
   };
-  protoOf(FragmentInput).hp = function () {
+  protoOf(FragmentInput).j7 = function () {
     return this.zo_1;
   };
   protoOf(FragmentInput).ip = function () {
@@ -9715,28 +9713,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(FragmentInput).op = function () {
     return this.gp_1;
   };
+  protoOf(FragmentInput).pp = function () {
+    return this.hp_1;
+  };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.xo_1 + ', startY=' + this.yo_1 + ', pivotX=' + this.zo_1 + ', pivotY=' + this.ap_1 + ', cellPx=' + this.bp_1 + ', groundY=' + this.cp_1 + ', cellX=' + this.dp_1 + ', cellY=' + this.ep_1 + ', impact=' + this.fp_1 + ', direction=' + this.gp_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.yo_1 + ', startY=' + this.zo_1 + ', pivotX=' + this.ap_1 + ', pivotY=' + this.bp_1 + ', cellPx=' + this.cp_1 + ', groundY=' + this.dp_1 + ', cellX=' + this.ep_1 + ', cellY=' + this.fp_1 + ', impact=' + this.gp_1 + ', direction=' + this.hp_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.xo_1);
-    result = imul(result, 31) + getNumberHashCode(this.yo_1) | 0;
+    var result = getNumberHashCode(this.yo_1);
     result = imul(result, 31) + getNumberHashCode(this.zo_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.ap_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.bp_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.cp_1) | 0;
-    result = imul(result, 31) + this.dp_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.dp_1) | 0;
     result = imul(result, 31) + this.ep_1 | 0;
-    result = imul(result, 31) + getNumberHashCode(this.fp_1) | 0;
-    result = imul(result, 31) + this.gp_1.hashCode() | 0;
+    result = imul(result, 31) + this.fp_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.gp_1) | 0;
+    result = imul(result, 31) + this.hp_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
     if (this === other)
       return true;
     if (!(other instanceof FragmentInput))
-      return false;
-    if (!equals(this.xo_1, other.xo_1))
       return false;
     if (!equals(this.yo_1, other.yo_1))
       return false;
@@ -9748,28 +9747,30 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return false;
     if (!equals(this.cp_1, other.cp_1))
       return false;
-    if (!(this.dp_1 === other.dp_1))
+    if (!equals(this.dp_1, other.dp_1))
       return false;
     if (!(this.ep_1 === other.ep_1))
       return false;
-    if (!equals(this.fp_1, other.fp_1))
+    if (!(this.fp_1 === other.fp_1))
       return false;
-    if (!this.gp_1.equals(other.gp_1))
+    if (!equals(this.gp_1, other.gp_1))
+      return false;
+    if (!this.hp_1.equals(other.hp_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.dn_1 = x;
-    this.en_1 = y;
-    this.fn_1 = degrees;
+    this.en_1 = x;
+    this.fn_1 = y;
+    this.gn_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.dn_1 + ', y=' + this.en_1 + ', degrees=' + this.fn_1 + ')';
+    return 'Fragment(x=' + this.en_1 + ', y=' + this.fn_1 + ', degrees=' + this.gn_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.dn_1);
-    result = imul(result, 31) + getNumberHashCode(this.en_1) | 0;
+    var result = getNumberHashCode(this.en_1);
     result = imul(result, 31) + getNumberHashCode(this.fn_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.gn_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -9777,11 +9778,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof Fragment))
       return false;
-    if (!equals(this.dn_1, other.dn_1))
-      return false;
     if (!equals(this.en_1, other.en_1))
       return false;
     if (!equals(this.fn_1, other.fn_1))
+      return false;
+    if (!equals(this.gn_1, other.gn_1))
       return false;
     return true;
   };
@@ -9796,22 +9797,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.om_1 = 1725;
-    this.pm_1 = 0.42;
-    this.qm_1 = 62.0;
-    this.rm_1 = 620;
-    this.sm_1 = 260;
-    this.tm_1 = 271;
-    this.um_1 = 0.35;
+    this.pm_1 = 1725;
+    this.qm_1 = 0.42;
+    this.rm_1 = 62.0;
+    this.sm_1 = 620;
+    this.tm_1 = 260;
+    this.um_1 = 271;
+    this.vm_1 = 0.35;
   }
-  protoOf(ResultsAnim).pp = function (revealing) {
+  protoOf(ResultsAnim).qp = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).ln = function (revealing, reducedMotion) {
-    var impactAt = this.qp((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).mn = function (revealing, reducedMotion) {
+    var impactAt = this.rp((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).qp = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).rp = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -9822,35 +9823,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).vm = function (progress, revealing) {
+  protoOf(ResultsAnim).wm = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.pp(true);
+    var share = 620 / this.qp(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).wm = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.pp(true);
+  protoOf(ResultsAnim).xm = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.qp(true);
   };
-  protoOf(ResultsAnim).xm = function (progress, revealing) {
+  protoOf(ResultsAnim).ym = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.pp(true);
+    var start = 880 / this.qp(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).rp = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).sp = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).ym = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).zm = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.rp(progress, direction, maxDegrees) : $super.rp.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.sp(progress, direction, maxDegrees) : $super.sp.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).zm = function (topple) {
+  protoOf(ResultsAnim).an = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).bn = function (board) {
+  protoOf(ResultsAnim).cn = function (board) {
     var lowest = board.s7_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -9873,17 +9874,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).cn = function (input) {
+  protoOf(ResultsAnim).dn = function (input) {
     var startX = input.i7();
     var startY = input.j7();
-    var pivotX = input.hp();
-    var pivotY = input.ip();
-    var cellPx = input.jp();
-    var groundY = input.kp();
-    var cellX = input.lp();
-    var cellY = input.mp();
-    var impact = input.np();
-    var direction = input.op();
+    var pivotX = input.ip();
+    var pivotY = input.jp();
+    var cellPx = input.kp();
+    var groundY = input.lp();
+    var cellX = input.mp();
+    var cellY = input.np();
+    var impact = input.op();
+    var direction = input.pp();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -9919,19 +9920,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.gn_1 = 12;
-    this.hn_1 = new Long(300, 0);
+    this.hn_1 = 12;
+    this.in_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).sp = function (combo) {
+  protoOf(SoundLadder).tp = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).tp = function (combo) {
+  protoOf(SoundLadder).up = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.sp(combo) / 12.0;
+    var x = this.tp(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).in = function (combo, rows, index) {
-    return this.tp(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).jn = function (combo, rows, index) {
+    return this.up(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -9940,12 +9941,12 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.up_1 = field;
-    this.vp_1 = crates;
+    this.vp_1 = field;
+    this.wp_1 = crates;
   }
   function Stop(at, color) {
-    this.nk_1 = at;
-    this.ok_1 = color;
+    this.ok_1 = at;
+    this.pk_1 = color;
   }
   function blend$mix($from, $to, f, shift) {
     var a = $from >> shift & 255;
@@ -9954,11 +9955,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function TowerBands() {
     TowerBands_instance = this;
-    this.vh_1 = new Long(37621, 0);
-    this.wh_1 = Medal_SUMMIT_getInstance().bg_1;
-    this.xh_1 = this.wh_1.k() + 1 | 0;
-    this.yh_1 = 10;
-    this.zh_1 = 0;
+    this.wh_1 = new Long(37621, 0);
+    this.xh_1 = Medal_SUMMIT_getInstance().cg_1;
+    this.yh_1 = this.xh_1.k() + 1 | 0;
+    this.zh_1 = 10;
+    this.ai_1 = 0;
     var tmp = this;
     var tmp_0 = 0;
     var tmp_1 = new Int32Array(10);
@@ -9966,23 +9967,23 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       tmp_1[tmp_0] = 0;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.ai_1 = new Band_0(16777215, tmp_1);
-    this.bi_1 = 16;
-    this.ci_1 = new Long(1284865837, 1481765933);
-    this.di_1 = new Long(-144211633, 335903614);
-    this.ei_1 = this.hi(new Long(37621, 0));
-    this.fi_1 = 2.0;
-    this.gi_1 = 1.0E-4;
+    tmp.bi_1 = new Band_0(16777215, tmp_1);
+    this.ci_1 = 16;
+    this.di_1 = new Long(1284865837, 1481765933);
+    this.ei_1 = new Long(-144211633, 335903614);
+    this.fi_1 = this.ii(new Long(37621, 0));
+    this.gi_1 = 2.0;
+    this.hi_1 = 1.0E-4;
   }
-  protoOf(TowerBands).hi = function (runSeed) {
-    return this.xp(runSeed, TowerPaletteBank_getInstance().wp_1);
+  protoOf(TowerBands).ii = function (runSeed) {
+    return this.yp(runSeed, TowerPaletteBank_getInstance().xp_1);
   };
-  protoOf(TowerBands).xp = function (runSeed, bank) {
+  protoOf(TowerBands).yp = function (runSeed, bank) {
     var deck = ArrayList_init_$Create$();
-    var bands = ArrayList_init_$Create$_0(this.xh_1);
+    var bands = ArrayList_init_$Create$_0(this.yh_1);
     var seed = runSeed;
     // Inline function 'kotlin.repeat' call
-    var times = this.xh_1 - 1 | 0;
+    var times = this.yh_1 - 1 | 0;
     var inductionVariable = 0;
     if (inductionVariable < times)
       do {
@@ -9995,33 +9996,33 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         bands.d(deck.u1((convertToInt(shiftRightUnsigned(seed, 33)) & 2147483647) % deck.k() | 0));
       }
        while (inductionVariable < times);
-    bands.d(this.ai_1);
+    bands.d(this.bi_1);
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).yp = function (placedOn, platformRows) {
-    return this.zp(placedOn - platformRows | 0);
+  protoOf(TowerBands).zp = function (placedOn, platformRows) {
+    return this.aq(placedOn - platformRows | 0);
   };
-  protoOf(TowerBands).qk = function (board) {
-    return this.yp(board.d8_1, board.v7_1);
+  protoOf(TowerBands).rk = function (board) {
+    return this.zp(board.d8_1, board.v7_1);
   };
-  protoOf(TowerBands).aq = function (platformRows) {
+  protoOf(TowerBands).bq = function (platformRows) {
     var tmp = 0;
-    var tmp_0 = this.wh_1.k();
+    var tmp_0 = this.xh_1.k();
     var tmp_1 = new Int32Array(tmp_0);
     while (tmp < tmp_0) {
       var tmp_2 = tmp;
-      tmp_1[tmp_2] = (platformRows + TowerBands_getInstance().wh_1.j(tmp_2) | 0) - 1 | 0;
+      tmp_1[tmp_2] = (platformRows + TowerBands_getInstance().xh_1.j(tmp_2) | 0) - 1 | 0;
       tmp = tmp + 1 | 0;
     }
     return tmp_1;
   };
-  protoOf(TowerBands).qo = function (from, to, t) {
+  protoOf(TowerBands).ro = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).zp = function (boxes) {
+  protoOf(TowerBands).aq = function (boxes) {
     var band = 0;
-    while (band < this.wh_1.k() && boxes >= this.wh_1.j(band)) {
+    while (band < this.xh_1.k() && boxes >= this.xh_1.j(band)) {
       band = band + 1 | 0;
     }
     return band;
@@ -10033,25 +10034,25 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().yp(_this__u8e3s4.c9(x, y), _this__u8e3s4.v7_1);
+    return TowerBands_getInstance().zp(_this__u8e3s4.c9(x, y), _this__u8e3s4.v7_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().yp(_this__u8e3s4.d9(row), _this__u8e3s4.v7_1);
+    return TowerBands_getInstance().zp(_this__u8e3s4.d9(row), _this__u8e3s4.v7_1);
   }
   function shaft$positionOf($camera, row) {
-    return 1.0 - (row - $camera.qi_1) / $camera.ri_1;
+    return 1.0 - (row - $camera.ri_1) / $camera.si_1;
   }
   function TowerPalette(bands) {
-    this.ii_1 = bands;
+    this.ji_1 = bands;
     var tmp = this;
     // Inline function 'kotlin.arrayOfNulls' call
-    var size = TowerBands_getInstance().xh_1;
-    tmp.ji_1 = Array(size);
+    var size = TowerBands_getInstance().yh_1;
+    tmp.ki_1 = Array(size);
   }
-  protoOf(TowerPalette).mk = function (camera, board) {
-    return this.bq(camera, TowerBands_getInstance().aq(board.v7_1));
+  protoOf(TowerPalette).nk = function (camera, board) {
+    return this.cq(camera, TowerBands_getInstance().bq(board.v7_1));
   };
-  protoOf(TowerPalette).bq = function (camera, starts) {
+  protoOf(TowerPalette).cq = function (camera, starts) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 0;
     var last = starts.length;
@@ -10074,54 +10075,54 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       var tmp;
       // Inline function 'kotlin.collections.isNotEmpty' call
       if (!stops.i()) {
-        tmp = at_0 - stops.j(stops.k() - 1 | 0).nk_1 < 1.0E-4;
+        tmp = at_0 - stops.j(stops.k() - 1 | 0).ok_1 < 1.0E-4;
       } else {
         tmp = false;
       }
       if (tmp)
         continue $l$loop;
-      var row_0 = camera.qi_1 + (1.0 - at_0) * camera.ri_1;
-      stops.d(new Stop(at_0, this.cq(row_0, starts)));
+      var row_0 = camera.ri_1 + (1.0 - at_0) * camera.si_1;
+      stops.d(new Stop(at_0, this.dq(row_0, starts)));
     }
     return stops;
   };
-  protoOf(TowerPalette).cq = function (row, starts) {
+  protoOf(TowerPalette).dq = function (row, starts) {
     var band = 0;
     while (band < starts.length && row >= starts[band]) {
       band = band + 1 | 0;
     }
     if (band === starts.length)
-      return this.tk(band);
+      return this.uk(band);
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
-      return this.tk(band);
-    return TowerBands_getInstance().qo(this.tk(band), this.tk(band + 1 | 0), into / 2.0);
+      return this.uk(band);
+    return TowerBands_getInstance().ro(this.uk(band), this.uk(band + 1 | 0), into / 2.0);
   };
-  protoOf(TowerPalette).tk = function (band) {
-    return this.ii_1.j(coerceIn_0(band, 0, TowerBands_getInstance().xh_1 - 1 | 0)).up_1;
+  protoOf(TowerPalette).uk = function (band) {
+    return this.ji_1.j(coerceIn_0(band, 0, TowerBands_getInstance().yh_1 - 1 | 0)).vp_1;
   };
-  protoOf(TowerPalette).pk = function (id, band) {
+  protoOf(TowerPalette).qk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
-    return this.rk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
+    return this.sk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
   };
-  protoOf(TowerPalette).rk = function (slot, band) {
+  protoOf(TowerPalette).sk = function (slot, band) {
     // Inline function 'kotlin.let' call
-    var it = this.ii_1.j(coerceIn_0(band, 0, TowerBands_getInstance().xh_1 - 1 | 0)).vp_1;
+    var it = this.ji_1.j(coerceIn_0(band, 0, TowerBands_getInstance().yh_1 - 1 | 0)).wp_1;
     return it[slot % it.length | 0];
   };
-  protoOf(TowerPalette).ki = function (band) {
+  protoOf(TowerPalette).li = function (band) {
     // Inline function 'kotlin.collections.copyOf' call
     // Inline function 'kotlin.js.asDynamic' call
-    return this.ii_1.j(coerceIn_0(band, 0, TowerBands_getInstance().xh_1 - 1 | 0)).vp_1.slice();
+    return this.ji_1.j(coerceIn_0(band, 0, TowerBands_getInstance().yh_1 - 1 | 0)).wp_1.slice();
   };
-  protoOf(TowerPalette).yl = function (band) {
-    var index = coerceIn_0(band, 0, TowerBands_getInstance().xh_1 - 1 | 0);
-    var tmp0_elvis_lhs = this.ji_1[index];
+  protoOf(TowerPalette).zl = function (band) {
+    var index = coerceIn_0(band, 0, TowerBands_getInstance().yh_1 - 1 | 0);
+    var tmp0_elvis_lhs = this.ki_1[index];
     var tmp;
     if (tmp0_elvis_lhs == null) {
       // Inline function 'kotlin.also' call
-      var this_0 = Companion_getInstance_17().po(this.ii_1.j(index).up_1, this.ii_1.j(index).vp_1);
-      this.ji_1[index] = this_0;
+      var this_0 = Companion_getInstance_17().qo(this.ji_1.j(index).vp_1, this.ji_1.j(index).wp_1);
+      this.ki_1[index] = this_0;
       tmp = this_0;
     } else {
       tmp = tmp0_elvis_lhs;
@@ -10169,7 +10170,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_11 = new Band_0(3875864, tmp$ret$11);
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$12 = new Int32Array([8912816, 9631231, 16383892, 16761795, 8912816, 9631231, 16383892, 16761795, 8912816, 9631231]);
-    tmp.wp_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, new Band_0(16147910, tmp$ret$12)]);
+    tmp.xp_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, new Band_0(16147910, tmp$ret$12)]);
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -10179,41 +10180,41 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   //region block: post-declaration
   protoOf(InternalHashMap).l3 = containsAllEntries;
-  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).pi);
-  defineProp(protoOf(Engine), 'viewFollowsTop', protoOf(Engine).wi);
-  defineProp(protoOf(Engine), 'towerDetachSlop', protoOf(Engine).xi);
-  defineProp(protoOf(Engine), 'dragGain', protoOf(Engine).lj);
-  defineProp(protoOf(Engine), 'contactMs', protoOf(Engine).mj);
-  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).gk);
-  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).hk);
-  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).ik);
-  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).jk);
+  defineProp(protoOf(Engine), 'hasCompletingMove', protoOf(Engine).qi);
+  defineProp(protoOf(Engine), 'viewFollowsTop', protoOf(Engine).xi);
+  defineProp(protoOf(Engine), 'towerDetachSlop', protoOf(Engine).yi);
+  defineProp(protoOf(Engine), 'dragGain', protoOf(Engine).mj);
+  defineProp(protoOf(Engine), 'contactMs', protoOf(Engine).nj);
+  defineProp(protoOf(Engine), 'boardWidth', protoOf(Engine).hk);
+  defineProp(protoOf(Engine), 'platformRows', protoOf(Engine).ik);
+  defineProp(protoOf(Engine), 'headroom', protoOf(Engine).jk);
+  defineProp(protoOf(Engine), 'deckRow', protoOf(Engine).kk);
   defineProp(protoOf(Engine), 'rowCount', protoOf(Engine).e8);
-  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).kk);
+  defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).lk);
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).qd);
-  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).lk);
-  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).sk);
-  defineProp(protoOf(Engine), 'waterSurface', protoOf(Engine).uk);
-  defineProp(protoOf(Engine), 'waterTop', protoOf(Engine).vl);
-  defineProp(protoOf(Engine), 'waterBottom', protoOf(Engine).wl);
-  defineProp(protoOf(Engine), 'waterLine', protoOf(Engine).xl);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).cm);
+  defineProp(protoOf(Engine), 'foundation', protoOf(Engine).mk);
+  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).tk);
+  defineProp(protoOf(Engine), 'waterSurface', protoOf(Engine).vk);
+  defineProp(protoOf(Engine), 'waterTop', protoOf(Engine).wl);
+  defineProp(protoOf(Engine), 'waterBottom', protoOf(Engine).xl);
+  defineProp(protoOf(Engine), 'waterLine', protoOf(Engine).yl);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).dm);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).o7);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).p7);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).dm);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).em);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).fm);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).gm);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).hm);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).im);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).jm);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).km);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).lm);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).mm);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).an);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).jn);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).kn);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).mn);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).em);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).fm);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).gm);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).hm);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).im);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).jm);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).km);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).lm);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).mm);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).nm);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).bn);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).kn);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).ln);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).nn);
   //endregion
   //region block: init
   Companion_instance = new Companion();
@@ -11124,7 +11125,20 @@ function drawGantry() {
    jumping to whatever column is under the finger. Clamped: the crane cannot
    leave the board. */
 function carriedCellX(c) {
+  if (c.direct) {
+    var sh = handShape(c.slot);
+    return (c.px - L.shaft.x) / L.cell - (sh ? sh.w : 1) / 2;
+  }
   return E.carriedCellX(c.anchorCellX, c.anchorFingerX, reachX(c.px), L.cell);
+}
+/* **A mouse points; a finger covers.** The game's drag moves the crate by how far the finger has,
+   amplified, so a fingertip never hides the crate it is aiming — but a mouse pointer hides
+   nothing, and someone holding one expects the crate under it: a crate that runs ahead of the
+   pointer reads as a bug. So a crate taken with a mouse is centred on the pointer's column, 1:1,
+   for the whole drag. Touch keeps the game's reach. A touch that lands on a crate is always
+   taken, so the browser never follows it with a mouse event that could pick one up. */
+function isMouse(e) {
+  return e.type.charAt(0) === "m";
 }
 /* Where the finger counts from. In landscape the hand stands beside the board, and a drag
    measured from the berth spent its first stretch crossing the mat: a crate taken from it
@@ -12119,6 +12133,7 @@ function down(e) {
   // In an ad the creative owns every touch. On a website it takes only the ones that land on
   // something, so a visitor can scroll past it.
   var take = function () { e.preventDefault(); };
+  var mouse = isMouse(e);
   if (!HOST_WEB) take();
   var p = pointAt(e);
   // Before everything, including the end card's whole-screen tap: a speaker the
@@ -12156,7 +12171,7 @@ function down(e) {
       G.idle = 0;
       G.fling = 0;
       G.carried = { slot: i, px: p.x, py: p.y, anchorCellX: startCellX(i), anchorFingerX: reachX(p.x),
-                    returning: overHand(p) };
+                    returning: overHand(p), direct: mouse };
       cue("pickup");
       aim();
       return;
@@ -12184,7 +12199,7 @@ function move(e) {
   // Past either end the crane stops, and the grab point moves with the finger,
   // so turning back moves the crate at once rather than after a dead stretch.
   // `GameInteraction.carryTo`.
-  if (sh) {
+  if (sh && !c.direct) {
     var wanted = carriedCellX(c), rightmost = E.boardWidth - sh.w;
     if (wanted < 0) c.anchorCellX -= wanted;
     if (wanted > rightmost) c.anchorCellX -= wanted - rightmost;
