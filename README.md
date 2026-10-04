@@ -2,7 +2,7 @@
 
 The TallmanGames website — served at <https://tallman-games.com/>.
 
-Static, no build step, no dependencies. Plain HTML, one stylesheet and a little script. Nothing is
+Static, no build step, no dependencies (one small script, `tools/stamp.py`, keeps asset links fresh). Plain HTML, one stylesheet and a little script. Nothing is
 fetched from anyone else, fonts included; the one exception is the colour vote,
 `box-stack/colours/`, which talks to one Cloudflare Worker, described below.
 
@@ -39,6 +39,13 @@ Links between pages are relative, so every page works under both hostnames.
 The App Store badges (homepage, Box Stack page twice, Play page) have `href="#"` and `data-soon`, so it shows "Coming soon" instead of
 going anywhere. When the listing is live, put its address in each `href` and delete `data-soon`; the
 Support page's "Is it on iPhone?" answer (and its JSON-LD) changes in the same commit.
+
+## Fresh CSS and scripts after a deploy
+
+Browsers keep a stylesheet or script for up to ten minutes, so a page fresh from a push could
+arrive with the old CSS and come out broken. Every link to the site's own CSS and JS carries
+`?v=` and a hash of the file. **After changing `style.css` or any script, run
+`python3 tools/stamp.py`** and commit what it changes with it.
 
 ## Deploying
 
