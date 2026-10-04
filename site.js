@@ -57,10 +57,17 @@
     Array.prototype.forEach.call(rising, function (el) { watch.observe(el); });
   }
 
-  // Over the homepage's night hero the top bar is clear; past it, solid.
+  // On the homepage the top bar is clear only at the very top. Scrolled, it takes the night sky
+  // behind it while it is still over the hero, so the hero's words never run under bare links;
+  // past the hero, it is the usual bar.
   var bar = document.querySelector(".topbar"), hero = document.getElementById("hero");
   if (bar && hero) {
-    var set = function () { bar.classList.toggle("clear", hero.getBoundingClientRect().bottom > bar.offsetHeight + 8); };
+    var set = function () {
+      var overHero = hero.getBoundingClientRect().bottom > bar.offsetHeight + 8;
+      var top = window.scrollY < 8;
+      bar.classList.toggle("clear", overHero && top);
+      bar.classList.toggle("over", overHero && !top);
+    };
     addEventListener("scroll", set, { passive: true });
     addEventListener("resize", set);
     set();

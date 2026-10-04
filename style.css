@@ -130,8 +130,8 @@ code {
 }
 
 /* ------------------------------------------------------------------ top bar
-   Sticky and quiet. Over the homepage's night hero it starts clear with light ink, and turns
-   solid once the hero has scrolled away. */
+   Sticky and quiet. On the homepage it starts clear over the night hero, takes the hero's sky
+   once the page scrolls, and turns to the usual bar when the hero has gone. */
 
 .topbar {
   position: sticky;
@@ -143,7 +143,7 @@ code {
 }
 @supports (color: color-mix(in srgb, red, blue)) {
   .topbar {
-    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
     -webkit-backdrop-filter: saturate(1.4) blur(12px);
     backdrop-filter: saturate(1.4) blur(12px);
   }
@@ -187,6 +187,14 @@ code {
 @media (max-width: 22rem) { .topbar nav a { padding: 0.55rem 0.35rem; font-size: 0.88rem; } }
 
 body.home .topbar { margin-bottom: -61px; }   /* lie over the hero rather than push it down */
+body.home .topbar.over {
+  background: var(--field);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f4eff9;
+}
+@supports (color: color-mix(in srgb, red, blue)) {
+  body.home .topbar.over { background: color-mix(in srgb, var(--field) 92%, transparent); }
+}
 body.home .topbar.clear {
   background: transparent;
   border-color: transparent;

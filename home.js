@@ -36,6 +36,7 @@
   // ------------------------------------------------------------------ the dock
   var canvas = document.getElementById("dock");
   var hero = document.getElementById("hero");
+  var bar = document.querySelector(".topbar");
   var themeMeta = document.querySelector('meta[name="theme-color"]');
   if (canvas && canvas.getContext) dock();
 
@@ -116,6 +117,7 @@
       palette = deal(palette);
       colours = hexes(palette);
       hero.style.setProperty("--field", colours[0]);
+      if (bar) bar.style.setProperty("--field", colours[0]);   // the top bar wears the same sky
       if (themeMeta) themeMeta.setAttribute("content", colours[0]);
       grid = []; heights = [0, 0, 0, 0, 0, 0, 0, 0]; setRows = {};
       // It comes in with a little cargo already aboard, so the interesting part starts sooner.
