@@ -158,14 +158,15 @@ code {
 }
 .topbar nav a:hover { opacity: 1; background: rgba(128, 110, 150, 0.14); }
 .topbar nav a[aria-current="page"] { opacity: 1; box-shadow: inset 0 -2px 0 var(--crane); border-radius: 0; }
-/* A phone keeps the name, the game and support. "Play" is the homepage's first button and
-   "Colours" is a card further down, and both are in the footer. */
-@media (max-width: 30rem) {
-  .topbar nav a[href$="#play"], .topbar nav a[href$="colours/"] { display: none; }
-  .topbar nav a { padding: 0.55rem 0.45rem; }
-  .brand { font-size: 1.05rem; }
+
+/* On a phone every page stays in the bar; the name gives way to the mark to make room. */
+@media (max-width: 36rem) {
+  .topbar .wrap { gap: 0.5rem; }
+  .topbar nav { gap: 0; }
+  .topbar nav a { padding: 0.55rem 0.5rem; font-size: 0.95rem; }
+  .brand span { display: none; }
 }
-@media (max-width: 23rem) { .brand span { display: none; } }
+@media (max-width: 22rem) { .topbar nav a { padding: 0.55rem 0.35rem; font-size: 0.88rem; } }
 
 body.home .topbar { margin-bottom: -61px; }   /* lie over the hero rather than push it down */
 body.home .topbar.clear {
@@ -255,6 +256,8 @@ body.home .topbar.clear {
 .hero p { color: #ddd5e8; font-size: 1.15rem; max-width: 33rem; }
 .hero .btn.ghost { color: #f4eff9; border-color: rgba(244, 239, 249, 0.45); }
 .hero .btn.ghost:hover { border-color: #f4eff9; box-shadow: none; }
+.hero .hero-more { margin: 1.25rem 0 0; font-size: 1rem; }
+.hero .hero-more a { color: var(--crane-lit); font-family: var(--display); font-weight: 600; letter-spacing: 0.02em; }
 .hero-art { position: relative; justify-self: center; width: min(380px, 100%); z-index: 1; display: flex; flex-direction: column-reverse; }
 .hero-art canvas { display: block; width: 100%; height: auto; cursor: pointer; border-radius: 6px; -webkit-tap-highlight-color: transparent; }
 .hero-art canvas:focus-visible { outline-color: var(--crane-lit); }
@@ -287,40 +290,14 @@ body.home .topbar.clear {
 
 .section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .section.tint { background: var(--bg-deep); }
-.section.slim { padding: clamp(2rem, 5vw, 3rem) 0; }
-.section-head { max-width: 40rem; margin-bottom: 2rem; }
-.section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
-.section-head p:not(.eyebrow) { color: var(--ink-dim); font-size: 1.08rem; }
 
 /* Box Stack's introduction: the app icon beside its name. */
 .game-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
 .game-title img { width: 72px; height: 72px; border-radius: 18px; box-shadow: var(--shadow); flex: none; }
-.game-title h2 { margin: 0; }
 .game-title .tagline { font-family: var(--display); font-weight: 600; color: var(--amber); letter-spacing: 0.04em; margin: 0; }
 
 .two { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
 @media (max-width: 52rem) { .two { grid-template-columns: 1fr; } }
-
-.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
-.facts li {
-  display: grid;
-  grid-template-columns: 2.4rem 1fr;
-  gap: 0.85rem;
-  align-items: start;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: 0.85rem 1rem;
-}
-.facts .ico {
-  width: 2.4rem; height: 2.4rem; border-radius: 10px;
-  display: grid; place-items: center;
-  background: rgba(224, 168, 60, 0.16);
-  color: var(--amber);
-}
-.facts .ico svg { width: 22px; height: 22px; }
-.facts strong { display: block; font-family: var(--display); font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
-.facts span { color: var(--ink-dim); font-size: 0.96rem; }
 
 /* ------------------------------------------------------------------ the Box Stack page */
 
@@ -329,32 +306,16 @@ body.home .topbar.clear {
 .game-intro .game-title img { width: 84px; height: 84px; border-radius: 20px; }
 .feature { margin: 0; }
 .feature img { width: 100%; height: auto; display: block; border-radius: var(--radius); box-shadow: var(--shadow); }
-.steps.big { max-width: none; gap: 1.1rem; }
 .tips { padding-left: 1.2rem; }
 .tips li { margin: 0.6rem 0; color: var(--ink-dim); }
 .tips strong { color: var(--ink); }
-.table-wrap { overflow-x: auto; margin: 1.25rem 0 0.75rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--panel); }
-table.landmarks { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
-.landmarks th, .landmarks td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--rule); }
-.landmarks thead th { font: 600 0.85rem var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-dim); }
-.landmarks tbody th { font-weight: 600; }
-.landmarks tbody th span { display: block; font-weight: 400; font-size: 0.86rem; color: var(--ink-dim); }
-.landmarks td { white-space: nowrap; }
-.landmarks td:last-child { font: 700 1.1rem var(--display); color: var(--amber); }
-@media (max-width: 30rem) { .landmarks th, .landmarks td { padding: 0.7rem 0.75rem; } }
-.landmarks tr:last-child th, .landmarks tr:last-child td { border-bottom: 0; }
-.landmarks tr.gap td { font: inherit; color: var(--ink-dim); font-style: italic; text-align: center; }
-.facts.grid-2 { grid-template-columns: repeat(2, 1fr); }
-@media (max-width: 52rem) { .facts.grid-2 { grid-template-columns: 1fr; } }
+/* ------------------------------------------------------------------ the Play page
+   The real game, from Box Stack's playable ad. On a big screen it runs inside a phone beside the
+   three steps; on a phone it fills the screen under the bar, with the store button just below. */
 
-/* ------------------------------------------------------------------ the demo */
-
-.play-grid { display: grid; grid-template-columns: 1fr auto; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
-@media (max-width: 52rem) {
-  .play-grid { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-  .play-grid .section-head { text-align: center; }
-  .play-after:empty { min-height: 0; margin: 0; }
-}
+.play-page { padding: clamp(2rem, 5vw, 3.5rem) 0; }
+.play-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.play-copy .meta { margin: 1.25rem 0 0; }
 .steps { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1rem; counter-reset: step; max-width: 30rem; }
 .steps li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.85rem; align-items: start; text-align: left; color: var(--ink-dim); }
 .steps li::before {
@@ -369,11 +330,12 @@ table.landmarks { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
 }
 .steps strong { display: block; font-family: var(--display); font-weight: 600; color: var(--ink); font-size: 1.05rem; }
 
-.phone-wrap { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; width: 100%; min-width: 0; }
+.phone-wrap { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; min-width: 0; }
 .phone {
   position: relative;
-  width: 320px;
-  max-width: 100%;
+  /* As big as the game is drawn for, and never taller than the window leaves room for. */
+  width: min(320px, calc((100svh - 61px - 9rem) * 298 / 600 + 22px));
+  min-width: 260px;
   padding: 11px;
   border-radius: 44px;
   background: linear-gradient(145deg, #2d2638, #0f0b15);
@@ -387,53 +349,19 @@ table.landmarks { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
   overflow: hidden;
   background: #0c1018;
 }
-.phone-screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.poster {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  padding: 0; border: 0; cursor: pointer; background: #0c1018; color: #fff;
-}
-.poster img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.5; transition: opacity 0.2s; }
-.poster:hover img { opacity: 0.62; }
-.poster .go {
-  position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
-  display: grid; justify-items: center; gap: 0.85rem;
-  font: 700 1.1rem var(--display); letter-spacing: 0.06em; text-transform: uppercase;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-}
-.poster .go i {
-  width: 78px; height: 78px; border-radius: 50%;
-  display: grid; place-items: center;
-  background: linear-gradient(180deg, var(--crane-lit), var(--crane));
-  box-shadow: 0 0 0 10px rgba(224, 168, 60, 0.2), 0 10px 30px rgba(0, 0, 0, 0.45);
-  animation: pulse 2.4s ease-in-out infinite;
-}
-.poster .go svg { width: 30px; height: 30px; margin-left: 5px; color: #1a1206; }
-@keyframes pulse { 50% { box-shadow: 0 0 0 18px rgba(224, 168, 60, 0.05), 0 10px 30px rgba(0, 0, 0, 0.45); } }
-@media (prefers-reduced-motion: reduce) { .poster .go i { animation: none; } }
-.play-after { min-height: 3.4rem; margin-top: 1.1rem; text-align: center; max-width: 320px; color: var(--ink-dim); font-size: 0.95rem; }
-.play-after .btn { min-height: 44px; padding: 0.55rem 1rem; font-size: 0.88rem; margin-top: 0.4rem; }
+.phone-screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.play-after { margin-top: 1rem; text-align: center; max-width: 320px; color: var(--ink-dim); font-size: 0.95rem; }
+.play-after p { margin: 0 0 0.6rem; }
+.play-after p:empty { display: none; }
 
-/* On a phone the demo opens over the whole screen, with its own bar to leave by. */
-.demo-sheet {
-  position: fixed; inset: 0; z-index: 200;
-  display: grid; grid-template-rows: auto 1fr;
-  background: #0c1018; color: #f4eff9;
+@media (max-width: 52rem) {
+  .play-page { padding: 0 0 2.5rem; }
+  .play-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .phone-wrap { order: -1; margin: 0 -1.25rem; }
+  .phone { width: 100%; min-width: 0; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+  .phone-screen { aspect-ratio: auto; height: calc(100svh - 61px - 5rem); min-height: 420px; border-radius: 0; }
+  .play-after { max-width: none; margin-top: 0.75rem; padding: 0 1.25rem; }
 }
-.demo-sheet[hidden] { display: none; }
-.demo-bar {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: max(0.35rem, env(safe-area-inset-top)) 0.35rem 0.35rem 1rem;
-  border-bottom: 1px solid #232a38;
-}
-.demo-bar b { font: 700 1.05rem var(--display); margin-right: auto; }
-.demo-bar a { color: var(--crane-lit); font: 600 0.88rem var(--display); letter-spacing: 0.04em; text-transform: uppercase; padding: 0.7rem 0.5rem; }
-.demo-bar button {
-  width: 48px; height: 48px; border: 0; border-radius: 12px; background: transparent; color: inherit; cursor: pointer;
-  display: grid; place-items: center;
-}
-.demo-bar button svg { width: 24px; height: 24px; }
-.demo-sheet iframe { width: 100%; height: 100%; border: 0; display: block; }
-html.sheet-open, html.sheet-open body { overflow: hidden; }
 
 /* ------------------------------------------------------------------ cards */
 
@@ -445,35 +373,12 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
   box-shadow: var(--shadow);
 }
 
-a.promo {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.35rem 1.5rem;
-  color: inherit;
-  text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
-}
-a.promo:hover { transform: translateY(-2px); border-color: var(--crane); }
-.promo-art { display: flex; flex-direction: column-reverse; gap: 3px; }
-.promo-art span { display: flex; gap: 3px; padding: 4px 6px; border-radius: 4px; }
-.promo-art i { width: 13px; height: 13px; border-radius: 2px; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25); }
-.promo h3 { margin: 0 0 0.2rem; }
-.promo p { margin: 0; color: var(--ink-dim); }
-.promo .go { font: 700 1.6rem var(--display); color: var(--amber); transition: transform 0.18s; }
-a.promo:hover .go { transform: translateX(4px); }
-@media (max-width: 30rem) { a.promo { grid-template-columns: auto 1fr; } a.promo .go { display: none; } }
-
-.points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 @media (max-width: 52rem) { .points { grid-template-columns: 1fr; } }
 .points .card { box-shadow: none; }
 .points h3 { font-size: 1.12rem; }
 .points p { margin: 0; color: var(--ink-dim); font-size: 0.97rem; }
 
-/* Say hi */
-.hello { text-align: center; }
-.hello p { color: var(--ink-dim); max-width: 34rem; margin-left: auto; margin-right: auto; }
 .mail {
   display: inline-flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
   background: var(--panel); border: 1px solid var(--rule); border-radius: 14px;
