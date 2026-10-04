@@ -119,11 +119,11 @@ code {
   mask: url("img/tallman-games.png") center / contain no-repeat;
 }
 /* The tower alone, from the middle of the wordmark, for where the whole of it would be too small
-   to read. Drawn as the wordmark draws it; only its outer line is new, closing the left side where
-   the wordmark lets the L stand in for it. In its own colours, with a pale rim so it holds on any
-   ground. */
+   to read. Drawn as the wordmark draws it, inside an outer line that is new: the right side's,
+   mirrored, because in the wordmark the tower's left side is the edge of the L. In its own
+   colours, with a pale rim so it holds on any ground. */
 .studio-mark.tower {
-  aspect-ratio: 150 / 450;
+  aspect-ratio: 138 / 449;
   background: url("img/tallman-tower.png") center / contain no-repeat;
   -webkit-mask: none;
   mask: none;
