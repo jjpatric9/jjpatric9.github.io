@@ -15,7 +15,7 @@ fetched from anyone else, fonts included; the one exception is the colour vote,
 | `style.css` | Shared styling, light and dark. Headings and buttons use the game's Chakra Petch from `fonts/`. |
 | `site.js` | What every page shares: copy buttons, the footer year, sections rising into view, and the "Coming soon" popup for any link marked `data-soon`. |
 | `home.js` | The homepage's crane, which deals one of the game's dark-sky palettes per boat. |
-| `play/` | The Play page: the demo, full-screen under the bar on a phone and in a phone frame beside three steps on a big screen. `play.js` listens for how a run went and answers under the game. |
+| `play/` | The Play page: the demo and the two store badges under it, nothing else. The demo fills the screen under the bar on a phone and sits in a phone frame on a big screen. `play.js` listens for how a run went and answers above the badges. |
 | `demo.html` | Box Stack's playable ad, copied from `playable/index.html` in the Boxstack repository. The Play page loads it as `demo.html?host=web`; the colour vote as `demo.html?host=palette`, wearing each palette on a built tower that shows every colour in exactly its share of the palette, with a hand to play from so a crate can be seen on the crane and over its landing outline; it scrolls. Re-copy it after the playable is rebuilt. |
 | `fonts/` | Chakra Petch semibold and bold, subset to Latin as WOFF2, with its licence (`OFL.txt`). |
 | `img/` | The studio's marks, app icon, favicon, the share card (`og.png`, from the Play feature graphic) and the demo's poster frame. `tallman-games.png` is the wordmark from the game's launch curtain (`ui/src/androidMain/res/drawable-nodpi/tallman_games.png` in the Boxstack repository), kept as a silhouette and used as a CSS mask so it takes the colour of wherever it sits; `tallman-tower.png` is its tower alone for the top bar, drawn as the wordmark draws it inside a new outer line: the right side's, mirrored, because in the wordmark the tower's left side is the edge of the L. It keeps its own colours, with a pale rim so it holds on light and dark grounds. |
@@ -36,8 +36,8 @@ Links between pages are relative, so every page works under both hostnames.
 
 ## The App Store badge
 
-The homepage's App Store badge has `href="#"` and `data-soon`, so it shows "Coming soon" instead of
-going anywhere. When the listing is live, put its address in the `href` and delete `data-soon`; the
+The App Store badges (homepage and Play page) have `href="#"` and `data-soon`, so it shows "Coming soon" instead of
+going anywhere. When the listing is live, put its address in each `href` and delete `data-soon`; the
 Support page's "Is it on iPhone?" answer (and its JSON-LD) changes in the same commit.
 
 ## Deploying
