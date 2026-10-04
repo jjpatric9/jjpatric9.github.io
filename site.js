@@ -25,6 +25,25 @@
     });
   });
 
+  // A store link that isn't live yet says so instead of going anywhere.
+  var soon = null;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-soon]"), function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (!window.HTMLDialogElement) { alert("Coming soon"); return; }
+      if (!soon) {
+        soon = document.createElement("dialog");
+        soon.className = "soon";
+        soon.setAttribute("aria-labelledby", "soon-title");
+        soon.innerHTML = '<h2 id="soon-title">Coming soon</h2><p>Box Stack is on its way to the App Store</p>' +
+          '<form method="dialog"><button class="btn primary">OK</button></form>';
+        soon.addEventListener("click", function (ev) { if (ev.target === soon) soon.close(); });
+        document.body.appendChild(soon);
+      }
+      soon.showModal();
+    });
+  });
+
   // Sections rise into place as they arrive.
   var rising = document.querySelectorAll("[data-reveal]");
   if (still || !("IntersectionObserver" in window)) {

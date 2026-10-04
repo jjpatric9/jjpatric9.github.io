@@ -111,6 +111,21 @@ code {
   font-size: 0.88em;
 }
 
+/* The studio's mark: the wordmark from the game's launch curtain, a silhouette used as a mask so
+   it takes the colour of whatever it sits in, the way the game tints it to its own ink. */
+.studio-mark {
+  display: block; flex: none; aspect-ratio: 720 / 409; background: currentColor;
+  -webkit-mask: url("img/tallman-games.png") center / contain no-repeat;
+  mask: url("img/tallman-games.png") center / contain no-repeat;
+}
+/* The tower alone, from the middle of the wordmark, for where the whole of it would be too small
+   to read. Its lit face is the half-tone. */
+.studio-mark.tower {
+  aspect-ratio: 130 / 430;
+  -webkit-mask-image: url("img/tallman-tower.png");
+  mask-image: url("img/tallman-tower.png");
+}
+
 /* ------------------------------------------------------------------ top bar
    Sticky and quiet. Over the homepage's night hero it starts clear with light ink, and turns
    solid once the hero has scrolled away. */
@@ -143,7 +158,7 @@ code {
   letter-spacing: 0.01em;
   min-height: 44px;
 }
-.brand img { width: 28px; height: 28px; flex: none; display: block; }
+.brand .studio-mark { height: 40px; width: auto; }
 .topbar nav { margin-left: auto; display: flex; gap: 0.25rem; }
 .topbar nav a {
   font-family: var(--display);
@@ -164,7 +179,7 @@ code {
   .topbar .wrap { gap: 0.5rem; }
   .topbar nav { gap: 0; }
   .topbar nav a { padding: 0.55rem 0.5rem; font-size: 0.95rem; }
-  .brand span { display: none; }
+  .brand-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 @media (max-width: 22rem) { .topbar nav a { padding: 0.55rem 0.35rem; font-size: 0.88rem; } }
 
@@ -209,7 +224,6 @@ body.home .topbar.clear {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 0 rgba(0, 0, 0, 0.15);
 }
 .btn.primary:hover { filter: brightness(1.05); box-shadow: 0 8px 22px rgba(224, 168, 60, 0.35); }
-.btn.ghost { background: transparent; border-color: currentColor; color: inherit; }
 .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
 /* ------------------------------------------------------------------ hero
@@ -254,9 +268,32 @@ body.home .topbar.clear {
 .hero .eyebrow { color: var(--crane-lit); }
 .hero h1 { color: #fff; text-wrap: balance; }
 .hero p { color: #ddd5e8; font-size: 1.15rem; max-width: 33rem; }
-.hero .btn.ghost { color: #f4eff9; border-color: rgba(244, 239, 249, 0.45); }
-.hero .btn.ghost:hover { border-color: #f4eff9; box-shadow: none; }
 .hero .hero-more { margin: 1.25rem 0 0; font-size: 1rem; }
+.hero .hero-logo { width: min(300px, 70vw); margin: 0 0 1.75rem; color: #fff; }
+
+/* The store badges, drawn the way the stores draw theirs: black, a grey rim, the store's mark. */
+.stores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+.store {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  min-width: 11rem; min-height: 56px; padding: 0.45rem 1.1rem 0.45rem 0.85rem;
+  background: #000; color: #fff; border: 1px solid #a6a6a6; border-radius: 10px;
+  text-decoration: none; line-height: 1.05; text-align: left; white-space: nowrap; touch-action: manipulation;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.store:hover { transform: translateY(-1px); border-color: #fff; text-decoration: none; }
+.store svg { width: 26px; height: 30px; flex: none; }
+.store small { display: block; font-size: 0.72rem; letter-spacing: 0.02em; }
+.store b { display: block; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em; }
+
+/* "Coming soon", for a store link that isn't live yet. */
+dialog.soon {
+  border: 0; border-radius: var(--radius); padding: 1.75rem 1.75rem 1.25rem; max-width: min(22rem, calc(100vw - 2rem));
+  background: var(--panel); color: var(--ink); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); text-align: center;
+}
+dialog.soon::backdrop { background: rgba(12, 7, 18, 0.6); }
+dialog.soon h2 { margin: 0 0 0.4rem; font-size: 1.5rem; }
+dialog.soon p { color: var(--ink-dim); margin: 0 0 1.25rem; }
+dialog.soon .btn { min-width: 8rem; }
 .hero .hero-more a { color: var(--crane-lit); font-family: var(--display); font-weight: 600; letter-spacing: 0.02em; }
 .hero-art { position: relative; justify-self: center; width: min(380px, 100%); z-index: 1; display: flex; flex-direction: column-reverse; }
 .hero-art canvas { display: block; width: 100%; height: auto; cursor: pointer; border-radius: 6px; -webkit-tap-highlight-color: transparent; }
@@ -283,6 +320,11 @@ body.home .topbar.clear {
   .hero .actions { justify-content: center; }
   .hero-art { width: min(300px, 80vw); }
   .hero .actions .btn { flex: 1 1 15rem; }
+  .hero .hero-logo { margin-left: auto; margin-right: auto; }
+  .stores { justify-content: center; }
+  .store { flex: 1 1 9rem; min-width: 0; justify-content: center; padding: 0.45rem 0.7rem; gap: 0.5rem; }
+  .store svg { width: 22px; height: 26px; }
+  .store b { font-size: 1.12rem; }
 
 }
 
@@ -452,8 +494,7 @@ body.home .topbar.clear {
 .foot nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
 .foot a { color: inherit; }
 .foot .made { display: flex; align-items: center; gap: 0.75rem; line-height: 1.45; }
-.foot .made img { width: 30px; height: 30px; flex: none; }
-.foot .made b { font-family: var(--display); color: var(--ink); font-size: 1.02rem; }
+.foot .made .studio-mark { width: 84px; color: var(--ink); }
 @media (max-width: 40rem) { .foot .wrap { flex-direction: column; align-items: flex-start; } }
 
 /* ------------------------------------------------------------------ reveal
