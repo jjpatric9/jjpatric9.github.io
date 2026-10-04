@@ -804,7 +804,7 @@
   /** The editor folds away so the game can have the screen, and opens when a colour is chosen. */
   function fold(folded) {
     $("make-body").hidden = folded;
-    $("make-fold").textContent = folded ? "Show" : "Hide";
+    $("make-fold").textContent = folded ? "Show more" : "Show less";
     $("make-fold").setAttribute("aria-expanded", folded ? "false" : "true");
   }
   $("make-fold").addEventListener("click", function () { fold(!$("make-body").hidden); });
