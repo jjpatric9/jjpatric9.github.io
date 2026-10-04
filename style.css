@@ -119,11 +119,13 @@ code {
   mask: url("img/tallman-games.png") center / contain no-repeat;
 }
 /* The tower alone, from the middle of the wordmark, for where the whole of it would be too small
-   to read. Its lit face is the half-tone. */
+   to read: its right half mirrored, outlined all round, the sun on its left face and shade under
+   the roof and the balcony. Drawn in its own colours, with a pale rim so it holds on any ground. */
 .studio-mark.tower {
-  aspect-ratio: 130 / 430;
-  -webkit-mask-image: url("img/tallman-tower.png");
-  mask-image: url("img/tallman-tower.png");
+  aspect-ratio: 140 / 451;
+  background: url("img/tallman-tower.png") center / contain no-repeat;
+  -webkit-mask: none;
+  mask: none;
 }
 
 /* ------------------------------------------------------------------ top bar
