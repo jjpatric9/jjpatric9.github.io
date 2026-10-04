@@ -10294,7 +10294,9 @@ var SAFETY_LIMIT = 45;        // active seconds; never shown to the player
    there because an ad network expects a playable to end; a visitor to the site
    has chosen to play, and a clock ending a good tower half a minute in cut short
    the thing the demo is for. So there it ends when the tower falls or on the
-   fiftieth crate, standing — the same `crates` ending the URL experiments use. */
+   fiftieth crate, standing — the same `crates` ending the URL experiments use.
+   The palette vote ends there too: it has no clock either, and without an end a
+   voter could build one tower for ever. */
 var WEB_CRATE_LIMIT = 50;
 var PLACEMENT_MODE = "open"; // natural run unless a campaign preset says otherwise
 /* **No persistent store exit by default.** It sat in the top-right corner, which is the 50-point
@@ -10337,7 +10339,7 @@ var WELCOME = !HOST_PALETTE && !HOST_WEB && !/[?&]welcome=0/.test(location.searc
 /* Per-placement experiments are parameters rather than forks. Neither timed mode
    draws a countdown; the network owns skip/countdown chrome outside the creative. */
 (function () {
-  if (HOST_WEB) { ENDS_ON = "crates"; CRATE_LIMIT = WEB_CRATE_LIMIT; }
+  if (HOST_WEB || HOST_PALETTE) { ENDS_ON = "crates"; CRATE_LIMIT = WEB_CRATE_LIMIT; }
   var placement = /[?&]placement=(rewarded|interstitial)/.exec(location.search);
   if (placement) {
     PLACEMENT_MODE = placement[1];
@@ -11647,8 +11649,10 @@ function endCardCopy() {
     note: null,
     action: HOST_WEB || HOST_GOOGLE || HOST_PALETTE ? "BUILD AGAIN" : "GET THE APP"
   };
-  if (demoFinished()) {
+  if (G.endReason === "crate_limit" && (HOST_WEB || HOST_PALETTE)) {
     copy.verdict = "ALL " + CRATE_LIMIT + (CRATE_LIMIT === 1 ? " PIECE" : " PIECES") + " PLACED";
+  }
+  if (demoFinished()) {
     copy.note = ["Want to keep building?", "Get the free app"];
     copy.action = "GET THE APP";
   }
@@ -11658,7 +11662,9 @@ function endCardCopy() {
 /* **On a website, the fiftieth crate is the end of the demo, and the card says
    so.** A tower that falls short of it can be built again — they have not had
    the demo yet — but one that has placed every crate is told that more building
-   is in the app, and its one action goes there instead of dealing another fifty. */
+   is in the app, and its one action goes there instead of dealing another fifty.
+   The palette vote says it placed all fifty too, but deals another tower in the
+   same palette, since the vote has no way out of the page. */
 function demoFinished() { return HOST_WEB && G.endReason === "crate_limit"; }
 
 /* The note's lines, each over as many more as [width] needs. */
