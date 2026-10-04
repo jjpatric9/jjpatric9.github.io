@@ -8,13 +8,13 @@ fetched from anyone else, fonts included; the one exception is the colour vote,
 
 | File | Purpose |
 |---|---|
-| `index.html` | Landing page, kept to one screen: who makes the games, and the way to Box Stack. Used as the Google Play **Website** field. Its hero is a crane building a tower (`home.js`). An old `#play` link forwards to `play/`. |
+| `index.html` | Landing page, kept to one screen: who makes the games, and the way to Box Stack. Used as the Google Play **Website** field. Its hero is a crane building a tower (`home.js`) until somebody taps it over. An old `#play` link forwards to `play/`. |
 | `box-stack/` | The Box Stack page: a short pitch, three hooks and the tips. The page search engines should send "box stack" searches to. Deliberately light on detail: the game explains itself. |
 | `privacy.html` | Privacy policy for Box Stack. Used as the Play **Privacy policy** field. |
 | `support.html` | Support contact and every FAQ. |
 | `style.css` | Shared styling, light and dark. Headings and buttons use the game's Chakra Petch from `fonts/`. |
 | `site.js` | What every page shares: copy buttons, the footer year, sections rising into view, and the "Coming soon" popup for any link marked `data-soon`. |
-| `home.js` | The homepage's crane, which deals one of the game's dark-sky palettes per boat. |
+| `home.js` | The homepage's crane. It plays the game's own pieces, three to a hand, in a frame about as many rows tall as a phone shows; the view climbs with the tower, and a tap pulls it back to the whole tower and tips it over, as a run ends in the game. Each boat is dealt one of the game's dark-sky palettes. |
 | `play/` | The Play page: the demo and the two store badges under it, nothing else. The demo fills the screen under the bar on a phone and sits in a phone frame on a big screen. `play.js` listens for how a run went and answers above the badges. |
 | `demo.html` | Box Stack's playable ad, copied from `playable/index.html` in the Boxstack repository. The Play page loads it as `demo.html?host=web`; the colour vote as `demo.html?host=palette`, wearing each palette on a built tower that shows every colour in exactly its share of the palette, with a hand to play from so a crate can be seen on the crane and over its landing outline; it scrolls. Re-copy it after the playable is rebuilt. |
 | `fonts/` | Chakra Petch semibold and bold, subset to Latin as WOFF2, with its licence (`OFL.txt`). |
