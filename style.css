@@ -329,7 +329,9 @@ dialog.soon .btn { min-width: 8rem; }
   transition: opacity 0.6s;
 }
 
-/* The harbour: two slow layers of swell across the whole width, over the bottom of the boat. */
+/* The harbour: two slow layers of swell across the whole width, over the bottom of the boat.
+   Each SVG is twice the width and slides by half of itself, so each path must repeat every 800
+   viewBox units (a whole number of waves) or the loop jumps when it starts again. */
 .water { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; z-index: 2; pointer-events: none; }
 .water svg { position: absolute; left: 0; bottom: 0; width: 200%; height: 100%; }
 .water .back { animation: swell 21s linear infinite; }
