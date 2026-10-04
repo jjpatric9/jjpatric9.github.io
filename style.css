@@ -253,20 +253,41 @@ body.home .topbar.clear {
   transition: --field 1.4s ease;
   padding-top: 61px;
 }
-.hero .stars {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+/* Stars, in three groups that each brighten and fade on their own slow clock, so the sky twinkles
+   one star at a time instead of sitting there as specks. */
+.hero .stars { position: absolute; inset: 0; pointer-events: none; }
+.hero .stars i {
+  position: absolute; inset: 0; opacity: 0.5;
+  animation: twinkle 4.3s ease-in-out infinite alternate;
+}
+.hero .stars i:nth-child(1) {
   background-image:
     radial-gradient(1px 1px at 12% 22%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 28% 12%, #fff 50%, transparent 51%),
     radial-gradient(1.5px 1.5px at 44% 30%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 63% 9%, #fff 50%, transparent 51%),
     radial-gradient(1px 1px at 86% 18%, #fff 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 93% 42%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 6% 48%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 52% 6%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 72% 26%, #fff 50%, transparent 51%),
-    radial-gradient(1px 1px at 36% 44%, #fff 50%, transparent 51%);
+    radial-gradient(1px 1px at 36% 44%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 20% 36%, #fff 50%, transparent 51%);
 }
+.hero .stars i:nth-child(2) {
+  animation-duration: 5.9s; animation-delay: -2.1s;
+  background-image:
+    radial-gradient(1px 1px at 28% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 93% 42%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 52% 6%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 58% 24%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 8%, #fff 50%, transparent 51%);
+}
+.hero .stars i:nth-child(3) {
+  animation-duration: 7.3s; animation-delay: -4.6s;
+  background-image:
+    radial-gradient(1px 1px at 63% 9%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 48%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 72% 26%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 4% 14%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 18%, #fff 50%, transparent 51%);
+}
+@keyframes twinkle { from { opacity: 0.12; } to { opacity: 0.85; } }
+@media (prefers-reduced-motion: reduce) { .hero .stars i { animation: none; } }
 .hero .wrap {
   position: relative;
   display: grid;
