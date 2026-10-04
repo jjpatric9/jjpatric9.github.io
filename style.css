@@ -282,6 +282,10 @@ body.home .topbar.clear {
 .hero .hero-more { margin: 1.25rem 0 0; font-size: 1rem; }
 .hero .hero-logo { width: min(300px, 70vw); margin: 0 0 1.75rem; color: #fff; }
 
+/* Try it here, over the two stores: the button centred over the badges. */
+.get { display: inline-flex; flex-direction: column; align-items: center; gap: 0.75rem; max-width: 100%; }
+.get .actions, .get .stores { margin: 0; }
+
 /* The store badges, drawn the way the stores draw theirs: black, a grey rim, the store's mark. */
 .stores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
 .store {
@@ -331,6 +335,7 @@ dialog.soon .btn { min-width: 8rem; }
   .hero .actions { justify-content: center; }
   .hero-art { width: min(300px, 80vw); }
   .btn.try { flex: 1 1 15rem; }
+  .get { display: flex; align-items: stretch; }
   .hero .hero-logo { margin-left: auto; margin-right: auto; }
   .stores { justify-content: center; }
   .store { flex: 1 1 9rem; min-width: 0; justify-content: center; padding: 0.45rem 0.7rem; gap: 0.5rem; }
