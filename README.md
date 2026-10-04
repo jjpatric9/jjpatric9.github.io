@@ -28,9 +28,9 @@ fetched from anyone else, fonts included; the one exception is the colour vote,
 | `robots.txt`, `sitemap.xml` | Tell search engines what to crawl. The bare `demo.html` is kept out: it's only meant to be seen inside the Play page. |
 | `CNAME` | The custom domain. Removing it unsets the domain on the next deploy. |
 
-Every page except the colour vote carries the same top bar (Box Stack, Play, Colours, Support, with
-the logo for home) and the same footer, which adds Privacy and Google Play. The colour vote is a
-full-screen app and has breadcrumbs instead. When a page is added, add it to both everywhere.
+Every page carries the same top bar (Box Stack, Play, Colours, Support, with the tower for home).
+Every page but the colour vote, which is a full-screen app with no room under it, also carries the
+same footer, which adds Privacy and Google Play. When a page is added, add it to both everywhere.
 
 Links between pages are relative, so every page works under both hostnames.
 

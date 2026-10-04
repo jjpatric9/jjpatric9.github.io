@@ -539,26 +539,23 @@ body.colours {
   height: 100vh;
   height: 100dvh;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
 }
 
-/* Where you are, the three tabs, and what the page is. One row on a wide screen, two on a phone. */
+/* The site's own top bar, then the three tabs. */
+.colours .topbar { position: static; padding-top: env(safe-area-inset-top, 0px); }
 .app-bar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: "crumbs info" "tabs tabs";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "tabs";
   align-items: center;
-  gap: 0.35rem 0.75rem;
-  padding: calc(env(safe-area-inset-top, 0px) + 0.35rem) calc(env(safe-area-inset-right, 0px) + 0.6rem) 0.5rem calc(env(safe-area-inset-left, 0px) + 0.6rem);
+  padding: 0.45rem calc(env(safe-area-inset-right, 0px) + 0.6rem) 0.45rem calc(env(safe-area-inset-left, 0px) + 0.6rem);
   background: var(--bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.crumbs { grid-area: crumbs; display: flex; align-items: center; gap: 0.45rem; min-width: 0; font: 600 1rem/1 var(--display); color: var(--ink-dim); }
-.crumbs a { color: var(--ink-dim); text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
-.crumbs a:hover { color: var(--ink); }
-.crumbs .crumb-home img { display: block; width: 26px; height: 26px; }
-.crumbs h1 { margin: 0; font: 700 1.05rem/1 var(--display); color: var(--ink); letter-spacing: 0.01em; }
-.app-bar .info { grid-area: info; width: 40px; height: 40px; font-family: var(--display); }
+.stage-top .info { font-family: var(--display); }
+/* The picture picker fills the stage with its own heading; the stage's buttons step aside for it. */
+.stage-game:has(.picker:not([hidden])) .stage-top { display: none; }
 
 .tabs {
   grid-area: tabs;
@@ -592,9 +589,11 @@ body.colours {
 .tab-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; letter-spacing: -0.01em; }
 .tab-count { font: 600 0.78rem/1 var(--display); font-variant-numeric: tabular-nums; color: var(--ink-dim); }
 .tab-count:empty { display: none; }
+/* The open tab's count is the stage's "1 of 13"; saying it twice in two forms only confused. */
+.tab[aria-selected="true"] .tab-count { display: none; }
 @media (max-width: 30rem) { .tab { font-size: clamp(0.8rem, 3.7vw, 0.95rem); padding: 0.3rem 0.15rem; } }
 @media (min-width: 52rem) {
-  .app-bar { grid-template-columns: auto minmax(0, 36rem) auto; grid-template-areas: "crumbs tabs info"; justify-content: space-between; }
+  .app-bar { grid-template-columns: minmax(0, 36rem); justify-content: center; }
   .tab { flex-direction: row; gap: 0.5rem; }
 }
 
@@ -1013,7 +1012,13 @@ body.picking .stage-game > iframe { position: relative; inset: auto; flex: 1 1 4
 .about::backdrop { background: rgba(3, 4, 8, 0.72); }
 .about-body { padding: 1.25rem 1.25rem 1rem; }
 .about h2 { font-size: 1.35rem; margin: 0 0 0.6rem; }
+.about h2:focus { outline: none; }
 .about h3 { font-size: 1rem; margin: 1rem 0 0.25rem; }
+.about .saves { margin: 0.9rem 0 0; }
+.about .saves summary { font: 600 1rem var(--display); cursor: pointer; min-height: 32px; display: flex; align-items: center; gap: 0.4rem; }
+.about .saves summary::after { content: "+"; color: var(--amber); }
+.about .saves[open] summary::after { content: "−"; }
+.about .saves p { margin: 0.3rem 0 0; }
 .about p { margin: 0 0 0.6rem; }
 .about-list { margin: 0 0 0.6rem; padding-left: 1.1rem; }
 .about-list li { margin-bottom: 0.35rem; }
@@ -1028,7 +1033,7 @@ body.picking .stage-game > iframe { position: relative; inset: auto; flex: 1 1 4
 
 /* A short screen gives the bar across the top less height, so the game keeps more. */
 @media (max-height: 40rem) {
-  .app-bar { padding-top: calc(env(safe-area-inset-top, 0px) + 0.15rem); padding-bottom: 0.35rem; gap: 0.15rem 0.75rem; }
-  .crumbs a, .app-bar .info { min-height: 34px; height: 34px; }
+  .colours .topbar .wrap { min-height: 52px; }
+  .app-bar { padding-top: 0.25rem; padding-bottom: 0.3rem; }
   .tab { min-height: 40px; padding-top: 0.15rem; padding-bottom: 0.15rem; gap: 0; }
 }

@@ -34,14 +34,19 @@
 
 <!-- One screen: where you are, the three things to do, the game wearing the palette, and the choice. -->
 <div class="app" id="app">
-  <header class="app-bar">
-    <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="../../index.html" class="crumb-home"><img src="../../img/mark.svg" alt="TallmanGames" width="26" height="26"></a>
-      <span aria-hidden="true">›</span>
-      <a href="../">Box Stack</a>
-      <span aria-hidden="true">›</span>
-      <h1 aria-current="page">Colours</h1>
-    </nav>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../../index.html"><span class="studio-mark tower" aria-hidden="true"></span><span class="brand-name">TallmanGames</span></a>
+      <nav aria-label="Site">
+        <a href="../">Box Stack</a>
+        <a href="../../play/">Play</a>
+        <a href="./" aria-current="page">Colours</a>
+        <a href="../../support.html">Support</a>
+      </nav>
+    </div>
+  </header>
+  <div class="app-bar">
+    <h1 class="sr-only">Pick Box Stack's colours</h1>
     <div class="tabs" role="tablist" aria-label="What to do">
       <button class="tab" role="tab" id="tab-current" data-mode="current" aria-selected="true" aria-controls="panel">
         <span class="tab-name">In the game</span><span class="tab-count" id="count-current"></span>
@@ -53,8 +58,7 @@
         <span class="tab-name">Make your own</span>
       </button>
     </div>
-    <button class="round info" id="info" aria-label="About this page" aria-haspopup="dialog"><span aria-hidden="true">?</span></button>
-  </header>
+  </div>
 
   <div class="app-body" id="panel" role="tabpanel" aria-labelledby="tab-current" tabindex="-1">
     <div class="stage-game" id="stage-game">
@@ -64,6 +68,7 @@
       <div class="stage-top">
         <span class="count" id="stage-count" aria-live="polite"></span>
         <span class="spacer"></span>
+        <button class="round info" id="info" aria-label="About this page" aria-haspopup="dialog"><span aria-hidden="true">?</span></button>
         <button class="round" id="stage-undo" aria-label="Undo the last one" title="Undo the last one (Z)"><span aria-hidden="true">↶</span></button>
         <button class="round" id="stage-menu" aria-label="Options" aria-expanded="false" aria-controls="stage-options"><span aria-hidden="true">⋯</span></button>
       </div>
@@ -82,9 +87,9 @@
           <h2>Take colours from a picture</h2>
           <div class="local-note" id="local-note">
             <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></g></svg>
-            <p><b>Your picture stays on your device.</b> It's opened right here in your browser to read
-            its colours, and it's never uploaded to a server or saved anywhere. Only the colours you
-            pick are sent, and only when you add your palette to the vote</p>
+            <p><b>Your picture stays on your device.</b> It's read here in your browser and never
+            uploaded or saved. Only the colours you pick are sent, when you add your palette to the
+            vote</p>
           </div>
           <div class="picker-actions">
             <label class="btn primary file-btn">
@@ -183,30 +188,28 @@
 <!-- What the page is, how it works and what it keeps. Opens by itself on a first visit. -->
 <dialog class="about" id="about" aria-labelledby="about-title">
   <div class="about-body">
-    <h2 id="about-title">Help pick Box Stack's colours</h2>
+    <h2 id="about-title" tabindex="-1" autofocus>Help pick Box Stack's colours</h2>
     <p>
-      Every tower in <a href="../">Box Stack</a> climbs through bands of colour, and I'd love your
-      help choosing them. Each palette is shown on the real game, so you see it the way you'd play
-      it. Drag a crate from the hand to see it on the crane, over its landing outline and on the
-      tower.
+      Every tower in <a href="../">Box Stack</a> climbs through bands of colour. Each palette here is
+      shown on the real game: drag a crate from the hand to try it
     </p>
     <ul class="about-list">
-      <li><b>In the game</b> goes through every palette in the game now, one at a time, and never the same one twice. Keep it, or vote to take it out</li>
-      <li><b>New palettes</b> are ones other players made. Yes if you'd like it in the game</li>
-      <li><b>Make your own</b> from scratch, or take colours from any picture with the eyedropper, then add it to the vote</li>
+      <li><b>In the game:</b> keep or remove each palette the game has now</li>
+      <li><b>New palettes:</b> vote on ones other players made</li>
+      <li><b>Make your own:</b> by hand or from a picture, then add it to the vote</li>
     </ul>
     <p class="meta keys">On a keyboard: <kbd>→</kbd> keep or yes, <kbd>←</kbd> remove or no, <kbd>Z</kbd> undo</p>
 
-    <h3>What this page saves</h3>
-    <p class="meta">
-      Your votes, yes or no on new palettes and keep or remove on the game's, and the palettes you
-      make, along with a random ID your browser makes up so each person only counts once. No name,
-      no account, no cookies, and your IP address isn't stored. It's kept on Cloudflare and only ever used to pick Box Stack's
-      colours. Your browser also remembers what you've already seen, on your device only, so you
-      don't get the same palette twice. A picture you take colours from stays on your device: it
-      is never uploaded or saved.
-    </p>
-    <p class="meta about-links"><a href="../../privacy.html">Privacy</a> · <a href="../../support.html">Support</a> · <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Get Box Stack on Google Play</a></p>
+    <details class="saves">
+      <summary>What this page saves</summary>
+      <p class="meta">
+        Your votes and the palettes you make, with a random ID your browser makes up so each person
+        counts once. No name, no account, no cookies, and your IP address isn't stored. It's kept on
+        Cloudflare and only used to pick Box Stack's colours. Your browser remembers which palettes
+        you've seen, on your device only. A picture you take colours from never leaves your device
+      </p>
+    </details>
+    <p class="meta about-links"><a href="../../privacy.html">Privacy</a> · <a href="../../support.html">Support</a> · <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Google Play</a></p>
     <form method="dialog"><button class="btn primary" id="about-close">Let's go</button></form>
   </div>
 </dialog>

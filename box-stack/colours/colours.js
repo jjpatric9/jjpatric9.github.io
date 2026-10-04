@@ -260,7 +260,7 @@
     if (flushing) return flushing;
     flushing = (async function () {
       if (memory.outbox.length && !(await workerReady())) {
-        syncEl.textContent = "The vote box is being updated. Your choices are saved here and will be sent when it's ready";
+        syncEl.textContent = "The vote box is being updated. Your choices are saved and will be sent soon";
         return;
       }
       while (memory.outbox.length) {
@@ -274,11 +274,11 @@
             body: JSON.stringify(next.body),
           });
         } catch (e) {
-          syncEl.textContent = "Can't reach the vote box right now. Your choices are saved here and will be sent when it's back";
+          syncEl.textContent = "Can't reach the vote box. Your choices are saved and will be sent later";
           return;
         }
         if (res.status === 429 || res.status >= 500) {
-          syncEl.textContent = "The vote box is busy. Your choices are saved here and will be sent shortly";
+          syncEl.textContent = "The vote box is busy. Your choices are saved and will be sent soon";
           return;
         }
         // Anything else is settled, sent or refused, and waiting would not change the answer.
