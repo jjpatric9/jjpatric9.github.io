@@ -11432,8 +11432,12 @@ function drawTray() {
     var s = traySlot(i);
     // A berth in the column is nearly square and a crate is at most four cells
     // either way, so it is the smaller side that decides. The row under the
-    // board is wide and shallow and takes the cell's own fraction, as it did.
-    var sc = L.tray.column ? Math.min(s.w, s.h) / 4.2 : Math.min(L.cell * 0.62, s.h * 0.34);
+    // board is wide and shallow and takes the cell's own fraction, as it did,
+    // except that a crate too tall for it shrinks to fit with a margin, as the
+    // game's own dealer fits each piece to its slot: at that fraction three
+    // cells already filled the berth and four stood out of it.
+    var sc = L.tray.column ? Math.min(s.w, s.h) / 4.2
+      : Math.min(L.cell * 0.62, s.h * 0.34, s.h / (sh.h + 0.8), s.w / (sh.w + 0.8));
     var ox = s.x + s.w / 2 - (sh.w * sc) / 2, oy = s.y + s.h / 2 - (sh.h * sc) / 2;
     for (var k = 0; k < sh.cells.length; k++) {
       slab(ox + sh.cells[k][0] * sc, oy + (sh.h - 1 - sh.cells[k][1]) * sc, sc, sc, sh.color);
