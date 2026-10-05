@@ -104,20 +104,20 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableCollection, 'AbstractMutableCollection', VOID, AbstractCollection, [AbstractCollection, Collection]);
   initMetadataForClass(IteratorImpl, 'IteratorImpl');
   initMetadataForClass(ListIteratorImpl, 'ListIteratorImpl', VOID, IteratorImpl);
-  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
+  initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
-  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
+  initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -161,7 +161,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -10677,7 +10677,18 @@ function mimeFrame() {
   var phase = ((G.idle - 0.65) % 2.8) / 2.8;
   var travel = ease(Math.max(0, Math.min(1, (phase - 0.10) / 0.56)));
   var alpha_ = phase < 0.08 ? phase / 0.08 : (phase > 0.84 ? Math.max(0, (1 - phase) / 0.16) : 1);
-  return { move: move, phase: phase, travel: travel, alpha: alpha_ };
+  var sh = handShape(move.slot); if (!sh) return null;
+  var s = traySlot(move.slot);
+  var fromX = s.x + s.w / 2, fromY = s.y + s.h / 2;
+  // The finger travels exactly as far as a real drag needs to reach the column —
+  // the game's reach, from where the crate starts on the crane — so the lesson
+  // is the gesture rather than a picture of it.
+  var anchor = startCellX(move.slot);
+  var toX = reachX(fromX) + (move.column - anchor) * L.cell / E.dragGain;
+  var toY = L.fieldTop + L.cell * Math.min(3.0, sh.h + 0.75);
+  var x = fromX + (toX - fromX) * travel, y = fromY + (toY - fromY) * travel;
+  return { move: move, phase: phase, travel: travel, alpha: alpha_, x: x, y: y,
+           fromX: fromX, anchor: anchor, aimed: travel > 0 && !overHand({ x: x, y: y }) };
 }
 
 /* ------------------------------------------------------------- layout ------ */
@@ -10785,7 +10796,7 @@ function placementCameraTop(slot, column) {
 }
 function cameraTopRow() {
   var top = Math.max(E.stackHeight + airOverSummit(), E.platformRows + L.rows);
-  if (G && G.carried && !G.falling) {
+  if (G && aiming()) {
     top = Math.max(top, placementCameraTop(G.carried.slot, aimedColumn()));
   }
   if (G && G.falling) {
@@ -10904,8 +10915,8 @@ function crateColor(v, x, row) {
    to be, for as long as the finger holds them, is what turns aiming at a finish
    into something the board answers. Mirrors the game; see `RowPreview`. */
 function closingRows() {
-  var c = G.carried;
-  if (!c || G.falling) return null;
+  var c = aiming();
+  if (!c) return null;
   var rows = E.completingRows(c.slot, aimedColumn());
   if (!rows.length) return null;
   var by = handShape(c.slot);
@@ -11172,18 +11183,28 @@ function overHand(p) {
   var t = L.tray;
   return p.x >= t.x - 4 && p.x <= t.x + t.w + 4 && p.y >= t.y - 4 && p.y <= t.y + t.h + 4;
 }
+/* The carried crate, once it is aimed at the tower. **Until the finger is off the hand the board
+   shows nothing of it** — no landing outline, no row it would close, no shadow on the gauge and
+   no camera move — and it shows nothing again when the finger goes back, which is how a player
+   sees it is going back to the dealer. The game's `GameController.isReturning`; one test, so the
+   outline, the rows, the gauge and the drop cannot disagree about where the crate is. */
+function aiming() {
+  var c = G.carried;
+  return c && !c.returning && !G.falling ? c : null;
+}
 
 /* It hangs from the crane, because that is what the game does: picking a crate
    out of the tray puts it on the cable at the top of the shaft **at once** and
    the finger moves it along the beam. It used to fly up from the tray, which
-   is a picture of the gesture rather than what the game does with it. Over the
-   hand again, it fades: letting go there puts it back. */
+   is a picture of the gesture rather than what the game does with it. While the
+   finger is over the hand it is faint and has no landing outline: letting go
+   there puts it back. */
 function drawCarried() {
   var c = G.carried; if (!c || G.falling) return;
   var sh = handShape(c.slot); if (!sh) return;
   var col = aimedColumn(), ly = E.landingY(c.slot, col);
 
-  if (ly >= 0) {
+  if (ly >= 0 && !c.returning) {
     // Inside the playfield, as the game's ghost is. The camera follows a landing
     // up but never down, so one far below the summit is out of the window — and
     // drawn unclipped, it landed on the dealer.
@@ -11219,7 +11240,7 @@ function drawCarried() {
   ctx.fillRect(centre - L.cell * 0.325, L.beamTop - L.cell * 0.075, L.cell * 0.65, L.cell * 0.30);
   if (c.returning) ctx.globalAlpha = was * 0.35;
   for (var i = 0; i < sh.cells.length; i++) {
-    var tint = ly < 0 ? "#FF5A5A" : packedRgb(E.handColor(sh.ord));
+    var tint = ly < 0 && !c.returning ? "#FF5A5A" : packedRgb(E.handColor(sh.ord));
     slab(px + sh.cells[i][0] * L.cell, py + (sh.h - 1 - sh.cells[i][1]) * L.cell,
          L.cell, L.cell, tint);
   }
@@ -11281,7 +11302,9 @@ function drawGauge() {
   balanceFill(g, v, riskColor(Math.abs(v)));
   // What the drop being aimed will do to the tower, at a third strength — the
   // honest shadow of the post-drop reading the game shows for a young tower.
+  // The lesson's, like a drag's, waits for its crate to leave the hand.
   var hint = G.projected === null ? mimeFrame() : null;
+  if (hint && !hint.aimed) hint = null;
   var projected = G.projected === null && hint ? hint.move.lean : G.projected;
   if (projected !== null) {
     var p = Math.max(-1, Math.min(1, projected));
@@ -11416,17 +11439,8 @@ function drawTray() {
    the legal landing outline appears, and the gauge previews the same outcome. */
 function drawMime() {
   var hint = mimeFrame(); if (!hint) return;
-  var move = hint.move, sh = handShape(move.slot); if (!sh) return;
-  var s = traySlot(move.slot), a = hint.alpha;
-  var fromX = s.x + s.w / 2, fromY = s.y + s.h / 2;
-  // The finger travels exactly as far as a real drag needs to reach the column —
-  // the game's reach, from where the crate starts on the crane — so the lesson
-  // is the gesture rather than a picture of it.
-  var anchor = startCellX(move.slot);
-  var toX = reachX(fromX) + (move.column - anchor) * L.cell / E.dragGain;
-  var toY = L.fieldTop + L.cell * Math.min(3.0, sh.h + 0.75);
-  var x = fromX + (toX - fromX) * hint.travel;
-  var y = fromY + (toY - fromY) * hint.travel;
+  var move = hint.move, s = traySlot(move.slot), a = hint.alpha;
+  var x = hint.x, y = hint.y, anchor = hint.anchor, fromX = hint.fromX;
 
   // The berth is the first instruction: this is the thing to touch.
   var pulse = 0.5 + 0.5 * Math.sin(hint.phase * Math.PI * 4);
@@ -11441,7 +11455,7 @@ function drawMime() {
   if (hint.travel > 0) {
     var real = G.carried;
     G.carried = { slot: move.slot, px: x, py: y, anchorCellX: anchor, anchorFingerX: reachX(fromX),
-                  returning: overHand({ x: x, y: y }) };
+                  returning: !hint.aimed };
     ctx.globalAlpha = a * 0.72;
     drawCarried();
     G.carried = real;
@@ -12131,7 +12145,7 @@ function inBox(box, p, slop) {
          p.y >= box.y - slop && p.y <= box.y + box.h + slop;
 }
 function aim() {
-  if (!G.carried) { G.projected = null; return; }
+  if (!aiming()) { G.projected = null; return; }
   var v = E.projectedLean(G.carried.slot, aimedColumn());
   G.projected = isNaN(v) ? null : v;
 }
