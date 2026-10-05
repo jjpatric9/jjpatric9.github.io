@@ -10741,12 +10741,19 @@ function layout() {
     tray = { x: shaftLeft + shaftW + gap, w: trayW, column: true };
     beam = { x: 0, w: W };
   } else {
-    shaftW = Math.min(W - pad * 2, H * 0.44);
+    var portraitGaugeH = Math.max(12, H * 0.018);
+    shaftTop = pad * 0.6 + headH + portraitGaugeH + pad * 0.7;
+    shaftH = H - shaftTop - pad * 1.1 - trayH;
+    // **On the website the board takes the phone's width** for as long as the
+    // shaft still holds `LAND_ROWS`, the floor the coached opening needs. The
+    // advert's own cap, under half the window's height, keeps a dozen rows; in a
+    // phone's browser, which loses a strip to its bars and the page's, it left
+    // the board two thirds of the screen's width.
+    var fit = HOST_WEB ? shaftH / (LAND_ROWS + 0.78) * E.boardWidth : H * 0.44;
+    shaftW = Math.min(W - pad * 2, fit);
     shaftLeft = (W - shaftW) / 2;
     head = { x: shaftLeft, y: pad * 0.6, w: shaftW, h: headH };
-    gauge = { x: shaftLeft, y: head.y + headH, w: shaftW, h: Math.max(12, H * 0.018) };
-    shaftTop = gauge.y + gauge.h + pad * 0.7;
-    shaftH = H - shaftTop - pad * 1.1 - trayH;
+    gauge = { x: shaftLeft, y: head.y + headH, w: shaftW, h: portraitGaugeH };
     tray = { x: shaftLeft, w: shaftW, h: trayH * 0.82 };
     beam = { x: shaftLeft, w: shaftW };
   }

@@ -395,12 +395,20 @@ dialog.soon .btn { min-width: 8rem; }
 .play-after .store { flex: 1 1 0; min-width: 0; justify-content: center; gap: 0.5rem; padding-left: 0.6rem; padding-right: 0.6rem; }
 .play-after .store b { font-size: 1.15rem; }
 
+/* On a phone the game is the page: edge to edge, every pixel of height the bar leaves but a strip
+   for the badges, which shrink to the stores' own 40px minimum to give it that. The game fits its
+   board to the width it gets, so height spent here is width lost there. */
 @media (max-width: 52rem) {
   .play-page { padding: 0 0 2.5rem; }
-  .phone-wrap { margin: 0 -1.25rem; }
+  .phone-wrap { justify-self: stretch; margin: 0 -1.25rem; }
   .phone { width: 100%; min-width: 0; padding: 0; border-radius: 0; background: none; box-shadow: none; }
-  .phone-screen { aspect-ratio: auto; height: calc(100svh - 61px - 5rem); min-height: 420px; border-radius: 0; }
-  .play-after { max-width: none; margin-top: 0.75rem; padding: 0 1.25rem; }
+  .phone-screen { aspect-ratio: auto; height: calc(100svh - 61px - 3.5rem); min-height: 420px; border-radius: 0; }
+  .play-after { width: auto; margin-top: 0.5rem; padding: 0 1.25rem; }
+  .play-after .stores { gap: 0.5rem; }
+  .play-after .store { min-height: 40px; padding-top: 0.2rem; padding-bottom: 0.2rem; border-radius: 8px; gap: 0.4rem; }
+  .play-after .store svg { width: 18px; height: 22px; }
+  .play-after .store small { font-size: 0.6rem; }
+  .play-after .store b { font-size: 0.98rem; }
 }
 
 /* ------------------------------------------------------------------ cards */
