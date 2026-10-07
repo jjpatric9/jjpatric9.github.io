@@ -74,6 +74,16 @@ When a page is added, or one changes meaningfully, add it to `sitemap.xml` or bu
 Google Search Console and Bing Webmaster Tools are where to submit the sitemap and see what's
 indexed; both are set up in the owner's accounts, not here.
 
+Links to the homepage are `./` or `../`, never `index.html`, so crawlers only meet the canonical
+address. Two of Search Console's "not indexed" reasons are expected and need no action:
+
+- **Page with redirect**: `http://`, `www.`, `jjpatric9.github.io` and folder addresses without
+  their trailing slash all 301 to the canonical one (GitHub Pages does this), and `palettes.html`
+  forwards to `box-stack/colours/`. Only the addresses they land on should be indexed.
+- **Excluded by 'noindex' tag**: `404.html` only. `palettes.html` deliberately has no `noindex`:
+  it is a redirect, and a `noindex` on it reported it as an excluded page instead of letting
+  Google follow it to the colour vote.
+
 ## The palette vote
 
 `box-stack/colours/` is the one page that sends anything anywhere. It posts votes, player-made
