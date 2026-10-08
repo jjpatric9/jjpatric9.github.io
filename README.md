@@ -70,6 +70,12 @@ Every page names itself in its `<title>` and description, carries a `<link rel="
 Box Stack; `box-stack/` describes the game; `support.html` its questions. When a
 question changes on the page, change it in that page's JSON-LD too.
 
+The `<title>` and description are the search result itself, so the homepage, `box-stack/` and
+`play/` lead with what people actually search ("box stacking game", "stack boxes", per Search
+Console) and with the offer that earns the click: free, and playable in the browser now. Titles
+stay under 60 characters and descriptions under 155, or Google cuts them off. Open Graph text is
+for link previews, where the person already knows the name, and can stay short.
+
 When a page is added, or one changes meaningfully, add it to `sitemap.xml` or bump its `lastmod`.
 Google Search Console and Bing Webmaster Tools are where to submit the sitemap and see what's
 indexed; both are set up in the owner's accounts, not here.
