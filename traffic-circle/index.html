@@ -60,14 +60,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);o
 .hbtn{appearance:none;border:0;border-radius:8px;min-width:44px;height:44px;padding:0 12px;background:var(--hud);color:var(--hud-ink);font:700 .85rem/1 var(--display);cursor:pointer;letter-spacing:.03em}
 .ctl-left{position:absolute;left:calc(env(safe-area-inset-left,0px) + 12px);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;flex-direction:column;align-items:center;gap:10px}
 .sigs{display:flex;gap:12px}
-.sig{appearance:none;width:56px;height:42px;border-radius:9px;border:2px solid rgba(255,255,255,.18);background:var(--hud);color:#7E8883;font:700 1.1rem/1 var(--display);cursor:pointer;touch-action:none;display:flex;align-items:center;justify-content:center;gap:4px}
-.sig[aria-pressed="true"]{color:#39D873;border-color:#39D873}
+.sig{appearance:none;width:clamp(78px,21vmin,104px);height:clamp(70px,17vmin,88px);border-radius:12px;border:2px solid rgba(255,255,255,.18);background:var(--hud);color:#9AA39E;font:700 .8rem/1 var(--display);letter-spacing:.04em;cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 6px 12px rgba(0,0,0,.4)}
+.sig .arrow{font-size:1.5rem;line-height:1}
+.sig[aria-pressed="true"]{color:#39D873;border-color:#39D873;background:rgba(18,48,30,.9)}
 .sig[aria-pressed="true"].dim{color:#1E5A35}
 .sig.cue{animation:cue 1s ease-in-out infinite}
 @keyframes cue{50%{box-shadow:0 0 0 4px var(--warn)}}
-.wheel{width:clamp(118px,24vmin,170px);aspect-ratio:1;touch-action:none;cursor:grab;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
-.wheel:active{cursor:grabbing}
-.wheel svg{width:100%;height:100%;display:block}
 .ctl-right{position:absolute;right:calc(env(safe-area-inset-right,0px) + 12px);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;gap:10px;align-items:flex-end}
 .pedal{appearance:none;border:0;border-radius:12px;color:#fff;font:700 .9rem/1 var(--display);letter-spacing:.04em;touch-action:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;padding:10px 6px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25),0 6px 12px rgba(0,0,0,.4);background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.10) 0 3px,transparent 3px 11px)}
 .pedal.brake{width:clamp(76px,20vmin,96px);height:clamp(66px,16vmin,82px);background-color:#B3172F}
@@ -169,21 +167,8 @@ details ol{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column
   </div>
   <div class="ctl-left" id="ctlLeft">
     <div class="sigs">
-      <button class="sig" id="sigL" type="button" aria-pressed="false" aria-label="Left turn signal">◀<kbd>Q</kbd></button>
-      <button class="sig" id="sigR" type="button" aria-pressed="false" aria-label="Right turn signal"><kbd>E</kbd>▶</button>
-    </div>
-    <div class="wheel" id="wheel" role="slider" aria-label="Steering wheel" aria-valuemin="-450" aria-valuemax="450" aria-valuenow="0" tabindex="0">
-      <svg viewBox="0 0 200 200" aria-hidden="true"><g id="wheelRot">
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#1D2120" stroke-width="22"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#3A403D" stroke-width="16"/>
-        <g stroke="#2A2F2D" stroke-width="2.2">
-          <path d="M100 8v14M100 178v14M8 100h14M178 100h14M35 35l10 10M155 155l10 10M35 165l10-10M155 45l10-10"/>
-        </g>
-        <path d="M100 100L28 118M100 100L172 118M100 100L100 178" stroke="#2A2F2D" stroke-width="16" stroke-linecap="round"/>
-        <circle cx="100" cy="100" r="28" fill="#2A2F2D"/>
-        <circle cx="100" cy="100" r="18" fill="#3E4542"/>
-        <rect x="94" y="9" width="12" height="20" rx="3" fill="#FFD84A"/>
-      </g></svg>
+      <button class="sig" id="sigL" type="button" aria-pressed="false" aria-label="Left turn signal"><span class="arrow" aria-hidden="true">◀</span><span>Signal</span><kbd>←</kbd></button>
+      <button class="sig" id="sigR" type="button" aria-pressed="false" aria-label="Right turn signal"><span class="arrow" aria-hidden="true">▶</span><span>Signal</span><kbd>→</kbd></button>
     </div>
   </div>
   <div class="ctl-right">
@@ -198,7 +183,7 @@ details ol{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column
       <h2 id="bTitle">Turning right</h2>
       <p class="goal"><span class="tag" id="bTag">1st exit</span><span id="bGoal"></span></p>
       <ul id="bTips"></ul>
-      <p class="keys"><kbd>↑</kbd> gas, <kbd>↓</kbd> brake, <kbd>←</kbd> <kbd>→</kbd> steer, <kbd>Q</kbd> <kbd>E</kbd> signals. On a phone, turn the wheel and press the pedals</p>
+      <p class="keys"><kbd>↑</kbd> gas, <kbd>↓</kbd> brake, <kbd>←</kbd> <kbd>→</kbd> signals. The car steers itself: signal to change lanes before the circle, and to take the next exit</p>
       <div class="row"><button class="btn" id="btnBriefMenu" type="button">Lessons</button><button class="btn primary" id="btnStart" type="button">Start driving</button></div>
     </div>
   </div>
@@ -253,7 +238,7 @@ const R_IN = 20.5, R_OUT = 25, LANE_LINE = 22.75, R_EDGE = 27.25, ISLAND = 18.25
 const LANE_W = 3.6, LAT = [2.6, 6.2], DIVIDER = 4.4, ROAD_HALF = 8.0, SPLIT = 0.8, WALK = 3.0;
 const RING = [R_IN, R_OUT], D_M = [0.45, 0.62];          // lane 0 = left / inner, lane 1 = right / outer
 const R_CURVE = 34, R_CW = 38, CW_HALF = 1.6, R_FAR = 170, R_YIELD = R_EDGE + 0.6;
-const WHEELBASE = 2.7, PAR = 0.010, START_ALONG = 82;
+const PAR = 0.010, START_ALONG = 82;
 const ORD = ['', '1st', '2nd', '3rd', '4th'];
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -340,8 +325,7 @@ let dpr = 1, W = 800, H = 600, mirror = 1, hints = true, simSpeed = 1, soundOn =
 let cars = [], peds = [], parts = [], player = null, T = 0, nextId = 1, shake = 0;
 let state = 'brief', paused = false, menuOpen = false, mission = null, lessonIdx = 0, script = {};
 let G = {}; const steps = Array(6).fill('todo');
-const input = { gas: false, brake: false, left: false, right: false };
-let wheelDeg = 0, wheelDrag = null, wheelHold = false;
+const input = { gas: false, brake: false };
 const cam = { x: 0, y: 12, zoom: 6 };
 let banner = null, topbarBottom = 80;
 
@@ -368,15 +352,15 @@ const mph = v => Math.round(Math.abs(v) * MPH);
 /* ---------- lessons ---------- */
 const LESSONS = [
   { title: w => `Turning ${w.sig}`, target: 1, traffic: 'light', peds: 'none',
-    tips: w => [`Use the ${w.sig} lane. It's the one that leads to the 1st exit`, `Slow to 15–20 mph and look ${w.look}. Yield to both lanes of the circle`, `Signal ${w.sig} on the way in, since your exit is the first one`] },
+    tips: w => [`Stay in the ${w.sig} lane. It's the one that leads to the 1st exit`, `Slow to 15–20 mph and look ${w.look}. Yield to both lanes of the circle`, `Signal ${w.sig} on the way in. While it's on, the car takes the next exit`] },
   { title: () => 'Going straight', target: 2, traffic: 'light', peds: 'none',
-    tips: w => [`Either lane works for the 2nd exit. Pick one and keep it`, `Stay in that lane all the way round. Never change lanes in the circle`, `Signal ${w.sig} once you pass the 1st exit`] },
+    tips: w => [`Either lane works for the 2nd exit`, `Don't signal on the way in: a ${w.sig} signal would take you out at the 1st exit`, `Signal ${w.sig} once you pass the 1st exit`] },
   { title: w => `Turning ${w.other}`, target: 3, traffic: 'normal', peds: 'none',
-    tips: w => [`Move to the ${w.other} lane early, before the solid line`, `Keep to the inner lane, then leave into the exit's ${w.other} lane`, `Signal ${w.sig} after you pass the 2nd exit`] },
+    tips: w => [`Signal ${w.other} before the solid line to move into the ${w.other} lane. Check nobody is beside you`, `Stay in the inner lane. Changing lanes in the circle is how crashes happen`, `Signal ${w.sig} after you pass the 2nd exit`] },
   { title: () => 'Crosswalks', target: 2, traffic: 'light', peds: 'high', script: 'peds',
     tips: () => [`People in a crosswalk go first, on the way in and on the way out`, `Stop before the white stripes, not on them`, `Each half of the crossing is separate. Walkers wait on the island in the middle`] },
   { title: () => 'Rush hour U-turn', target: 4, traffic: 'heavy', peds: 'low',
-    tips: w => [`Use the ${w.other} lane and go all the way round to the 4th exit`, `A car about 3 seconds away is too close to pull out in front of`, `Missed your exit? Go around again. Never stop or reverse`] },
+    tips: w => [`Move to the ${w.other} lane early and go all the way round to the 4th exit`, `A car about 3 seconds away is too close to pull out in front of`, `Missed your exit? Keep your signal off and go around again`] },
   { title: () => 'Free drive', free: true,
     tips: () => [`Pick traffic, pedestrians and your exit in the menu`, `You're graded on the same six steps`, `Cut someone off and they won't be able to stop`] },
 ];
@@ -621,25 +605,6 @@ const SPLITTERS = [0, 1, 2, 3].map(i => edgeOf(entryPts(i, 0), LANE_W / 2 + 0.2,
 function poly(c, pts) { c.beginPath(); c.moveTo(pts[0].x, pts[0].y); for (let k = 1; k < pts.length; k++) c.lineTo(pts[k].x, pts[k].y); }
 function quad(c, i, a0, a1, l0, l1) { poly(c, [P(i, a0, l0), P(i, a1, l0), P(i, a1, l1), P(i, a0, l1)]); c.closePath(); c.fill(); }
 
-// One map of what is under every point: grass 0, sidewalk 1, road 2, apron 3, island 4, splitter 5, building 6
-const SURF = (() => {
-  const half = 200, ppm = 3, size = half * 2 * ppm, c = document.createElement('canvas'); c.width = c.height = size;
-  const g = c.getContext('2d'); g.fillStyle = 'rgb(0,0,0)'; g.fillRect(0, 0, size, size);
-  g.setTransform(ppm, 0, 0, ppm, half * ppm, half * ppm);
-  const col = k => `rgb(${k * 40},0,0)`;
-  g.strokeStyle = col(1); roadPaths(g, WALK);
-  g.strokeStyle = col(2); roadPaths(g, 0);
-  g.fillStyle = col(3); g.beginPath(); g.arc(0, 0, ISLAND, 0, TAU); g.fill();
-  g.fillStyle = col(4); g.beginPath(); g.arc(0, 0, ISLAND - APRON, 0, TAU); g.fill();
-  for (let i = 0; i < 4; i++) { g.fillStyle = col(5); poly(g, SPLITTERS[i]); g.closePath(); g.fill(); g.fillStyle = col(2); quad(g, i, R_CW - CW_HALF, R_CW + CW_HALF, -SPLIT - 0.6, SPLIT + 0.6); }
-  g.fillStyle = col(6); for (const b of BUILDINGS) g.fillRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
-  const data = g.getImageData(0, 0, size, size).data;
-  return (x, y) => {
-    const px = ((x + half) * ppm) | 0, py = ((y + half) * ppm) | 0;
-    if (px < 0 || py < 0 || px >= size || py >= size) return 0;
-    return Math.round(data[(py * size + px) * 4] / 40);
-  };
-})();
 
 /* ---------- world step ---------- */
 function stepWorld(dt) {
@@ -682,68 +647,93 @@ function stepWorld(dt) {
 
 /* ---------- the learner car ---------- */
 function makePlayer() {
-  const q = P(0, START_ALONG, LAT[1]), u = legU(0);
-  const p = { id: 0, ai: false, x: q.x, y: q.y, h: Math.atan2(-u.y, -u.x), v: 9, len: 4.4, wid: 1.85, color: '#1F6FE5', kind: 'learner',
-    leg: 0, phase: 'approach', lane: 1, nextLeg: 1, signal: 0, signalOnT: -99, sigArmed: false, braking: false, revT: 0,
-    stopT: 0, stopFlag: false, waitClear: 0, otherT: 0, wrongT: 0, offT: 0, startT: T, auto: false, upstream: new Set(), enterT: -99,
-    rogueUntil: -1, ringLane: null, settled: false, exitLeg: -1, prevAlong: START_ALONG, flagged: new Set(), lastLaneChangeT: -99 };
-  p.pos = { x: p.x, y: p.y, h: p.h, i: 0 }; p.L = locate(p.x, p.y); return p;
+  const q = P(0, START_ALONG, LAT[1]);
+  const p = { id: 0, ai: false, x: q.x, y: q.y, h: -Math.PI / 2, v: 9, len: 4.4, wid: 1.85, color: '#1F6FE5', kind: 'learner', s: 0,
+    leg: 0, phase: 'approach', lane: 1, nextLeg: 1, decided: false, exitLeg: -1, signal: 0, signalOnT: -99, braking: false,
+    pendingLane: null, pendingSig: 0, pendingT: 0, changeEndS: -1, changeSig: 0, arcStartS: 0, exitCurveEnd: 0,
+    stopT: 0, stopFlag: false, waitClear: 0, startT: T, auto: false, upstream: new Set(), enterT: -99,
+    rogueUntil: -1, ringLane: null, prevAlong: START_ALONG, flagged: new Set(), lastLaneChangeT: -99 };
+  p.pos = { x: q.x, y: q.y, h: p.h, i: 0 };
+  planApproach(p, 1); p.L = locate(p.x, p.y); return p;
+}
+// The car drives itself: these two plans are the only ways its path changes, and both come from a signal
+function planApproach(p, lane) {
+  const L = locate(p.x, p.y), A = L.along, rt = new Route().add([{ x: p.x, y: p.y }]);
+  let changeEnd = -1;
+  if (Math.abs(L.lat - LAT[lane]) > 0.3) {
+    const Lc = clamp(A - R_CURVE - 1, 6, 16), a1 = A - Lc;
+    rt.add(bezPts(P(0, A, L.lat), P(0, A - Lc * 0.5, L.lat), P(0, A - Lc * 0.5, LAT[lane]), P(0, a1, LAT[lane]), 24));
+    changeEnd = rt.length;
+    rt.add(linePts(P(0, a1, LAT[lane]), P(0, R_CURVE, LAT[lane]), 1));
+  } else rt.add(linePts(P(0, A, LAT[lane]), P(0, R_CURVE, LAT[lane]), 1));
+  rt.add(ENTRY_CURVES[0][lane]); const arcStart = rt.length;
+  rt.add(arcPts(RING[lane], legAngle(0) - D_M[lane], legAngle(1) + D_M[lane]));
+  Object.assign(p, { route: rt, s: 0, lane, nextLeg: 1, sDiverge: rt.length, decided: false, changeEndS: changeEnd, arcStartS: arcStart });
+  p.pos.i = 0;
+}
+function ringLaneChange(p) {
+  const phi0 = Math.atan2(p.y, p.x), r0 = Math.hypot(p.x, p.y), dphi = 14 / R_OUT, n = 28, pts = [];
+  for (let k = 0; k <= n; k++) { const t = k / n, e = t * t * (3 - 2 * t); pts.push(ringPt(r0 + (R_IN - r0) * e, phi0 - dphi * t)); }
+  const phi1 = phi0 - dphi; let j = 0, best = 9;
+  for (let i = 0; i < 4; i++) { const d = mod(phi1 - (legAngle(i) + D_M[0]), TAU); if (d > 0.05 && d < best) { best = d; j = i; } }
+  const rt = new Route().add([{ x: p.x, y: p.y }]).add(pts), changeEnd = rt.length;
+  rt.add(arcPts(R_IN, phi1, legAngle(j) + D_M[0]));
+  Object.assign(p, { route: rt, s: 0, lane: 0, nextLeg: j, sDiverge: rt.length, decided: false, changeEndS: changeEnd, arcStartS: 0 });
+  p.pos.i = 0;
 }
 function updatePlayer(dt) {
   const p = player;
   if (p.free) { stepFree(p, dt); return; }
-  if (!wheelDrag && !wheelHold) {
-    const rate = 300 * dt;
-    if (input.left && !input.right) wheelDeg = Math.max(-450, wheelDeg - rate * (wheelDeg > 0 ? 2 : 1));
-    else if (input.right && !input.left) wheelDeg = Math.min(450, wheelDeg + rate * (wheelDeg < 0 ? 2 : 1));
-    else { const r = 520 * dt; wheelDeg = Math.abs(wheelDeg) <= r ? 0 : wheelDeg - Math.sign(wheelDeg) * r; }
-  }
-  const steerC = mirror * wheelDeg;                       // canonical wheel angle: + turns right in the canonical world
-  const delta = steerC / 15 * Math.PI / 180;
   const gas = p.auto ? p.v < 12 : input.gas, brake = !p.auto && input.brake;
-  let a = -(0.3 + 0.002 * p.v * p.v) * Math.sign(p.v);
-  if (gas) a += p.v < -0.1 ? 8 : 3.2 * (1 - p.v / 20);
-  if (brake) { if (p.v > 0.1) { a -= 8; p.revT = 0; } else { p.revT += dt; if (p.revT > 0.35) a -= 2.6; } } else p.revT = 0;
-  const surf = SURF(p.x, p.y);
-  if (surf === 0 || surf === 1) { a -= 3.5 * Math.sign(p.v); }
-  if (surf === 4 || surf === 5) { a -= 6.5 * Math.sign(p.v); if (Math.abs(p.v) > 2 && Math.random() < dt * 8) shake = Math.max(shake, 0.25); }
-  const vOld = p.v; p.v = clamp(p.v + a * dt, -4.5, 20);
-  if (!gas && !(brake && p.revT > 0.35) && vOld * p.v < 0) p.v = 0;
-  if (!gas && !brake && Math.abs(p.v) < 0.12) p.v = 0;
-  if ((surf === 0 || surf === 1) && Math.abs(p.v) > 6) p.v = Math.sign(p.v) * Math.max(6, Math.abs(p.v) - 6 * dt);
+  let a = -0.3 - 0.002 * p.v * p.v;
+  if (gas) a += 3.2 * (1 - p.v / 20);
+  if (brake) a -= 8;
+  p.v = clamp(p.v + a * dt, 0, 20);
   p.braking = brake && p.v > 0.1;
-  p.h += p.v / WHEELBASE * Math.tan(delta) * dt;
-  const nx = p.x + Math.cos(p.h) * p.v * dt, ny = p.y + Math.sin(p.h) * p.v * dt;
-  if (SURF(nx + Math.cos(p.h) * 2 * Math.sign(p.v || 1), ny + Math.sin(p.h) * 2 * Math.sign(p.v || 1)) === 6) {
-    if (Math.abs(p.v) > 6 && state === 'drive') { p.pos = { x: p.x, y: p.y, h: p.h, i: 0 }; crashWall(); return; }
-    p.v = 0;
-  } else { p.x = nx; p.y = ny; }
-  p.pos = { x: p.x, y: p.y, h: p.h, i: 0 };
-  // a real stalk cancels once the wheel comes back after a turn in the signal's direction
-  if (p.signal) { if (p.signal * steerC > 70) p.sigArmed = true; else if (p.sigArmed && Math.abs(steerC) < 20) { p.signal = 0; p.sigArmed = false; } }
-  if (Math.hypot(p.x, p.y) > 190) { if (state === 'drive') finish(); else if (p.auto) player = null; return; }
+  if (p.pendingLane != null && state === 'drive') { if (p.signal !== p.pendingSig) p.pendingLane = null; else if (T - p.pendingT >= 1.0) executeChange(); }
+  p.s += p.v * dt;
+  while (!p.decided && p.s >= p.sDiverge) decideExit();
+  if (p.decided && p.s >= p.route.length - 0.5) { player = null; return; }
+  const q = p.route.at(p.s, p.pos.i); p.pos = q; p.x = q.x; p.y = q.y; p.h = q.h;
+  if (p.changeEndS > 0 && p.s >= p.changeEndS) { p.changeEndS = -1; if (p.signal === p.changeSig) p.signal = 0; }
+  if (p.decided && p.signal && p.s > p.exitCurveEnd + 2) p.signal = 0;
   if (state === 'drive' && !G.crash) grade(dt);
-  else if (p.auto && p.L) { const L = locate(p.x, p.y); p.L = L; if (L.along > 160) player = null; }
+  else p.L = locate(p.x, p.y);
+}
+function decideExit() {
+  const p = player, n = p.nextLeg === 0 ? 4 : p.nextLeg, tgt = mission.target;
+  if (p.signal === 1) {
+    p.route.add(exitPts(p.nextLeg, p.lane)); p.exitLeg = p.nextLeg; p.decided = true; p.exitCurveEnd = p.sDiverge + EXITC[p.lane].curve;
+  } else {
+    if (state === 'drive' && n === tgt) { G.missed++; toast('warn', 'Missed your exit. Go around again'); }
+    const from = p.nextLeg, to = (from + 1) % 4;
+    p.route.add(arcPts(RING[p.lane], legAngle(from) + D_M[p.lane], legAngle(to) + D_M[p.lane])); p.nextLeg = to; p.sDiverge = p.route.length;
+  }
+}
+function executeChange() {
+  const p = player, want = p.pendingLane; p.pendingLane = null; p.changeSig = p.pendingSig;
+  if (p.phase === 'approach') {
+    const L = locate(p.x, p.y);
+    if (L.along < R_CURVE + 7) { toast('warn', 'Too late to change lanes. Choose before the solid line'); return; }
+    if (L.along < 60 && !G.solidLine) { G.solidLine = true; toast('warn', 'Change lanes before the solid line'); }
+    p.lastLaneChangeT = T; planApproach(p, want);
+  } else if (p.phase === 'ring' && p.s >= p.arcStartS) {
+    ringLaneChange(p); G.laneChange++; p.ringLane = 0; p.lastLaneChangeT = T; rogue(3); setStep(3, 'bad'); toast('bad', 'Never change lanes in the circle');
+  }
+}
+function carBeside(side) {
+  const p = player, hx = Math.cos(p.h), hy = Math.sin(p.h);
+  return cars.filter(c => { const dx = c.pos.x - p.x, dy = c.pos.y - p.y, f = dx * hx + dy * hy, sd = -dx * hy + dy * hx; return !c.free && Math.abs(f) < 7.5 && side * sd > 1.4 && side * sd < 5.8; });
 }
 
-function laneOfLat(lat) { return lat > DIVIDER ? 1 : lat > SPLIT ? 0 : -1; }
-function expectedDir(L) {
-  if (L.inRing) return { x: Math.sin(L.phi), y: -Math.cos(L.phi) };
-  if (L.along > R_EDGE + 1 && Math.abs(L.lat) < ROAD_HALF + 0.5 && Math.abs(L.lat) > SPLIT * 0.5) { const u = legU(L.leg); return L.lat > 0 ? { x: -u.x, y: -u.y } : { x: u.x, y: u.y }; }
-  return null;
-}
 function rogue(sec) { player.rogueUntil = Math.max(player.rogueUntil, T + sec); }
 
 function grade(dt) {
-  const p = player, L = locate(p.x, p.y), tgt = mission.target, tl = tgt % 4;
-  const hx = Math.cos(p.h), hy = Math.sin(p.h), fx = p.x + hx * 2.1, fy = p.y + hy * 2.1, F = locate(fx, fy);
-  const prevL = p.L; p.L = L;
-  // ---- approach on the start leg
+  const p = player, L = locate(p.x, p.y), tgt = mission.target;
+  const hx = Math.cos(p.h), hy = Math.sin(p.h), F = locate(p.x + hx * 2.1, p.y + hy * 2.1);
+  p.L = L;
   if (p.phase === 'approach') {
-    if (L.leg === 0 && !L.inRing && Math.abs(L.lat) < ROAD_HALF + 0.5) {
-      const ln = laneOfLat(L.lat);
-      if (ln >= 0 && ln !== p.lane && L.along > R_CW + 2 && L.along < 60 && !G.solidLine) { G.solidLine = true; toast('warn', 'Change lanes before the solid line'); }
-      if (ln >= 0) p.lane = ln;
+    if (L.leg === 0 && !L.inRing) {
       if (L.along > R_YIELD && L.along < R_YIELD + 15) G.entrySpeed = Math.max(G.entrySpeed, p.v);
       if (p.prevAlong >= R_CW && L.along < R_CW) {
         G.laneChoice = p.lane;
@@ -754,48 +744,16 @@ function grade(dt) {
     }
     if (L.inRing) enterRing(L);
   }
-  // ---- in the circle
   if (p.phase === 'ring') {
     if (L.inRing) {
-      const lane = L.r < LANE_LINE ? 0 : 1; p.curRingLane = lane;
-      if (lane === p.ringLane) { p.settled = true; p.otherT = 0; }
-      else if (p.settled) {
-        p.otherT += dt;
-        if (p.otherT > 1.4) { G.laneChange++; p.ringLane = lane; p.otherT = 0; p.lastLaneChangeT = T; rogue(3); setStep(3, 'bad'); toast('bad', 'Never change lanes in the circle'); }
-      }
-      let nl = 0, best = 9; for (let j = 0; j < 4; j++) { const d = mod(L.phi - legAngle(j), TAU); if (d < best) { best = d; nl = j; } }
-      if (nl !== p.nextLeg) { if (p.nextLeg === tl && p.enterT > 0 && T - p.enterT > 1) { G.missed++; toast('warn', 'Missed your exit. Go around again'); } p.nextLeg = nl; }
-      if (Math.abs(p.v) < 0.4) {
+      if (p.v < 0.4) {
         const blocked = allVeh().some(o => o !== p && Math.hypot(o.pos.x - p.x, o.pos.y - p.y) < 11 && ((o.pos.x - p.x) * hx + (o.pos.y - p.y) * hy) > 0.7 * Math.hypot(o.pos.x - p.x, o.pos.y - p.y));
         if (!blocked) { p.stopT += dt; if (p.stopT > 1.3 && !p.stopFlag) { p.stopFlag = true; G.stopInRing++; setStep(3, 'bad'); toast('warn', "Don't stop in the circle"); } } else p.stopT = 0;
       } else { p.stopT = 0; if (p.v > 2) p.stopFlag = false; }
-      if (p.v < -0.6 && !G.reverse) { G.reverse = true; setStep(3, 'bad'); toast('bad', 'Never reverse in a roundabout'); rogue(3); }
       if (steps[2] !== 'ok' && steps[2] !== 'bad' && T - p.enterT > 1.6) setStep(2, (G.yieldViol || G.cutOff || G.pedEntry) ? 'bad' : 'ok');
     } else if (L.r > R_EDGE && L.along > R_EDGE - 0.5) leaveRing(L);
   }
-  // ---- leaving
-  if (p.phase === 'exiting') {
-    if (L.inRing && L.r < R_EDGE - 0.8) { p.phase = 'ring'; p.settled = false; }
-    else {
-      if (L.leg === p.exitLeg && prevL && prevL.along < R_CW && L.along >= R_CW && !p.exitLaneJudged) {
-        p.exitLaneJudged = true; const ln = L.lat < -DIVIDER ? 1 : L.lat < -SPLIT ? 0 : -1;
-        if (ln >= 0 && ln !== p.exitRingLane) { G.exitLaneBad = true; toast('warn', `Leave into the lane that matches yours: ${laneWord(p.exitRingLane)} lane`); }
-      }
-      if (L.leg === p.exitLeg && L.along > 74) { finish(); return; }
-    }
-  }
-  // ---- everywhere: wrong way, off road, walkers, other cars
-  const ex = expectedDir(L);
-  if (ex && p.v > 1.5 && hx * ex.x + hy * ex.y < -0.35) {
-    p.wrongT += dt;
-    if (p.wrongT > 0.5) { rogue(1.5); if (!p.wrongActive) { p.wrongActive = true; G.wrongWay = true; setStep(3, 'bad'); toast('bad', `Wrong way! Traffic goes ${Wd().rot}`); } }
-  } else { p.wrongT = 0; p.wrongActive = false; }
-  const sf = SURF(p.x, p.y), sff = SURF(fx, fy);
-  if ([0, 1, 4, 5].includes(sf) || [4, 5].includes(sff)) {
-    p.offT += dt;
-    if (p.offT > 0.25 && !p.offActive) { p.offActive = true; G.offroad++; toast('bad', sf === 4 || sff === 4 ? 'You drove onto the island' : sf === 5 || sff === 5 ? 'You hit the curb' : 'Off the road'); }
-  } else { p.offT = 0; p.offActive = false; }
-  if (sf === 3 && !G.apron) { G.apron = true; toast('warn', 'The raised apron is for trucks. Stay in your lane'); }
+  if (p.phase === 'exiting' && L.leg === p.exitLeg && L.along > 74) { finish(); return; }
   for (let i = 0; i < 4; i++) for (const half of [1, -1]) {
     const key = i + ':' + half, inside = F.leg === i && Math.abs(F.along - R_CW) <= CW_HALF && half * F.lat > SPLIT && half * F.lat < ROAD_HALF;
     if (inside && !p.flagged.has(key)) {
@@ -806,7 +764,7 @@ function grade(dt) {
       }
     } else if (!inside && p.flagged.has(key) && Math.abs(F.along - R_CW) > CW_HALF + 3) p.flagged.delete(key);
   }
-  if (p.phase === 'approach' && L.leg === 0 && L.along < R_YIELD + 6 && Math.abs(p.v) < 0.4 && !circleTraffic(0, p.lane, p, 3.4, 12).conflict.length && !pedBlocking(0, 1)) p.waitClear += dt; else p.waitClear = 0;
+  if (p.phase === 'approach' && L.leg === 0 && L.along < R_YIELD + 6 && p.v < 0.4 && !circleTraffic(0, p.lane, p, 3.4, 12).conflict.length && !pedBlocking(0, 1)) p.waitClear += dt; else p.waitClear = 0;
   for (const c of cars) { const hit = carsTouch(p, c); if (hit) { crash('car', c, hit); return; } }
   for (const d of peds) {
     if (d.state === 'gone' || d.state === 'down') continue;
@@ -816,7 +774,7 @@ function grade(dt) {
 }
 function enterRing(L) {
   const p = player, tgt = mission.target;
-  p.phase = 'ring'; p.enterT = T; p.ringLane = p.lane; p.settled = false; p.curRingLane = L.r < LANE_LINE ? 0 : 1;
+  p.phase = 'ring'; p.enterT = T; p.ringLane = p.lane;
   setStep(0, G.entrySpeed <= 9.0 ? 'ok' : 'bad');
   if (G.entrySpeed > 9.0) toast('warn', `${mph(G.entrySpeed)} mph is too fast for the circle`);
   if (G.laneChoice == null) { G.laneChoice = p.lane; setStep(1, lanesFor(tgt).includes(p.lane) ? 'ok' : 'bad'); if (!lanesFor(tgt).includes(p.lane)) G.badLane = true; }
@@ -826,18 +784,14 @@ function enterRing(L) {
   const tr = circleTraffic(0, p.lane, p, 2.6, 9);
   if (tr.conflict.length) { G.yieldViol = true; rogue(2.5); setStep(2, 'bad'); toast('bad', 'You pulled out in front of a car in the circle'); }
   else toast('ok', 'Good gap');
-  let nl = 0, best = 9; for (let j = 0; j < 4; j++) { const d = mod(L.phi - legAngle(j), TAU); if (d < best) { best = d; nl = j; } }
-  p.nextLeg = nl;
 }
 function leaveRing(L) {
   const p = player, tgt = mission.target, n = L.leg === 0 ? 4 : L.leg;
-  p.phase = 'exiting'; p.exitLeg = L.leg; p.exitN = n; p.exitRingLane = p.ringLane; p.exitLaneJudged = false;
+  p.phase = 'exiting'; p.exitN = n;
   if (steps[2] !== 'ok' && steps[2] !== 'bad') setStep(2, (G.yieldViol || G.cutOff || G.pedEntry) ? 'bad' : 'ok');
-  setStep(3, (G.laneChange || G.stopInRing || G.wrongWay || G.reverse) ? 'bad' : 'ok');
-  if (p.signal === 1 && T - p.signalOnT >= 1.0) { G.signal = 'ok'; toast('ok', 'Well signaled'); }
-  else if (p.signal === 1) { G.signal = 'late'; toast('warn', 'Late signal. Turn it on a few car lengths sooner'); }
-  else if (p.signal === -1) { G.signal = 'wrong'; toast('bad', `Wrong signal. You leave to the ${Wd().sig}`); }
-  else { G.signal = 'none'; toast('warn', 'No signal. Drivers waiting to enter need to know you are leaving'); }
+  setStep(3, (G.laneChange || G.stopInRing) ? 'bad' : 'ok');
+  if (T - p.signalOnT >= 1.0) { G.signal = 'ok'; toast('ok', 'Well signaled'); }
+  else { G.signal = 'late'; toast('warn', 'Late signal. Turn it on a few car lengths sooner'); }
   setStep(4, G.signal === 'ok' ? 'ok' : 'bad');
   if (n !== tgt) { G.wrongExit = n; toast('bad', `Wrong exit. That was the ${ORD[n]}`); }
 }
@@ -850,19 +804,13 @@ function noteCutOff(c) {
 function crash(kind, other, at) {
   const p = player; G.crash = kind; G.crashT = T; G.crashWith = other;
   if (kind === 'car') {
-    G.crashWhy = p.wrongActive ? 'wrongway' : T - p.lastLaneChangeT < 3 || p.otherT > 0.3 ? 'lanechange'
+    G.crashWhy = T - p.lastLaneChangeT < 3.5 ? 'lanechange'
       : (p.upstream.has(other.id) && T - p.enterT < 8) || (G.yieldViol && T - p.enterT < 5) ? 'cutin'
       : other.leader === p ? 'rearended' : 'hit';
     collide(p, other, at);
   } else { makeFree(p); p.free.vx *= 0.35; p.free.vy *= 0.35; other.state = 'down'; burst(at.x, at.y, 2); shake = 0.6; sound('crash', 4); G.crashWhy = 'ped'; }
   for (let k = 0; k < 6; k++) if (steps[k] === 'active') setStep(k, 'bad');
   bigText(kind === 'ped' ? 'PEDESTRIAN HIT' : 'CRASHED!', '', '#FF3B4E', 2.2);
-}
-function crashWall() {
-  const p = player; G.crash = 'wall'; G.crashT = T; G.crashWhy = 'wall';
-  makeFree(p); p.free.vx *= -0.2; p.free.vy *= -0.2; p.free.w = (Math.random() - 0.5) * 3; p.v = 0;
-  burst(p.x + Math.cos(p.h) * 2.2, p.y + Math.sin(p.h) * 2.2, 8); shake = 0.8; sound('crash', 8);
-  bigText('CRASHED!', '', '#FF3B4E', 2.2);
 }
 
 /* ---------- lesson scripts ---------- */
@@ -878,11 +826,11 @@ function stepDefs() {
   const w = Wd();
   return [
     ['Slow down', 'About 15–20 mph by the yield line'],
-    ['Pick your lane', `${laneWord(1)} lane for the 1st exit, ${laneWord(0)} lane for the 3rd and 4th, either for straight`.replace(/^./, s => s.toUpperCase())],
+    ['Pick your lane', `${laneWord(1)} lane for the 1st exit, ${laneWord(0)} for the 3rd and 4th. Signal to move over before the solid line`.replace(/^./, s => s.toUpperCase())],
     ['Yield', `To walkers, then to both lanes of traffic from the ${w.look}`],
-    ['Stay in your lane', `Go ${w.rot}. No lane changes, no stopping, no reversing`],
-    [`Signal ${w.sig}`, 'After you pass the exit before yours'],
-    ['Exit with care', "Leave into your matching lane and watch the crosswalk"],
+    ['Stay in your lane', `No lane changes and no stopping in the circle`],
+    [`Signal ${w.sig}`, 'After you pass the exit before yours. While it is on, you take the next exit'],
+    ['Exit with care', 'Right exit, and watch the crosswalk on the way out'],
   ];
 }
 function renderSteps() {
@@ -912,17 +860,20 @@ function coach() {
   const p = player, w = Wd();
   if (state !== 'drive' || !p || !p.L) return null;
   if (G.crash) return { tone: 'bad', text: G.crash === 'ped' ? 'You hit a pedestrian' : 'Crash' };
-  const L = p.L, tgt = mission.target;
-  if (p.wrongActive) return { tone: 'bad', text: `Wrong way! Traffic goes ${w.rot}` };
-  if (p.offActive) return { tone: 'bad', text: 'Off the road. Steer back onto the asphalt' };
+  const L = p.L, tgt = mission.target, want = lanesFor(tgt);
+  if (p.pendingLane != null) {
+    if (p.phase !== 'approach') return { tone: 'bad', text: `Don't change lanes in the circle! Cancel the signal` };
+    if (carBeside(p.pendingSig).length) return { tone: 'bad', text: `Car beside you in the ${laneWord(p.pendingLane)} lane! Cancel the signal` };
+    return { tone: 'info', text: `Mirror clear. Moving into the ${laneWord(p.pendingLane)} lane` };
+  }
   if (p.phase === 'approach') {
     const near = L.along < R_CW + 40;
     if (L.leg === 0 && L.along > R_CW - CW_HALF && near && pedBlocking(0, 1)) return { tone: 'bad', text: 'Pedestrian crossing. Stop before the stripes' };
     if (L.leg === 0 && L.along > R_CW && L.along < R_CW + 30 && peds.some(d => d.leg === 0 && ((d.state === 'wait' && d.side === 1) || (d.state === 'refuge' && d.side === -1)))) return { tone: 'warn', text: 'Pedestrian waiting. Be ready to stop' };
-    if (!lanesFor(tgt).includes(p.lane) && L.along > R_CW) return { tone: 'warn', text: `Move to the ${laneWord(lanesFor(tgt)[0])} lane for the ${ORD[tgt]} exit` };
+    if (!want.includes(p.lane) && L.along > R_CURVE + 7) return { tone: 'warn', text: `Signal ${laneWord(want[0])} to move into the ${laneWord(want[0])} lane` };
     if (p.v * MPH > 21 && near) return { tone: 'warn', text: 'Too fast. Slow to 15–20 mph' };
     if (tgt === 1 && p.signal !== 1 && L.along < R_CW + 30) return { tone: 'warn', text: `1st exit: signal ${w.sig} now` };
-    if (tgt !== 1 && p.signal === 1) return { tone: 'warn', text: `Cancel the signal. A ${w.sig} signal means 1st exit` };
+    if (tgt !== 1 && p.signal === 1 && p.changeEndS < 0) return { tone: 'warn', text: `Cancel the signal. A ${w.sig} signal takes the 1st exit` };
     if (L.along < R_YIELD + 12) {
       if (circleTraffic(0, p.lane, p, 3.0, 11).conflict.length) return { tone: 'bad', text: `Yield. Traffic coming from the ${w.look}` };
       if (p.waitClear > 2) return { tone: 'ok', text: 'All clear. Go now' };
@@ -931,16 +882,15 @@ function coach() {
     return { tone: 'info', text: tgt === 2 ? 'Roundabout ahead. Either lane goes straight' : `Roundabout ahead. ${ORD[tgt]} exit: ${laneAdvice(tgt)}` };
   }
   if (p.phase === 'ring') {
-    if (p.v < -0.3) return { tone: 'bad', text: 'Never reverse in a roundabout' };
     if (p.stopT > 0.6) return { tone: 'warn', text: "Don't stop in the circle. Keep going" };
-    if (p.settled && p.curRingLane !== p.ringLane) return { tone: 'warn', text: `Stay in the ${laneWord(p.ringLane)} lane` };
     const n = p.nextLeg === 0 ? 4 : p.nextLeg;
-    if (n === tgt) return p.signal === 1 ? { tone: 'ok', text: 'Signal on. Take your exit' } : { tone: 'bad', text: `Your exit is next. Signal ${w.sig} now` };
-    if (p.signal === 1) return { tone: 'warn', text: `Cancel your signal. The ${ORD[n]} exit isn't yours` };
-    return { tone: 'info', text: `${G.missed ? 'Go around again. ' : ''}Pass the ${ORD[n]} exit in the ${laneWord(p.ringLane)} lane` };
+    if (p.decided) return { tone: 'ok', text: 'Taking this exit' };
+    if (n === tgt) return p.signal === 1 ? { tone: 'ok', text: 'Signal on. Taking your exit' } : { tone: 'bad', text: `Your exit is next. Signal ${w.sig} now` };
+    if (p.signal === 1) return { tone: 'warn', text: `Cancel your signal or you'll leave at the ${ORD[n]} exit` };
+    return { tone: 'info', text: `${G.missed ? 'Going around again. ' : ''}Passing the ${ORD[n]} exit in the ${laneWord(p.lane)} lane` };
   }
   if (p.exitLeg >= 0 && pedBlocking(p.exitLeg, -1) && L.along < R_CW + CW_HALF) return { tone: 'bad', text: 'Pedestrian at your exit. Stop' };
-  if (G.wrongExit) return { tone: 'warn', text: 'Wrong exit. Next time, count the exits' };
+  if (G.wrongExit) return { tone: 'warn', text: 'Wrong exit. Next time, wait to signal' };
   if (L.along < R_CW + 4) return { tone: 'info', text: 'Leaving. Watch the crosswalk' };
   return { tone: 'ok', text: "You're through" };
 }
@@ -1018,7 +968,7 @@ function startLesson(i, skipBrief) {
   lessonIdx = i; mission = missionFor(i); state = 'brief'; closeMenu();
   $('#report').hidden = true; $('#toasts').innerHTML = '';
   steps.fill('todo'); renderSteps(); renderLessons(); renderFree(); updateMission();
-  resetWorld(); wheelDeg = 0;
+  resetWorld();
   if (skipBrief) beginDrive(); else { showBrief(); $('#brief').hidden = false; }
 }
 function updateMission() {
@@ -1039,8 +989,8 @@ function beginDrive() {
   const sp = P(0, START_ALONG, LAT[1]);
   cars = cars.filter(c => Math.hypot(c.pos.x - sp.x, c.pos.y - sp.y) > 16);
   G = { entrySpeed: 0, laneChoice: null, badLane: false, solidLine: false, pedEntry: false, pedExit: false, yieldViol: false, cutOff: false,
-    laneChange: 0, stopInRing: 0, wrongWay: false, reverse: false, offroad: 0, apron: false, signal: null, wrongExit: 0, exitLaneBad: false, missed: 0, crash: null };
-  player = makePlayer(); state = 'drive'; paused = false; $('#pausedTag').hidden = true; wheelDeg = 0;
+    laneChange: 0, stopInRing: 0, signal: null, wrongExit: 0, missed: 0, crash: null };
+  player = makePlayer(); state = 'drive'; paused = false; $('#pausedTag').hidden = true;
   steps.fill('todo'); renderSteps();
   const t = mission.target; bigText(`${ORD[t]} EXIT`, `${turnName(t)} from ${laneAdvice(t)}`, '#FFD84A', 2.6);
   audio();
@@ -1050,8 +1000,8 @@ function finish() {
   if (state !== 'drive') return;
   state = 'report';
   if (player && !G.crash) {
-    player.auto = true; wheelDeg = 0;
-    setStep(5, (G.pedExit || G.wrongExit || G.exitLaneBad) ? 'bad' : 'ok');
+    player.auto = true;
+    setStep(5, (G.pedExit || G.wrongExit) ? 'bad' : 'ok');
   }
   buildReport();
   const stars = G.stars;
@@ -1065,15 +1015,14 @@ function buildReport() {
   add(judged(0), 'Slowed down', `${mph(G.entrySpeed)} mph at the yield line`, `${mph(G.entrySpeed)} mph at the yield line. At 15–20 mph you can still stop for a gap or a walker`);
   add(judged(1), 'Picked the right lane', `The ${laneWord(G.laneChoice ?? 1)} lane suits the ${ORD[tgt]} exit`, `The ${ORD[tgt]} exit needs ${laneAdvice(tgt)}. The wrong lane makes you cut across other drivers`);
   add(judged(2), 'Yielded', 'Walkers first, then a safe gap in both lanes', G.pedEntry ? 'You drove through a crosswalk while someone was in it' : 'You entered in front of a car already in the circle. It had the right of way');
-  add(judged(3), 'Stayed in your lane', `Steady and ${w.rot}, in one lane`, G.wrongWay ? `You drove against traffic. Everyone goes ${w.rot}` : G.laneChange ? 'You changed lanes inside the circle. Pick a lane before you enter and keep it' : G.reverse ? 'You reversed in the circle' : 'You stopped inside the circle. Only stop for a car or person right in front of you');
-  add(G.signal ? (G.signal === 'ok' ? 'ok' : 'bad') : 'skip', `Signaled ${w.sig}`, 'Signal on in good time before your exit', G.signal === 'none' ? 'No signal. Waiting drivers count on it to know you are leaving' : G.signal === 'wrong' ? `You signaled ${w.other}. Leaving always takes a ${w.sig} signal` : 'Your signal came too late to warn anyone');
-  const exitSt = (G.wrongExit || G.exitLaneBad || G.pedExit) ? 'bad' : done ? 'ok' : 'skip';
-  add(exitSt, 'Exited with care', `${ORD[tgt]} exit, into the matching lane`, G.wrongExit ? `You left at the ${ORD[G.wrongExit]} exit instead of the ${ORD[tgt]}` : G.pedExit ? 'You drove through a crosswalk while someone was in it' : 'You left into the wrong lane of the exit road, across the other lane');
-  add((G.offroad || G.apron) ? 'bad' : 'ok', 'Stayed on the road', 'All four wheels on the asphalt', G.offroad ? 'You left the road or hit a curb' : 'You drove on the truck apron. It is there for long vehicles only');
+  add(judged(3), 'Stayed in your lane', `Steady and ${w.rot}, in one lane`, G.laneChange ? 'You changed lanes inside the circle. Pick a lane before you enter and keep it' : 'You stopped inside the circle. Only stop for a car or person right in front of you');
+  add(G.signal ? (G.signal === 'ok' ? 'ok' : 'bad') : 'skip', `Signaled ${w.sig}`, 'Signal on in good time before your exit', 'Your signal came too late to warn the drivers waiting to enter');
+  const exitSt = (G.wrongExit || G.pedExit) ? 'bad' : done ? 'ok' : 'skip';
+  add(exitSt, 'Exited with care', `${ORD[tgt]} exit, crosswalk clear`, G.wrongExit ? `You left at the ${ORD[G.wrongExit]} exit instead of the ${ORD[tgt]}. Signal only once you've passed the exit before yours` : 'You drove through a crosswalk while someone was in it');
   add(G.crash ? 'bad' : 'ok', 'No collisions', 'Nobody got hurt', crashText());
   if (G.crash) items.unshift(items.pop());
-  const crit = G.crash || G.wrongExit || G.pedEntry || G.pedExit || G.yieldViol || G.cutOff || G.badLane || G.laneChange || G.wrongWay || G.reverse || G.offroad;
-  const minor = G.entrySpeed > 9 || G.stopInRing || (G.signal && G.signal !== 'ok') || G.exitLaneBad || G.solidLine || G.apron;
+  const crit = G.crash || G.wrongExit || G.pedEntry || G.pedExit || G.yieldViol || G.cutOff || G.badLane || G.laneChange;
+  const minor = G.entrySpeed > 9 || G.stopInRing || (G.signal && G.signal !== 'ok') || G.solidLine;
   const stars = (G.crash || G.wrongExit) ? 0 : crit ? 1 : minor ? 2 : 3; G.stars = stars;
   const L = LESSONS[lessonIdx];
   $('#rEyebrow').textContent = L.free ? 'Free drive' : `Lesson ${lessonIdx + 1}: ${L.title(w)}`;
@@ -1093,10 +1042,8 @@ function crashText() {
   return {
     ped: 'A person in the crosswalk had the right of way. At roundabout speeds you can always stop for them',
     cutin: `The car from your ${w.look} had the right of way. Its driver didn't expect you to pull out and couldn't stop in time`,
-    lanechange: 'You moved into a lane that was already taken. Pick your lane before you enter and keep it',
-    wrongway: `You drove against traffic. In a roundabout everyone goes ${w.rot}`,
+    lanechange: 'You moved into a lane that was already taken. Check beside you before you signal, and never change lanes in the circle',
     rearended: "You stopped or slowed where the driver behind didn't expect it",
-    wall: 'You left the road and hit a building',
     hit: 'You ran into another car. Keep a safe gap and watch the car ahead',
   }[G.crashWhy] || 'You ran into another car';
 }
@@ -1292,7 +1239,7 @@ function guidePts() {
     return linePts(P(0, along, LAT[l]), P(0, R_CURVE, LAT[l]), 2).concat(ENTRY_CURVES[0][l], arcPts(RING[l], legAngle(0) - D_M[l], legAngle(tl) + D_M[l]), EXIT_CURVES[tl][l], linePts(P(tl, R_CURVE, -LAT[l]), P(tl, 74, -LAT[l]), 2));
   }
   if (p.phase === 'ring') {
-    const l = p.ringLane ?? 1, phi = Math.atan2(p.y, p.x);
+    const l = p.lane, phi = Math.atan2(p.y, p.x);
     return arcPts(RING[l], phi, legAngle(tl) + D_M[l]).concat(EXIT_CURVES[tl][l], linePts(P(tl, R_CURVE, -LAT[l]), P(tl, 74, -LAT[l]), 2));
   }
   return [];
@@ -1389,6 +1336,7 @@ function draw() {
     const g = guidePts();
     if (g.length) { ctx.save(); ctx.lineWidth = 0.5; ctx.setLineDash([1.4, 1.2]); ctx.strokeStyle = 'rgba(46,230,140,.85)'; ctx.lineCap = 'round'; poly(ctx, g); ctx.stroke(); ctx.restore(); }
   }
+  if (hintOn && p.pendingLane != null) for (const c of carBeside(p.pendingSig)) tr.conflict.push(c);
   drawParts(true);
   const relevant = new Set();
   if (p && state === 'drive') for (const d of peds) if ((d.leg === 0 && p.phase === 'approach') || (d.leg === mission.target % 4 && p.phase !== 'approach')) relevant.add(d);
@@ -1434,20 +1382,28 @@ function updateHUD() {
   const cm = coach(), box = $('#coach');
   if (!cm) { box.hidden = true; lastCoach = ''; }
   else { box.hidden = false; const key = cm.tone + cm.text; if (key !== lastCoach) { lastCoach = key; $('#tone').dataset.tone = cm.tone; $('#coachText').textContent = cm.text; } }
-  const needSig = driving && !G.crash && cm && /signal (right|left) now/i.test(cm.text);
-  (mirror === 1 ? sr : sl).classList.toggle('cue', !!needSig); (mirror === 1 ? sl : sr).classList.remove('cue');
-  $('#wheelRot').setAttribute('transform', `rotate(${wheelDeg.toFixed(1)} 100 100)`);
-  $('#wheel').setAttribute('aria-valuenow', String(Math.round(wheelDeg)));
+  const cueWord = driving && !G.crash && cm ? ((cm.text.match(/signal (right|left) (now|to move)/i) || [])[1] || '').toLowerCase() : '';
+  sl.classList.toggle('cue', cueWord === 'left'); sr.classList.toggle('cue', cueWord === 'right');
   activateSteps();
 }
 
 /* ---------- input ---------- */
 function pressSignal(visual) {
   if (!player || state !== 'drive' || G.crash) return;
-  const val = (visual === 'right') === (mirror === 1) ? 1 : -1, p = player;
-  p.signal = p.signal === val ? 0 : val; p.sigArmed = false;
-  if (p.signal === 1) p.signalOnT = T;
+  const val = (visual === 'right') === (mirror === 1) ? 1 : -1, p = player, w = Wd();
+  p.signal = p.signal === val ? 0 : val; p.pendingLane = null;
   audio();
+  if (!p.signal || p.decided) return;
+  if (p.signal === 1) p.signalOnT = T;
+  if (p.phase === 'approach') {
+    const want = val === -1 && p.lane === 1 ? 0 : val === 1 && p.lane === 0 ? 1 : null;
+    if (want == null) { if (val === -1) toast('info', `Already in the ${laneWord(0)} lane`); return; }
+    if (locate(p.x, p.y).along < R_CURVE + 7) { toast('warn', 'Too late to change lanes. Choose before the solid line'); return; }
+    p.pendingLane = want; p.pendingSig = val; p.pendingT = T;
+  } else if (val === -1) {
+    if (p.lane === 1 && p.s >= p.arcStartS) { p.pendingLane = 0; p.pendingSig = -1; p.pendingT = T; }
+    else toast('info', `No ${w.other} signal needed in the circle`);
+  }
 }
 function holdButton(el, key) {
   const on = e => { e.preventDefault(); input[key] = true; el.classList.add('held'); try { el.setPointerCapture(e.pointerId); } catch (x) { /* fine */ } audio(); };
@@ -1459,19 +1415,6 @@ function holdButton(el, key) {
 holdButton($('#btnGas'), 'gas'); holdButton($('#btnBrake'), 'brake');
 $('#sigL').addEventListener('click', () => pressSignal('left'));
 $('#sigR').addEventListener('click', () => pressSignal('right'));
-(function wheelInput() {
-  const el = $('#wheel'); let last = 0, acc = 0, start = 0;
-  const ang = e => { const r = el.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
-  el.addEventListener('pointerdown', e => { e.preventDefault(); wheelDrag = e.pointerId; last = ang(e); acc = 0; start = wheelDeg; try { el.setPointerCapture(e.pointerId); } catch (x) { /* fine */ } audio(); });
-  el.addEventListener('pointermove', e => {
-    if (wheelDrag !== e.pointerId) return;
-    const a = ang(e); let d = a - last; if (d > 180) d -= 360; if (d < -180) d += 360; last = a; acc += d;
-    wheelDeg = clamp(start + acc, -450, 450);
-  });
-  const end = e => { if (wheelDrag === e.pointerId) wheelDrag = null; };
-  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => el.addEventListener(t, end));
-  el.addEventListener('contextmenu', e => e.preventDefault());
-})();
 $('#btnStart').addEventListener('click', beginDrive);
 $('#btnBriefMenu').addEventListener('click', openMenu);
 $('#btnRetry').addEventListener('click', () => startLesson(lessonIdx, true));
@@ -1489,7 +1432,7 @@ $('#btnFull').addEventListener('click', () => {
 function openMenu() { menuOpen = true; $('#menu').hidden = false; renderLessons(); renderSteps(); clearInput(); }
 function closeMenu() { menuOpen = false; $('#menu').hidden = true; }
 function togglePause() { if (state !== 'drive') return; paused = !paused; $('#pausedTag').hidden = !paused; clearInput(); }
-function clearInput() { input.gas = input.brake = input.left = input.right = false; }
+function clearInput() { input.gas = input.brake = false; }
 const typing = t => t && (t.tagName === 'SELECT' || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
 document.addEventListener('keydown', e => {
   if (typing(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1498,10 +1441,8 @@ document.addEventListener('keydown', e => {
   if (menuOpen) return;
   if (k === 'ArrowUp' || k === 'w') { input.gas = true; e.preventDefault(); }
   else if (k === 'ArrowDown' || k === 's' || (k === ' ' && state === 'drive')) { input.brake = true; e.preventDefault(); }
-  else if (k === 'ArrowLeft' || k === 'a') { input.left = true; e.preventDefault(); }
-  else if (k === 'ArrowRight' || k === 'd') { input.right = true; e.preventDefault(); }
-  else if (k === 'q' && !e.repeat) pressSignal('left');
-  else if (k === 'e' && !e.repeat) pressSignal('right');
+  else if ((k === 'ArrowLeft' || k === 'a' || k === 'q') && !e.repeat) { pressSignal('left'); e.preventDefault(); }
+  else if ((k === 'ArrowRight' || k === 'd' || k === 'e') && !e.repeat) { pressSignal('right'); e.preventDefault(); }
   else if (k === 'p' && !e.repeat) togglePause();
   else if (k === 'r' && !e.repeat) startLesson(lessonIdx, state !== 'brief');
   else if (k === 'Enter' && state === 'brief' && !(e.target && e.target.tagName === 'BUTTON')) { e.preventDefault(); beginDrive(); }
@@ -1510,8 +1451,6 @@ document.addEventListener('keyup', e => {
   const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
   if (k === 'ArrowUp' || k === 'w') input.gas = false;
   if (k === 'ArrowDown' || k === 's' || k === ' ') input.brake = false;
-  if (k === 'ArrowLeft' || k === 'a') input.left = false;
-  if (k === 'ArrowRight' || k === 'd') input.right = false;
 });
 window.addEventListener('blur', clearInput);
 document.addEventListener('visibilitychange', clearInput);
