@@ -1,0 +1,1303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traffic Circle Trainer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="canonical" href="https://tallman-games.com/traffic-circle/">
+<meta name="description" content="Practice entering, circling and leaving a single-lane roundabout in live traffic, with a coach that grades every step.">
+<style>
+@font-face{font-family:"Chakra Petch";src:url("../fonts/chakra-petch-semibold.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Chakra Petch";src:url("../fonts/chakra-petch-bold.woff2") format("woff2");font-weight:700 900;font-display:swap}
+/* Layout: one fixed overhead view of a single-lane roundabout, pedals under it, the instructor's clipboard beside it; stacks on phones */
+:root{
+  --bg:#ECEEE9; --surface:#FAFBF8; --surface-2:#E1E5DE; --ink:#1B211E; --muted:#56615B; --line:#CDD3CC;
+  --guide:#00704A; --guide-ink:#FFFFFF; --warn:#F2C300; --warn-ink:#1B1A10; --stop:#C3122F; --stop-ink:#FFFFFF; --ok:#1C7A4A;
+  --hud:rgba(16,20,19,.88); --hud-ink:#F3F5F1;
+  --display:'Chakra Petch','Arial Narrow',system-ui,sans-serif;
+  --body:system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --stage-w:max(280px,min(760px,calc(100svh - 230px)));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101412; --surface:#181D1A; --surface-2:#232A26; --ink:#E7ECE8; --muted:#9AA69F; --line:#2E3732;
+    --guide:#13804F; --stop:#D8283F; --ok:#4CC08A; --hud:rgba(8,10,9,.88); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101412; --surface:#181D1A; --surface-2:#232A26; --ink:#E7ECE8; --muted:#9AA69F; --line:#2E3732;
+  --guide:#13804F; --stop:#D8283F; --ok:#4CC08A; --hud:rgba(8,10,9,.88); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);padding-inline:16px;padding-block:16px 32px;margin:0}
+.app{max-width:1200px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+.top{display:flex;align-items:center;gap:14px}
+.top svg{width:46px;height:46px;flex:none}
+h1{font:900 clamp(1.45rem,2.6vw,2rem)/1.05 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.top p{margin:3px 0 0;color:var(--muted);font-size:.95rem;max-width:60ch}
+.grid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:920px){.grid{grid-template-columns:minmax(0,1fr) 350px;align-items:start}}
+.stage{display:flex;flex-direction:column;gap:10px;min-width:0}
+.wrap{position:relative;width:100%;max-width:var(--stage-w);aspect-ratio:1;margin-inline:auto;border-radius:12px;overflow:hidden;background:#8DA66C;box-shadow:0 14px 34px -22px rgba(0,0,0,.6)}
+canvas{display:block;width:100%;height:100%}
+.coach{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:var(--hud);color:var(--hud-ink);font:800 1rem/1.25 var(--display);pointer-events:none}
+.coach[hidden]{display:none!important}
+.tone{width:18px;height:18px;flex:none;background:#fff;border-radius:50%}
+.tone[data-tone="ok"]{background:#22A866;border-radius:3px}
+.tone[data-tone="warn"]{background:#F2C300;border-radius:2px;transform:rotate(45deg) scale(.8)}
+.tone[data-tone="bad"]{background:#E5263F;border-radius:0;clip-path:polygon(0 4%,100% 4%,50% 92%)}
+.toasts{position:absolute;top:60px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:calc(100% - 20px);pointer-events:none}
+.toast{padding:6px 12px;border-radius:6px;font:800 .9rem/1.2 var(--display);background:var(--hud);color:var(--hud-ink);text-align:center;max-width:100%;transition:opacity .3s,transform .3s}
+.toast[data-tone="ok"]{background:#0F6B40;color:#fff}
+.toast[data-tone="warn"]{background:#F2C300;color:#1B1A10}
+.toast[data-tone="bad"]{background:#C3122F;color:#fff}
+.toast.out{opacity:0;transform:translateY(-6px)}
+.dash{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;pointer-events:none}
+.gauge{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:var(--hud);color:var(--hud-ink)}
+.speed{font:700 2rem/1 var(--mono);font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
+.speed.fast{color:#FFCF33}
+.unit{font:800 .72rem/1.1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:#B9C2BD}
+.blinkers{display:flex;gap:6px}
+.blk{width:18px;height:18px;background:#3C4441;clip-path:polygon(0 50%,55% 0,55% 28%,100% 28%,100% 72%,55% 72%,55% 100%)}
+.blk.r{transform:scaleX(-1)}
+.blk.on{background:#39D873}
+.blk.on.tick{background:#1E5A35}
+.target{padding:5px;border-radius:7px;background:#00704A;color:#fff;font:800 .85rem/1.15 var(--display);text-align:center}
+.target span{display:block;border:2px solid #fff;border-radius:4px;padding:5px 9px}
+.target small{display:block;font-weight:600;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(10,14,12,.32);overflow:auto}
+.card{background:var(--surface);color:var(--ink);border-radius:12px;padding:18px 20px;width:100%;max-width:390px;box-shadow:0 18px 40px -18px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:10px}
+.eyebrow{margin:0;font:800 .75rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font:900 1.5rem/1.1 var(--display);text-wrap:balance}
+.goal{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700}
+.chip{display:inline-block;padding:2px 8px;border-radius:4px;background:#00704A;color:#fff;font:800 .8rem/1.4 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.card ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.card li{padding-left:2px}
+.keys{margin:0;color:var(--muted);font-size:.9rem}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:10px 16px;font:800 1rem/1 var(--display);cursor:pointer;min-height:44px}
+.btn.primary{background:var(--guide);color:var(--guide-ink);border-color:transparent}
+.btn:focus-visible,.ctl:focus-visible,.lesson:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible+span{outline:3px solid var(--warn);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1 1 auto}
+.stars{display:flex;gap:4px}
+.star{width:24px;height:24px;background:var(--surface-2);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.star.on{background:var(--warn)}
+.checks{list-style:none;padding:0!important;gap:6px!important}
+.checks li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:0!important}
+.mark{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:800 .8rem/1 var(--display);background:var(--surface-2);color:var(--muted)}
+.mark.ok{background:var(--ok);color:#fff}
+.mark.bad{background:var(--stop);color:#fff}
+.checks b{display:block;font:800 .95rem/1.25 var(--display)}
+.checks span{display:block;color:var(--muted);font-size:.88rem;line-height:1.35}
+.note{margin:0;font-size:.92rem;background:var(--surface-2);border-radius:8px;padding:8px 10px}
+.note:empty{display:none}
+.paused{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 18px;border-radius:8px;background:var(--hud);color:var(--hud-ink);font:900 1.2rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.controls{display:grid;grid-template-columns:1fr 1.3fr 1.3fr 1fr;gap:8px;width:100%;max-width:var(--stage-w);margin-inline:auto}
+.ctl{min-height:66px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:800 1rem/1.1 var(--display);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer;padding:6px}
+.ctl .arrow{font-size:1.3rem;line-height:1}
+.ctl.brake{background:var(--stop);color:var(--stop-ink);border-color:transparent}
+.ctl.gas{background:var(--guide);color:var(--guide-ink);border-color:transparent}
+.ctl.held{filter:brightness(.82);transform:translateY(1px)}
+.ctl.sig[aria-pressed="true"]{background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.ctl.cue{animation:cue 1s ease-in-out infinite}
+@keyframes cue{50%{box-shadow:0 0 0 4px var(--warn)}}
+kbd{font:600 .72rem/1.3 var(--mono);padding:0 5px;border-radius:4px;border:1px solid currentColor;opacity:.75}
+@media (hover:none){kbd{display:none}}
+.subrow{display:flex;gap:8px;width:100%;max-width:var(--stage-w);margin-inline:auto}
+.subrow .btn{flex:1;min-height:40px;font-size:.92rem;padding:8px 10px}
+.panel{display:flex;flex-direction:column;gap:14px;min-width:0}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.label{font:800 .76rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:6px 8px;border-radius:8px;transition:background .2s}
+.num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:800 .9rem/1 var(--display);background:var(--surface-2);color:var(--muted)}
+.steps li[data-state="active"]{background:color-mix(in srgb,var(--warn) 20%,transparent)}
+.steps li[data-state="active"] .num{background:var(--warn);color:var(--warn-ink)}
+.steps li[data-state="ok"] .num{background:var(--ok);color:#fff}
+.steps li[data-state="bad"] .num{background:var(--stop);color:#fff}
+.steps b{display:block;font:800 1rem/1.25 var(--display)}
+.steps span{display:block;color:var(--muted);font-size:.88rem;line-height:1.35}
+.lessons{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.lesson{width:100%;display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;text-align:left;padding:8px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--ink);cursor:pointer;font:inherit}
+.lesson:hover{background:var(--surface-2)}
+.lesson[aria-current="true"]{border-color:var(--guide);background:color-mix(in srgb,var(--guide) 10%,transparent)}
+.lesson .n{font:800 .95rem/1 var(--display);color:var(--muted);text-align:center}
+.lesson b{display:block;font:800 .98rem/1.2 var(--display)}
+.lesson span{display:block;color:var(--muted);font-size:.85rem;line-height:1.3}
+.mini{display:flex;gap:2px}
+.mini i{width:12px;height:12px;background:var(--surface-2);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.mini i.on{background:var(--warn)}
+.settings{display:flex;flex-direction:column;gap:12px}
+.set{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.set > span{font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg span{display:block;padding:6px 12px;font:800 .88rem/1.2 var(--display)}
+.seg input:checked+span{background:var(--ink);color:var(--bg)}
+select{font:700 .92rem var(--body);padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.toggle{display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--guide)}
+.freeonly[hidden]{display:none!important}
+details.rules summary{cursor:pointer;font:800 1rem/1.3 var(--display);list-style-position:inside}
+details.rules ol{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px;font-size:.94rem}
+.fine{color:var(--muted);font-size:.85rem;margin:0;text-align:center}
+@media (max-width:520px){
+  .overlay{padding:10px;align-items:start}
+  .card{padding:14px 16px;gap:7px;font-size:.9rem;line-height:1.35}
+  .card h2{font-size:1.2rem}
+  .keys{display:none}
+  .checks li .mark.ok+div span{display:none}
+  .checks li.skip{display:none!important}
+  .coach{font-size:.9rem;padding:7px 10px}
+  .speed{font-size:1.6rem}
+  .target{font-size:.75rem}
+}
+@media (prefers-reduced-motion: reduce){.ctl.cue{animation:none;box-shadow:0 0 0 4px var(--warn)}.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <rect x="9" y="9" width="30" height="30" rx="3" transform="rotate(45 24 24)" fill="#F2C300" stroke="#111" stroke-width="2.4"/>
+      <g fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round">
+        <path d="M24 32 A8 8 0 0 0 31.88 25.39"/><path d="M17.07 20 A8 8 0 0 0 18.86 30.13"/><path d="M30.93 20 A8 8 0 0 0 21.26 16.48"/>
+      </g>
+      <g fill="#111"><polygon points="32.4,21.9 34.6,25.9 29.4,25.1"/><polygon points="21.6,32.4 17.2,32.2 20.3,28.1"/><polygon points="18.1,17.4 20.3,13.9 22.4,18.6"/></g>
+    </svg>
+    <div>
+      <h1>Traffic Circle Trainer</h1>
+      <p>Drive a learner car through a live roundabout. Slow down, yield, signal and exit, and your coach grades every step.</p>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="stage" aria-label="Driving simulator">
+      <div class="wrap" id="wrap">
+        <canvas id="cv" aria-label="Overhead view of a single-lane roundabout with traffic" role="img"></canvas>
+        <div class="coach" id="coach" role="status" aria-live="polite" hidden><i class="tone" id="tone" data-tone="info"></i><span id="coachText"></span></div>
+        <div class="toasts" id="toasts" aria-live="polite"></div>
+        <div class="dash" id="dash" hidden>
+          <div class="gauge">
+            <div class="speed" id="speed">0</div>
+            <div class="unit">mph<br><span id="kmh">0 km/h</span></div>
+            <div class="blinkers" aria-hidden="true"><i class="blk" id="blkL"></i><i class="blk r" id="blkR"></i></div>
+          </div>
+          <div class="target"><span><small>Your exit</small><b id="targetText">2nd exit</b></span></div>
+        </div>
+        <div class="paused" id="pausedTag" hidden>Paused</div>
+        <div class="overlay" id="brief">
+          <div class="card">
+            <p class="eyebrow" id="bEyebrow">Lesson 1 of 5</p>
+            <h2 id="bTitle">Turning right</h2>
+            <p class="goal"><span class="chip" id="bChip">1st exit</span><span id="bGoal"></span></p>
+            <ul id="bTips"></ul>
+            <p class="keys" id="bKeys"></p>
+            <button class="btn primary" id="btnStart" type="button">Start driving</button>
+          </div>
+        </div>
+        <div class="overlay" id="report" hidden>
+          <div class="card">
+            <p class="eyebrow" id="rEyebrow"></p>
+            <h2 id="rTitle"></h2>
+            <div class="stars" id="rStars"></div>
+            <ul class="checks" id="rChecks"></ul>
+            <p class="note" id="rNote"></p>
+            <div class="row"><button class="btn" id="btnRetry" type="button">Try again</button><button class="btn primary" id="btnNext" type="button">Next lesson</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls" id="controls">
+        <button class="ctl sig" id="btnSigL" type="button" aria-pressed="false"><span class="arrow" aria-hidden="true">◀</span><span>Signal</span><kbd>←</kbd></button>
+        <button class="ctl brake" id="btnBrake" type="button"><span>Brake</span><kbd>↓</kbd></button>
+        <button class="ctl gas" id="btnGas" type="button"><span>Gas</span><kbd>↑</kbd></button>
+        <button class="ctl sig" id="btnSigR" type="button" aria-pressed="false"><span class="arrow" aria-hidden="true">▶</span><span>Signal</span><kbd>→</kbd></button>
+      </div>
+      <div class="subrow">
+        <button class="btn" id="btnPause" type="button">Pause <kbd>P</kbd></button>
+        <button class="btn" id="btnRestart" type="button">Restart <kbd>R</kbd></button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <section class="block">
+        <h2 class="label">The six steps</h2>
+        <ol class="steps" id="steps"></ol>
+      </section>
+      <section class="block">
+        <h2 class="label">Lessons</h2>
+        <ol class="lessons" id="lessons"></ol>
+      </section>
+      <section class="block">
+        <h2 class="label">Settings</h2>
+        <div class="settings">
+          <div class="set"><span id="sideLabel">Drive on the</span>
+            <div class="seg" role="radiogroup" aria-labelledby="sideLabel">
+              <label><input type="radio" name="side" id="sideR" value="right" checked><span>Right</span></label>
+              <label><input type="radio" name="side" id="sideL" value="left"><span>Left</span></label>
+            </div>
+          </div>
+          <div class="set"><label class="toggle"><input type="checkbox" id="optHints" checked><span>Show hints on the road</span></label></div>
+          <div class="set"><label class="toggle"><input type="checkbox" id="optSound" checked><span>Sound</span></label></div>
+          <div class="set"><label for="optSpeed">Simulation speed</label>
+            <select id="optSpeed"><option value="0.5">Half</option><option value="0.75">Slower</option><option value="1" selected>Normal</option></select></div>
+          <div class="set freeonly" id="freeTraffic" hidden><label for="optTraffic">Traffic</label>
+            <select id="optTraffic"><option value="light">Light</option><option value="normal" selected>Normal</option><option value="heavy">Heavy</option></select></div>
+          <div class="set freeonly" id="freePeds" hidden><label for="optPeds">Pedestrians</label>
+            <select id="optPeds"><option value="none">None</option><option value="low" selected>A few</option><option value="high">Many</option></select></div>
+          <div class="set freeonly" id="freeExit" hidden><label for="optExit">Exit</label>
+            <select id="optExit"><option value="0" selected>Random</option><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option><option value="4">4th</option></select></div>
+        </div>
+      </section>
+      <details class="block rules" id="rulesBox">
+        <summary>Roundabout rules in short</summary>
+        <ol id="rulesList"></ol>
+      </details>
+      <p class="fine">A practice aid, not legal advice. Follow your local driver's handbook and the signs on the road.</p>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- geometry (canonical world: drive on the right, metres, screen y points down) ---------- */
+const TAU = Math.PI * 2, MPH = 2.23694;
+const R = 20, RING_HALF = 2.75, ISLAND = R - RING_HALF, APRON = 1.6;
+const LANE_OFF = 3.4, LANE_W = 3.6, ROAD_HALF = 5.2, WALK = 2.4;
+const R_CW = 31, CW_HALF = 1.5, R_CURVE = 27.5, DELTA = 0.42, R_FAR = 95;
+const R_YIELD = R + RING_HALF + 0.6;
+const VIEW_HALF = 57, VIEW_CY = 5;
+const CAR_L = 4.4, CAR_W = 1.85;
+const ORD = ['', '1st', '2nd', '3rd', '4th'];
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const mod = (a, m) => ((a % m) + m) % m;
+const legAngle = i => Math.PI / 2 - i * Math.PI / 2;           // 0 south, 1 east, 2 north, 3 west (travel order)
+const legU = i => ({ x: Math.cos(legAngle(i)), y: Math.sin(legAngle(i)) });
+const legR = i => { const u = legU(i); return { x: u.y, y: -u.x }; }; // right-hand side of a driver heading in
+const mergePhi = i => legAngle(i) - DELTA;
+const divergePhi = j => legAngle(j) + DELTA;
+const onRing = p => ({ x: R * Math.cos(p), y: R * Math.sin(p) });
+const ringTan = p => ({ x: Math.sin(p), y: -Math.cos(p) });
+const P = (i, along, lat) => { const u = legU(i), r = legR(i); return { x: u.x * along + r.x * lat, y: u.y * along + r.y * lat }; };
+
+function linePts(a, b, step) {
+  const d = Math.hypot(b.x - a.x, b.y - a.y), n = Math.max(1, Math.ceil(d / step)), o = [];
+  for (let k = 0; k <= n; k++) { const t = k / n; o.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }); }
+  return o;
+}
+function bezPts(p0, p1, p2, p3, n) {
+  const o = [];
+  for (let k = 0; k <= n; k++) {
+    const t = k / n, m = 1 - t, a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+    o.push({ x: a * p0.x + b * p1.x + c * p2.x + d * p3.x, y: a * p0.y + b * p1.y + c * p2.y + d * p3.y });
+  }
+  return o;
+}
+function arcPts(phi1, phi2) { // travel direction lowers the angle
+  let d = mod(phi1 - phi2, TAU); if (d < 1e-6) d = TAU;
+  const n = Math.ceil(d * R / 0.5), o = [];
+  for (let k = 0; k <= n; k++) o.push(onRing(phi1 - d * k / n));
+  return o;
+}
+function entryCurve(i) {
+  const u = legU(i), p0 = P(i, R_CURVE, LANE_OFF), ph = mergePhi(i), p3 = onRing(ph), t = ringTan(ph);
+  return bezPts(p0, { x: p0.x - u.x * 5, y: p0.y - u.y * 5 }, { x: p3.x - t.x * 5, y: p3.y - t.y * 5 }, p3, 30);
+}
+function exitCurve(j) {
+  const u = legU(j), ph = divergePhi(j), p0 = onRing(ph), t = ringTan(ph), p3 = P(j, R_CURVE, -LANE_OFF);
+  return bezPts(p0, { x: p0.x + t.x * 5, y: p0.y + t.y * 5 }, { x: p3.x - u.x * 5, y: p3.y - u.y * 5 }, p3, 30);
+}
+const entryPts = i => linePts(P(i, R_FAR, LANE_OFF), P(i, R_CURVE, LANE_OFF), 1).concat(entryCurve(i));
+const exitPts = j => exitCurve(j).concat(linePts(P(j, R_CURVE, -LANE_OFF), P(j, R_FAR, -LANE_OFF), 1));
+
+class Route {
+  constructor() { this.x = []; this.y = []; this.s = []; }
+  add(pts) {
+    for (const p of pts) {
+      const n = this.x.length;
+      if (n) { const d = Math.hypot(p.x - this.x[n - 1], p.y - this.y[n - 1]); if (d < 1e-4) continue; this.s.push(this.s[n - 1] + d); }
+      else this.s.push(0);
+      this.x.push(p.x); this.y.push(p.y);
+    }
+    return this;
+  }
+  get length() { return this.s[this.s.length - 1]; }
+  at(s, hint) {
+    const S = this.s, n = S.length; let i = clamp(hint | 0, 0, n - 2);
+    while (i > 0 && S[i] > s) i--;
+    while (i < n - 2 && S[i + 1] < s) i++;
+    const t = S[i + 1] > S[i] ? clamp((s - S[i]) / (S[i + 1] - S[i]), 0, 1) : 0;
+    const x0 = this.x[i], y0 = this.y[i], x1 = this.x[i + 1], y1 = this.y[i + 1];
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, h: Math.atan2(y1 - y0, x1 - x0), i };
+  }
+}
+const ENTRY = (() => {
+  const r = new Route().add(entryPts(0)); let sYield = 0;
+  for (let k = 0; k < r.x.length; k++) if (Math.hypot(r.x[k], r.y[k]) <= R_YIELD) { sYield = r.s[k]; break; }
+  return { len: r.length, sYield, sCW: R_FAR - R_CW };
+})();
+const EXIT = (() => { const c = new Route().add(exitCurve(0)).length; return { curve: c, cw: c + (R_CW - R_CURVE) }; })();
+
+/* ---------- page state ---------- */
+const $ = s => document.querySelector(s);
+const cv = $('#cv'), ctx = cv.getContext('2d'), wrap = $('#wrap');
+const sc = document.createElement('canvas'), sctx = sc.getContext('2d');
+let dpr = 1, cssW = 600, scale = 1, mirror = 1, hints = true, simSpeed = 1, soundOn = true;
+let cars = [], peds = [], parts = [], player = null, T = 0, nextId = 1, shake = 0;
+let state = 'brief', paused = false, mission = null, lessonIdx = 0, script = {};
+let G = {}; const steps = Array(6).fill('todo');
+const input = { gas: false, brake: false };
+
+const TRAFFIC = { light: 0.045, normal: 0.08, heavy: 0.13 };
+const PEDS = { none: 0, low: 0.012, high: 0.03 };
+const CAR_COLORS = ['#D8D3C6', '#3E5A78', '#8E2F2F', '#2C2D30', '#A7ACB1', '#B5843A', '#55714A', '#E3E5E7', '#6A4C79', '#22466A', '#C9663A'];
+const SHIRTS = ['#E4572E', '#29335C', '#F3A712', '#669BBC', '#8FB46A', '#8E5572', '#EDE6D6'];
+const SKIN = ['#8D5A3B', '#C68A62', '#E2B48D', '#5B3A29', '#F0C8A4'];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+function W() {
+  return mirror === 1
+    ? { look: 'left', sig: 'right', other: 'left', rot: 'counterclockwise', key: '→', otherKey: '←' }
+    : { look: 'right', sig: 'left', other: 'right', rot: 'clockwise', key: '←', otherKey: '→' };
+}
+function turnName(n) { const w = W(); return ['', `${w.sig} turn`, 'straight ahead', `${w.other} turn`, 'U-turn'][n]; }
+const mph = v => Math.round(v * MPH);
+
+/* ---------- lessons ---------- */
+const LESSONS = [
+  { title: w => `Turning ${w.sig}`, target: 1, traffic: 'light', peds: 'none',
+    tips: w => [`Slow to 15–20 mph before the yield line`, `Look ${w.look}. Cars already in the circle have the right of way, so wait for a gap`, `Your exit is the 1st one, so signal ${w.sig} as you approach`] },
+  { title: () => 'Going straight', target: 2, traffic: 'light', peds: 'none',
+    tips: w => [`Don't signal on the way in. A ${w.sig} signal tells everyone you're taking the 1st exit`, `Once you pass the 1st exit, signal ${w.sig}`, `In this trainer your ${w.sig} signal steers you out at the next exit`] },
+  { title: () => 'Crosswalks', target: 2, traffic: 'light', peds: 'high', script: 'peds',
+    tips: () => [`People in a crosswalk go first, on the way in and on the way out`, `Stop before the white stripes, not on them`, `Walkers can wait on the island between lanes, so each half is its own crossing`] },
+  { title: w => `Turning ${w.other}`, target: 3, traffic: 'normal', peds: 'low',
+    tips: w => [`Go ${w.rot} around the island and take the 3rd exit. Never cut across`, `Keep moving in the circle. Stop only for a car or person right in front of you`, `Signal ${w.sig} after you pass the 2nd exit`] },
+  { title: () => 'Rush hour U-turn', target: 4, traffic: 'heavy', peds: 'low',
+    tips: w => [`Heavy traffic. A car about 3 seconds away is too close to pull out in front of`, `The 4th exit takes you back the way you came`, `Miss your exit? Go around again. Never stop or reverse`] },
+  { title: () => 'Free drive', free: true,
+    tips: w => [`Pick traffic, pedestrians and your exit in Settings`, `Every run is graded on the same six steps`, `Drivers in the circle won't see you coming if you cut in`] },
+];
+
+/* ---------- vehicles ---------- */
+const allVeh = () => player ? cars.concat([player]) : cars;
+function zoneOf(c) {
+  if (c.s + CAR_L / 2 < c.sYield) return 'approach';
+  if (c.s < c.sMerge) return 'entering';
+  if (!c.ai && !c.decided) return 'ring';
+  return c.s < c.sDiverge ? 'ring' : 'exiting';
+}
+const RANK = { approach: 0, entering: 1, exiting: 2, ring: 3 };
+const nextExitOf = c => c.ai ? c.exitLeg : (c.decided ? c.exitLeg : c.nextLeg);
+
+function makeAI(leg, exitN) {
+  const rt = new Route().add(entryPts(leg)), exitLeg = (leg + exitN) % 4;
+  rt.add(arcPts(mergePhi(leg), divergePhi(exitLeg)));
+  const sDiverge = rt.length; rt.add(exitPts(exitLeg));
+  const c = { id: nextId++, ai: true, route: rt, s: 0, v: 11.5, leg, exitN, exitLeg, sYield: ENTRY.sYield, sMerge: ENTRY.len,
+    sDiverge, sCWin: ENTRY.sCW, sCWout: sDiverge + EXIT.cw, color: pick(CAR_COLORS), signal: 0, braking: false,
+    committed: false, lazy: Math.random() < 0.08, leader: null, gap: Infinity, acc: 0, seenPlayerAt: -1, honked: false };
+  c.pos = rt.at(0, 0); return c;
+}
+function makePlayer() {
+  const rt = new Route().add(entryPts(0)); const sMerge = rt.length;
+  rt.add(arcPts(mergePhi(0), divergePhi(1)));
+  const p = { id: 0, ai: false, route: rt, s: R_FAR - 58, v: 10.5, leg: 0, nextLeg: 1, decided: false, exitLeg: -1,
+    sYield: ENTRY.sYield, sMerge, sDiverge: rt.length, sCWin: ENTRY.sCW, sCWout: Infinity, signal: 0, signalOnS: -1e9,
+    braking: false, color: '#1F6FE5', stopT: 0, stopFlag: false, waitClear: 0, startT: T, auto: false, upstream: new Set(), enterT: -99 };
+  p.pos = rt.at(p.s, 0); return p;
+}
+function trySpawn(leg) {
+  if (cars.length >= 22) return;
+  if (allVeh().some(o => o.leg === leg && !o.free && zoneOf(o) === 'approach' && o.s < 16)) return;
+  const r = Math.random(); cars.push(makeAI(leg, r < 0.3 ? 1 : r < 0.65 ? 2 : r < 0.9 ? 3 : 4));
+}
+
+function findLeader(c, list, look = 45) {
+  let best = null, gap = Infinity; const rt = c.route, S = rt.s, n = S.length;
+  const hx = Math.cos(c.pos.h), hy = Math.sin(c.pos.h);
+  for (const o of list) {
+    if (o === c) continue;
+    const dx = o.pos.x - c.pos.x, dy = o.pos.y - c.pos.y;
+    if (dx * dx + dy * dy > (look + 6) ** 2 || dx * hx + dy * hy < 0.3) continue;
+    for (let k = c.pos.i + 1; k < n; k++) {
+      const d = S[k] - c.s; if (d > look) break;
+      const ex = rt.x[k] - o.pos.x, ey = rt.y[k] - o.pos.y;
+      if (ex * ex + ey * ey < 3.6) { const g = d + 0.8 - CAR_L; if (g < gap) { gap = g; best = o; } break; }
+    }
+  }
+  return { leader: best, gap };
+}
+function idm(v, v0, gap, dv, s0 = 2) {
+  const A = 1.8, B = 3, Tg = 1.1;
+  let a = v <= v0 ? A * (1 - (v / Math.max(v0, 0.1)) ** 4) : -2.5 * Math.min(1, (v - v0) / 2);
+  if (gap < Infinity) { const ss = s0 + Math.max(0, v * Tg + v * dv / (2 * Math.sqrt(A * B))); a -= A * (ss / Math.max(gap, 0.05)) ** 2; }
+  return a;
+}
+function circleTraffic(leg, self, tT, minD) {
+  const pm = mergePhi(leg), res = { conflict: [], leaving: [] };
+  for (const o of allVeh()) {
+    if (o === self || o.free) continue;
+    const z = zoneOf(o);
+    if (z === 'approach' || z === 'exiting' || (z === 'entering' && o.leg === leg)) continue;
+    const d = mod(Math.atan2(o.pos.y, o.pos.x) - pm, TAU);
+    if (d > TAU - 0.3) continue;
+    if (nextExitOf(o) === leg && o.signal === 1) { res.leaving.push(o); continue; }
+    const dist = d * R, t = dist / Math.max(o.v, 1.5);
+    if (dist < minD || (t < tT && dist < 45)) res.conflict.push(o);
+  }
+  return res;
+}
+
+function aiAccel(c) {
+  const z = zoneOf(c), front = c.s + CAR_L / 2; let v0;
+  if (z === 'approach') v0 = Math.min(13, 7 + Math.max(0, c.sYield - front - 6) * 0.2);
+  else if (z === 'exiting') v0 = Math.min(13, 7.5 + (c.s - c.sDiverge) * 0.3);
+  else v0 = 7.5;
+  let a = idm(c.v, v0, c.gap, c.leader ? c.v - (c.leader.free ? 0 : c.leader.v) : 0);
+  let floor = -9;
+  if (c.leader && c.leader === player) floor = -6.5; // a surprised driver cannot brake perfectly
+  if (z === 'approach' && !c.committed) {
+    const dY = c.sYield - front;
+    if (dY < 32) {
+      if (circleTraffic(c.leg, c, 3.4, 11).conflict.length) a = Math.min(a, idm(c.v, v0, dY + 0.3, c.v, 0.6));
+      else if (dY < 3.5) c.committed = true;
+    }
+  }
+  if (front < c.sCWin - CW_HALF + 0.4 && c.sCWin - front < 45 && pedBlocking(c.leg, 1)) a = Math.min(a, idm(c.v, v0, c.sCWin - CW_HALF - 0.5 - front, c.v, 0.6));
+  const dX = c.sCWout - CW_HALF - front;
+  if (dX > -0.4 && dX < 40 && pedBlocking(c.exitLeg, -1)) a = Math.min(a, idm(c.v, v0, dX - 0.5, c.v, 0.6));
+  if (player && c.leader === player && a < -4) noteCutOff(c);
+  return clamp(a, floor, 2.2);
+}
+function updateSignalAI(c) {
+  if (c.lazy || c.free || c.s > c.sDiverge + EXIT.curve) { c.signal = 0; return; }
+  c.signal = c.exitN === 1 ? (c.sYield - c.s - CAR_L / 2 < 40 ? 1 : 0) : (c.s > c.sDiverge - R * Math.PI / 2 + 3 ? 1 : 0);
+}
+
+/* ---------- pedestrians ---------- */
+function spawnPed(leg, side, walking) {
+  peds.push({ leg, side, lat: side * (walking ? 6.0 : 6.8), dir: -side, state: walking ? 'walk' : 'wait', phase: 1, fade: 1,
+    shirt: pick(SHIRTS), skin: pick(SKIN), stride: Math.random() * 6 });
+}
+const pedInHalf = (d, half) => d.state === 'walk' && half * d.lat > 0.9 && half * d.lat < 5.9;
+function pedBlocking(leg, half) {
+  return peds.some(d => d.leg === leg && d.state === 'walk' &&
+    ((half * d.lat > 0.9 && half * d.lat < 6.2) || (d.dir === half && half * d.lat > -1.3 && half * d.lat <= 0.9)));
+}
+function halfClear(leg, half) {
+  for (const c of allVeh()) {
+    if (c.free) continue;
+    const front = c.s + CAR_L / 2, rear = c.s - CAR_L / 2; let edge;
+    if (half === 1) { if (c.leg !== leg) continue; edge = ENTRY.sCW - CW_HALF; }
+    else {
+      const ex = c.ai ? c.exitLeg : (c.decided ? c.exitLeg : (c.signal === 1 ? c.nextLeg : -1));
+      if (ex !== leg || (c.ai && zoneOf(c) === 'approach')) continue;
+      edge = c.sDiverge + EXIT.cw - CW_HALF;
+    }
+    if (rear > edge + 2 * CW_HALF + 0.5) continue;
+    const dist = edge - front;
+    if (dist < 0) return false;
+    if (c.v > 0.6 && dist < Math.max(5, c.v * c.v / 7 + c.v * 0.8)) return false;
+  }
+  return true;
+}
+function updatePeds(dt) {
+  for (const d of peds) {
+    if (d.state === 'wait') { if (halfClear(d.leg, d.side)) d.state = 'walk'; }
+    else if (d.state === 'walk') {
+      d.lat += d.dir * 1.35 * dt; d.stride += dt * 9;
+      if (d.phase === 1 && d.side * d.lat <= 1.0) { d.phase = 2; if (!halfClear(d.leg, -d.side)) { d.state = 'refuge'; d.lat = d.side * 1.0; } }
+      if (d.phase === 2 && -d.side * d.lat >= 6.8) d.state = 'gone';
+    } else if (d.state === 'refuge') { if (halfClear(d.leg, -d.side)) d.state = 'walk'; }
+    else if (d.state === 'gone') d.fade -= dt * 1.5;
+  }
+  peds = peds.filter(d => d.fade > 0);
+}
+const pedPos = d => P(d.leg, R_CW, d.lat);
+
+/* ---------- crashes ---------- */
+function circlesOf(c) {
+  const hx = Math.cos(c.pos.h), hy = Math.sin(c.pos.h);
+  return [-1.45, 0, 1.45].map(o => ({ x: c.pos.x + hx * o, y: c.pos.y + hy * o }));
+}
+function carsTouch(a, b) {
+  if (Math.hypot(a.pos.x - b.pos.x, a.pos.y - b.pos.y) > 6) return null;
+  const A = circlesOf(a), B = circlesOf(b);
+  for (const p of A) for (const q of B) if ((p.x - q.x) ** 2 + (p.y - q.y) ** 2 < 1.8 * 1.8) return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 };
+  return null;
+}
+function makeFree(c) {
+  if (!c.free) c.free = { vx: Math.cos(c.pos.h) * c.v, vy: Math.sin(c.pos.h) * c.v, w: 0 };
+  return c.free;
+}
+function collide(a, b, at) {
+  const fa = makeFree(a), fb = makeFree(b);
+  const rvx = fa.vx - fb.vx, rvy = fa.vy - fb.vy, rel = Math.hypot(rvx, rvy);
+  let nx = b.pos.x - a.pos.x, ny = b.pos.y - a.pos.y; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+  const mvx = (fa.vx + fb.vx) / 2, mvy = (fa.vy + fb.vy) / 2, push = 0.6 + rel * 0.25;
+  fa.vx = mvx - nx * push; fa.vy = mvy - ny * push; fb.vx = mvx + nx * push; fb.vy = mvy + ny * push;
+  const cross = rvx * ny - rvy * nx, spin = clamp(0.6 + rel * 0.35, 0.8, 4);
+  fa.w = (cross >= 0 ? 1 : -1) * spin; fb.w = -(cross >= 0 ? 1 : -1) * spin * 0.8;
+  a.signal = 0; b.signal = 0; a.v = 0; b.v = 0;
+  burst(at.x, at.y, rel);
+  shake = Math.min(1, 0.35 + rel * 0.06);
+  sound('crash', rel);
+}
+function stepFree(c, dt) {
+  const f = c.free, sp = Math.hypot(f.vx, f.vy);
+  if (sp > 0) { const ns = Math.max(0, sp - 6.5 * dt); f.vx *= ns / sp; f.vy *= ns / sp; }
+  f.w *= Math.exp(-2.2 * dt);
+  c.pos = { x: c.pos.x + f.vx * dt, y: c.pos.y + f.vy * dt, h: c.pos.h + f.w * dt, i: c.pos.i };
+  if (sp > 3 && Math.random() < dt * 30) parts.push({ k: 'skid', x: c.pos.x, y: c.pos.y, h: c.pos.h, life: 6, max: 6 });
+}
+function burst(x, y, rel) {
+  const n = 18 + Math.min(30, rel * 3);
+  for (let k = 0; k < n; k++) {
+    const a = Math.random() * TAU, s = 2 + Math.random() * (3 + rel * 0.6);
+    parts.push({ k: Math.random() < 0.55 ? 'glass' : 'spark', x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 0.6 + Math.random() * 1.2, max: 1.8, r: 0.12 + Math.random() * 0.22, rot: Math.random() * TAU });
+  }
+  for (let k = 0; k < 6; k++) parts.push({ k: 'smoke', x: x + (Math.random() - 0.5) * 2, y: y + (Math.random() - 0.5) * 2, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, life: 2.5, max: 2.5, r: 1 + Math.random() });
+  parts.push({ k: 'flash', x, y, life: 0.35, max: 0.35 });
+}
+function stepParts(dt) {
+  for (const q of parts) {
+    q.life -= dt;
+    if (q.vx !== undefined) { q.x += q.vx * dt; q.y += q.vy * dt; const damp = q.k === 'smoke' ? 0.98 : Math.exp(-3 * dt); q.vx *= damp; q.vy *= damp; }
+    if (q.k === 'smoke') q.r += dt * 0.9;
+  }
+  parts = parts.filter(q => q.life > 0 && (q.k !== 'glass' || true));
+}
+
+/* ---------- the world step ---------- */
+function stepWorld(dt) {
+  T += dt;
+  const rate = TRAFFIC[mission.traffic], pr = PEDS[mission.peds];
+  for (let i = 0; i < 4; i++) {
+    if (Math.random() < rate * dt) trySpawn(i);
+    if (pr && Math.random() < pr * dt && peds.filter(d => d.leg === i).length < 2) spawnPed(i, Math.random() < 0.5 ? 1 : -1, false);
+  }
+  const all = allVeh();
+  for (const c of all) if (!c.free) c.pos = c.route.at(c.s, c.pos ? c.pos.i : 0);
+  for (const c of cars) {
+    if (c.free) continue;
+    const L = findLeader(c, all); c.leader = L.leader; c.gap = L.gap;
+    // drivers with the right of way do not expect someone to pull out: the learner car is seen only after a reaction time
+    if (c.leader === player && player) {
+      if (c.seenPlayerAt < 0) c.seenPlayerAt = T;
+      const surprised = G.yieldViol && player.upstream.has(c.id);
+      if (surprised && T - c.seenPlayerAt < 0.8 && c.gap > 0.4) { const L2 = findLeader(c, cars); c.leader = L2.leader; c.gap = L2.gap; }
+    } else c.seenPlayerAt = -1;
+  }
+  for (const c of cars) {
+    const o = c.leader;
+    if (o && o.ai && o.leader === c && !c.free && !o.free) {
+      const rc = RANK[zoneOf(c)], ro = RANK[zoneOf(o)];
+      if (rc > ro || (rc === ro && c.id < o.id)) { c.leader = null; c.gap = Infinity; }
+    }
+  }
+  for (const c of cars) c.acc = c.free ? 0 : aiAccel(c);
+  for (const c of cars) {
+    if (c.free) { stepFree(c, dt); continue; }
+    c.v = Math.max(0, c.v + c.acc * dt); c.s += c.v * dt; c.braking = c.acc < -1.2 || c.v < 0.3; updateSignalAI(c);
+  }
+  cars = cars.filter(c => c.free || c.s < c.route.length - 0.5);
+  if (player) updatePlayer(dt);
+  updatePeds(dt);
+  stepParts(dt);
+  scriptTick();
+  if (state === 'drive' && G.crash && T - G.crashT > 1.6) finish();
+}
+
+/* ---------- the learner ---------- */
+function updatePlayer(dt) {
+  const p = player;
+  if (p.free) { stepFree(p, dt); return; }
+  let a;
+  if (p.auto) a = p.v < 12 ? 2.2 : 0;
+  else { a = -0.3 - 0.0022 * p.v * p.v; if (input.gas) a += 3.0 * (1 - p.v / 19); if (input.brake) a -= 7.5; }
+  p.braking = !p.auto && input.brake;
+  p.v = clamp(p.v + a * dt, 0, 19);
+  const sPrev = p.s; p.s += p.v * dt;
+  while (!p.decided && p.s >= p.sDiverge) decideExit();
+  if (p.decided && p.s >= p.route.length - 0.5) { player = null; return; }
+  p.pos = p.route.at(p.s, p.pos.i);
+  if (p.decided && p.signal && p.s > p.sDiverge + EXIT.curve + 2) p.signal = 0;
+  if (state === 'drive') checkPlayer(sPrev, dt);
+}
+function decideExit() {
+  const p = player, n = p.nextLeg === 0 ? 4 : p.nextLeg, grading = state === 'drive', tgt = mission.target;
+  if (p.signal === 1) {
+    p.route.add(exitPts(p.nextLeg)); p.exitLeg = p.nextLeg; p.decided = true; p.sCWout = p.sDiverge + EXIT.cw;
+    if (!grading) return;
+    if (steps[3] !== 'bad') setStep(3, 'ok');
+    if (n === tgt) {
+      if (p.sDiverge - p.signalOnS < 10) { G.signalLate = true; setStep(4, 'bad'); toast('warn', 'Late signal. Turn it on a few car lengths before your exit'); }
+      else { setStep(4, 'ok'); toast('ok', 'Well signaled'); }
+    } else { G.wrongExit = n; setStep(4, 'bad'); toast('bad', `Wrong exit. Your signal took you out at the ${ORD[n]} exit`); }
+  } else {
+    if (grading && n === tgt) { G.missed++; toast('warn', 'Missed your exit. Go around again'); }
+    const from = p.nextLeg, to = (from + 1) % 4;
+    p.route.add(arcPts(divergePhi(from), divergePhi(to))); p.nextLeg = to; p.sDiverge = p.route.length;
+  }
+}
+function checkPlayer(sPrev, dt) {
+  const p = player, front = p.s + CAR_L / 2, pf = sPrev + CAR_L / 2, dY = p.sYield - front;
+  if (dY > 0 && dY < 15) G.entrySpeed = Math.max(G.entrySpeed, p.v);
+  const e1 = p.sCWin - CW_HALF;
+  if (pf < e1 && front >= e1) {
+    if (peds.some(d => d.leg === 0 && pedInHalf(d, 1))) { G.pedEntry = true; setStep(1, 'bad'); toast('bad', 'You drove through an occupied crosswalk'); }
+    else setStep(1, 'ok');
+  }
+  if (pf < p.sYield && front >= p.sYield) {
+    setStep(0, G.entrySpeed <= 9.0 ? 'ok' : 'bad');
+    if (G.entrySpeed > 9.0) toast('warn', `${mph(G.entrySpeed)} mph is too fast for the circle`);
+    const tr = circleTraffic(0, p, 2.6, 8.5);
+    p.enterT = T; p.upstream = new Set();
+    for (const o of cars) {
+      const z = zoneOf(o);
+      if ((z === 'ring' || z === 'entering') && o.leg !== 0 && mod(Math.atan2(o.pos.y, o.pos.x) - mergePhi(0), TAU) < 2.4) p.upstream.add(o.id);
+    }
+    if (tr.conflict.length) { G.yieldViol = true; setStep(2, 'bad'); toast('bad', `You pulled out in front of a car in the circle`); }
+    else toast('ok', 'Good gap');
+  }
+  if (steps[2] !== 'ok' && steps[2] !== 'bad' && p.s >= p.sMerge + 8) setStep(2, (G.yieldViol || G.cutOff) ? 'bad' : 'ok');
+  if (p.decided) {
+    const e2 = p.sCWout - CW_HALF;
+    if (pf < e2 && front >= e2 && peds.some(d => d.leg === p.exitLeg && pedInHalf(d, -1))) { G.pedExit = true; toast('bad', 'You drove through an occupied crosswalk'); }
+  }
+  const z = zoneOf(p);
+  if ((z === 'ring' || z === 'entering') && p.v < 0.4) {
+    const L = findLeader(p, allVeh(), 12);
+    if (!(L.leader && L.gap < 9)) {
+      p.stopT += dt;
+      if (p.stopT > 1.3 && !p.stopFlag) { p.stopFlag = true; G.stopInRing++; setStep(3, 'bad'); toast('warn', "Don't stop inside the circle"); }
+    } else p.stopT = 0;
+  } else { p.stopT = 0; if (p.v > 2) p.stopFlag = false; }
+  if (z === 'approach' && dY < 6 && p.v < 0.4 && !circleTraffic(0, p, 3.4, 11).conflict.length && !pedBlocking(0, 1)) p.waitClear += dt; else p.waitClear = 0;
+  for (const c of cars) { const hit = carsTouch(p, c); if (hit) { crash('car', c, hit); return; } }
+  for (const d of peds) {
+    if (d.state === 'gone' || d.state === 'down') continue;
+    const q = pedPos(d);
+    if (circlesOf(p).some(k => (k.x - q.x) ** 2 + (k.y - q.y) ** 2 < 1.45 * 1.45)) { crash('ped', d, q); return; }
+  }
+  if (p.decided && p.s > p.sDiverge + EXIT.curve + (58 - R_CURVE)) finish();
+}
+function noteCutOff(c) {
+  const p = player;
+  if (!p || state !== 'drive' || G.cutOff || !p.upstream.has(c.id) || T - p.enterT > 6) return;
+  G.cutOff = true; setStep(2, 'bad'); toast('bad', 'A driver in the circle had to slam the brakes for you');
+  if (!c.honked) { c.honked = true; sound('horn'); }
+}
+function crash(kind, other, at) {
+  const p = player; G.crash = kind; G.crashT = T; G.crashWith = other;
+  if (kind === 'car') {
+    collide(p, other, at);
+    const wasUp = p.upstream.has(other.id) || (zoneOf(p) !== 'approach' && RANK[zoneOf(other)] >= 3 && T - p.enterT < 8);
+    G.crashWhy = wasUp ? 'cutin' : (other.leader === p ? 'rearended' : 'hit');
+  } else {
+    makeFree(p); p.free.vx *= 0.35; p.free.vy *= 0.35; other.state = 'down'; burst(at.x, at.y, 2); shake = 0.6; sound('crash', 4);
+  }
+  for (let k = 0; k < 6; k++) if (steps[k] === 'active') setStep(k, 'bad');
+  toast('bad', kind === 'ped' ? 'You hit a pedestrian' : 'Crash');
+}
+
+/* ---------- lesson scripts ---------- */
+function scriptTick() {
+  if (state !== 'drive' || !player || mission.script !== 'peds') return;
+  const p = player;
+  if (!script.a && T - p.startT > 0.25) { script.a = true; spawnPed(0, 1, true); }
+  const tl = mission.target % 4;
+  if (!script.b && !p.decided && p.nextLeg === tl && zoneOf(p) === 'ring' && p.sDiverge - p.s < 14) { script.b = true; spawnPed(tl, -1, true); }
+}
+
+/* ---------- steps, coach, toasts ---------- */
+function stepDefs() {
+  const w = W();
+  return [
+    ['Slow down', 'About 15–20 mph by the yield line'],
+    ['Stop for walkers', 'Anyone in the crosswalk goes first'],
+    [`Yield to the ${w.look}`, 'Cars already circling have the right of way'],
+    ['Keep moving', `Go ${w.rot} and don't stop inside`],
+    [`Signal ${w.sig}`, 'After you pass the exit before yours'],
+    ['Exit with care', 'Watch the crosswalk on the way out'],
+  ];
+}
+function renderSteps() {
+  const defs = stepDefs();
+  $('#steps').innerHTML = defs.map((d, k) =>
+    `<li data-state="${steps[k]}"><i class="num" aria-hidden="true">${steps[k] === 'ok' ? '✓' : steps[k] === 'bad' ? '✕' : k + 1}</i><div><b>${d[0]}</b><span>${d[1]}</span></div></li>`).join('');
+}
+function setStep(k, s) {
+  if (steps[k] === s) return;
+  if (steps[k] === 'bad' && s !== 'bad') return;
+  steps[k] = s; renderSteps();
+}
+function activateSteps() {
+  const p = player; if (!p || state !== 'drive' || G.crash) return;
+  const front = p.s + CAR_L / 2, z = zoneOf(p), tl = mission.target % 4;
+  const want = [
+    z === 'approach',
+    front < p.sCWin - CW_HALF,
+    z === 'approach' && p.sYield - front < 30 || (z !== 'approach' && p.s < p.sMerge + 8),
+    z === 'entering' || (z === 'ring'),
+    !p.decided && (p.nextLeg === tl) && (z !== 'approach' || mission.target === 1),
+    p.decided,
+  ];
+  want.forEach((on, k) => { if (on && steps[k] === 'todo') setStep(k, 'active'); });
+}
+function coach() {
+  const p = player, w = W();
+  if (state !== 'drive' || !p) return null;
+  if (G.crash) return { tone: 'bad', text: G.crash === 'ped' ? 'You hit a pedestrian' : 'Crash' };
+  const front = p.s + CAR_L / 2, z = zoneOf(p), tgt = mission.target, mv = p.v * MPH;
+  if (z === 'approach') {
+    const dY = p.sYield - front, e1 = p.sCWin - CW_HALF;
+    if (front < e1 && e1 - front < 40 && pedBlocking(0, 1)) return { tone: 'bad', text: 'Pedestrian crossing. Stop before the stripes' };
+    if (front < e1 && e1 - front < 30 && peds.some(d => d.leg === 0 && ((d.state === 'wait' && d.side === 1) || (d.state === 'refuge' && d.side === -1)))) return { tone: 'warn', text: 'Pedestrian waiting. Be ready to stop' };
+    if (mv > 21 && dY < 45) return { tone: 'warn', text: 'Too fast. Slow to 15–20 mph' };
+    if (tgt === 1 && p.signal !== 1 && dY < 45) return { tone: 'warn', text: `1st exit: signal ${w.sig} now` };
+    if (tgt !== 1 && p.signal === 1) return { tone: 'warn', text: `Your ${w.sig} signal says 1st exit. Cancel it` };
+    if (dY < 24) {
+      if (circleTraffic(0, p, 3.0, 10).conflict.length) return { tone: 'bad', text: `Yield. Car coming from the ${w.look}` };
+      if (p.waitClear > 2) return { tone: 'ok', text: 'All clear. Go now' };
+      return { tone: 'ok', text: `Clear to the ${w.look}. Enter now` };
+    }
+    return { tone: 'info', text: 'Roundabout ahead. Ease off to 15–20 mph' };
+  }
+  const n = p.decided ? -1 : (p.nextLeg === 0 ? 4 : p.nextLeg);
+  if (z === 'entering' || z === 'ring') {
+    if (p.stopT > 0.6) return { tone: 'warn', text: "Don't stop in the circle. Keep going" };
+    if (n === tgt) return p.signal === 1 ? { tone: 'ok', text: 'Signal on. Take your exit' } : { tone: 'bad', text: `Your exit is next. Signal ${w.sig} now` };
+    if (p.signal === 1) return { tone: 'warn', text: `Cancel your signal. The ${ORD[n]} exit isn't yours` };
+    if (z === 'entering') return { tone: 'info', text: `Merge in and keep moving ${w.rot}` };
+    return { tone: 'info', text: `${G.missed ? 'Go around again. ' : ''}Pass the ${ORD[n]} exit` };
+  }
+  const e2 = p.sCWout - CW_HALF;
+  if (front < e2 && pedBlocking(p.exitLeg, -1)) return { tone: 'bad', text: 'Pedestrian at your exit. Stop' };
+  if (G.wrongExit) return { tone: 'warn', text: 'Wrong exit. Next time, wait to signal' };
+  if (front < e2 + 3) return { tone: 'info', text: 'Leaving. Watch the crosswalk' };
+  return { tone: 'ok', text: "You're through" };
+}
+let lastToast = { text: '', t: 0 };
+function toast(tone, text) {
+  const now = performance.now();
+  if (text === lastToast.text && now - lastToast.t < 2500) return;
+  lastToast = { text, t: now };
+  const el = document.createElement('div'); el.className = 'toast'; el.dataset.tone = tone; el.textContent = text;
+  const box = $('#toasts'); box.prepend(el);
+  while (box.children.length > 3) box.lastChild.remove();
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3200);
+}
+
+/* ---------- sound ---------- */
+let ac = null;
+function audio() {
+  if (!soundOn) return null;
+  try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch (e) { ac = null; }
+  return ac;
+}
+function sound(kind, power = 5) {
+  const a = audio(); if (!a) return;
+  const t = a.currentTime, out = a.createGain(); out.connect(a.destination);
+  if (kind === 'crash') {
+    const len = 0.9, buf = a.createBuffer(1, Math.floor(a.sampleRate * len), a.sampleRate), ch = buf.getChannelData(0);
+    for (let i = 0; i < ch.length; i++) { const k = i / ch.length; ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - k, 2.2) * (Math.random() < 0.02 ? 2.5 : 1); }
+    const src = a.createBufferSource(); src.buffer = buf;
+    const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(5000, t); lp.frequency.exponentialRampToValueAtTime(300, t + len);
+    src.connect(lp); lp.connect(out); out.gain.setValueAtTime(clamp(0.25 + power * 0.04, 0.3, 0.8), t); src.start(t);
+    const o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(38, t + 0.35);
+    g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.4); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.45);
+  } else if (kind === 'horn') {
+    out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
+    out.gain.setValueAtTime(0.16, t + 0.55); out.gain.exponentialRampToValueAtTime(0.0001, t + 0.62);
+    const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1800; lp.connect(out);
+    for (const f of [405, 507]) { const o = a.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.connect(lp); o.start(t); o.stop(t + 0.65); }
+  } else if (kind === 'tick') {
+    const o = a.createOscillator(); o.type = 'square'; o.frequency.value = power; out.gain.setValueAtTime(0.05, t); out.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+    o.connect(out); o.start(t); o.stop(t + 0.03);
+  }
+}
+
+/* ---------- flow ---------- */
+function loadProgress() { try { return JSON.parse(localStorage.getItem('tct-progress') || '{}'); } catch (e) { return {}; } }
+function saveProgress(p) { try { localStorage.setItem('tct-progress', JSON.stringify(p)); } catch (e) { /* storage off */ } }
+let progress = loadProgress();
+
+function missionFor(i) {
+  const L = LESSONS[i];
+  if (!L.free) return { target: L.target, traffic: L.traffic, peds: L.peds, script: L.script || null };
+  const ex = +$('#optExit').value;
+  return { target: ex || 1 + Math.floor(Math.random() * 4), traffic: $('#optTraffic').value, peds: $('#optPeds').value, script: null };
+}
+function resetWorld() {
+  cars = []; peds = []; parts = []; player = null; script = {}; shake = 0;
+  for (let k = 0; k < 600; k++) stepWorld(1 / 20);
+}
+function startLesson(i, skipBrief) {
+  lessonIdx = i; mission = missionFor(i); state = 'brief';
+  $('#report').hidden = true; $('#toasts').innerHTML = '';
+  steps.fill('todo'); renderSteps(); renderLessons(); renderFree();
+  resetWorld();
+  if (skipBrief) beginDrive(); else { showBrief(); $('#brief').hidden = false; }
+  updateHUD(true);
+}
+function showBrief() {
+  const L = LESSONS[lessonIdx], w = W(), t = mission.target;
+  $('#bEyebrow').textContent = L.free ? 'Practice' : `Lesson ${lessonIdx + 1} of ${LESSONS.length - 1}`;
+  $('#bTitle').textContent = L.title(w);
+  $('#bChip').textContent = `${ORD[t]} exit`;
+  $('#bGoal').textContent = t === 2 ? 'Go straight ahead' : t === 4 ? 'Make a U-turn' : `Make a ${turnName(t)}`;
+  $('#bTips').innerHTML = L.tips(w).map(s => `<li>${s}</li>`).join('');
+  $('#bKeys').innerHTML = `Hold <kbd>↑</kbd> gas and <kbd>↓</kbd> brake. <kbd>${w.key}</kbd> signals ${w.sig}. Or use the buttons under the map.`;
+}
+function beginDrive() {
+  $('#brief').hidden = true;
+  cars = cars.filter(c => !(c.leg === 0 && zoneOf(c) === 'approach' && Math.abs(c.s - (R_FAR - 58)) < 16));
+  G = { entrySpeed: 0, pedEntry: false, pedExit: false, yieldViol: false, cutOff: false, stopInRing: 0, signalLate: false, wrongExit: 0, missed: 0, crash: null };
+  player = makePlayer(); state = 'drive'; paused = false; $('#pausedTag').hidden = true;
+  steps.fill('todo'); renderSteps();
+  audio();
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+}
+function finish() {
+  if (state !== 'drive') return;
+  state = 'report';
+  if (player && !G.crash) { player.auto = true; setStep(5, (G.pedExit || G.wrongExit) ? 'bad' : 'ok'); }
+  buildReport(); $('#report').hidden = false;
+  setTimeout(() => { const b = $('#btnNext'); if (b) b.focus({ preventScroll: true }); }, 50);
+}
+function buildReport() {
+  const w = W(), tgt = mission.target, done = !G.crash;
+  const items = [];
+  const add = (st, title, good, bad) => items.push({ st, title, text: st === 'ok' ? good : st === 'bad' ? bad : 'Not reached' });
+  const judged = k => steps[k] === 'ok' || steps[k] === 'bad' ? steps[k] : 'skip';
+  add(judged(0), 'Slowed down', `${mph(G.entrySpeed)} mph at the yield line`, `${mph(G.entrySpeed)} mph at the yield line. At 15–20 mph you can still stop for a gap or a walker`);
+  const pedSt = (G.pedEntry || G.pedExit) ? 'bad' : (judged(1) === 'ok' && (done || player && player.decided)) ? 'ok' : judged(1);
+  add(pedSt, 'Yielded to pedestrians', 'Nobody in a crosswalk had to wait for you', 'You drove through a crosswalk while someone was in it. Walkers always go first');
+  add(judged(2), `Yielded to the ${w.look}`, 'You waited for a safe gap', `You entered in front of a car already in the circle. It had the right of way`);
+  add(judged(3), 'Kept moving', `Smooth and steady, ${w.rot}`, 'You stopped inside the circle. Only stop for a car or person right in front of you');
+  add(judged(4), `Signaled ${w.sig}`, 'Signal on in good time before your exit', G.wrongExit ? 'You signaled too early and left at the wrong exit' : 'Your signal came too late to warn the drivers waiting');
+  add(G.wrongExit ? 'bad' : (done ? 'ok' : 'skip'), 'Right exit', `${ORD[tgt]} exit, ${turnName(tgt)}`, `You left at the ${ORD[G.wrongExit]} exit instead of the ${ORD[tgt]}`);
+  add(G.crash ? 'bad' : 'ok', 'No collisions', 'Nobody got hurt', crashText());
+  if (G.crash) items.unshift(items.pop());
+  const crit = G.crash || G.wrongExit || G.pedEntry || G.pedExit || G.yieldViol || G.cutOff;
+  const minor = G.entrySpeed > 9 || G.stopInRing || G.signalLate;
+  const stars = (G.crash || G.wrongExit) ? 0 : crit ? 1 : minor ? 2 : 3;
+  const L = LESSONS[lessonIdx];
+  $('#rEyebrow').textContent = L.free ? 'Free drive' : `Lesson ${lessonIdx + 1}: ${L.title(w)}`;
+  $('#rTitle').textContent = G.crash ? (G.crash === 'ped' ? 'You hit a pedestrian' : 'You crashed') : G.wrongExit ? 'Wrong exit' : stars === 3 ? 'Perfect run' : stars === 2 ? 'Passed' : 'Made it, with a serious error';
+  $('#rStars').innerHTML = [1, 2, 3].map(k => `<i class="star${k <= stars ? ' on' : ''}" aria-hidden="true"></i>`).join('') + `<span class="sr-only" style="position:absolute;left:-9999px">${stars} of 3 stars</span>`;
+  $('#rChecks').innerHTML = items.map(it => `<li class="${it.st}"><i class="mark ${it.st === 'ok' ? 'ok' : it.st === 'bad' ? 'bad' : ''}" aria-hidden="true">${it.st === 'ok' ? '✓' : it.st === 'bad' ? '✕' : '–'}</i><div><b>${it.title}</b><span>${it.text}</span></div></li>`).join('');
+  $('#rNote').textContent = G.missed ? `You went around ${G.missed === 1 ? 'an extra time' : G.missed + ' extra times'}. That is exactly what to do when you miss an exit` : '';
+  if (!L.free) { const key = String(lessonIdx); if (!progress[key] || stars > progress[key]) { progress[key] = stars; saveProgress(progress); } }
+  const nb = $('#btnNext');
+  nb.textContent = L.free ? 'Drive again' : lessonIdx < LESSONS.length - 2 ? 'Next lesson' : 'Free drive';
+  nb.className = 'btn' + (stars >= 2 || L.free ? ' primary' : '');
+  $('#btnRetry').className = 'btn' + (stars >= 2 || L.free ? '' : ' primary');
+  renderLessons();
+}
+function crashText() {
+  const w = W();
+  if (G.crash === 'ped') return 'A person in the crosswalk had the right of way. At roundabout speeds you can always stop for them';
+  if (G.crashWhy === 'cutin') return `The car from your ${w.look} had the right of way. Its driver didn't expect you to pull out and couldn't stop in time`;
+  if (G.crashWhy === 'rearended') return 'You stopped where the driver behind didn\'t expect it. Keep moving inside the circle';
+  return 'You ran into another car. Keep a safe gap and watch the car ahead';
+}
+
+/* ---------- drawing ---------- */
+function setWorld(c) {
+  let ox = 0, oy = 0;
+  if (shake > 0 && c === ctx) { ox = (Math.random() - 0.5) * 10 * shake; oy = (Math.random() - 0.5) * 10 * shake; }
+  c.setTransform(dpr * scale * mirror, 0, 0, dpr * scale, dpr * (cssW / 2 + ox), dpr * (cssW / 2 - VIEW_CY * scale + oy));
+}
+const toScreen = (x, y) => ({ x: cssW / 2 + mirror * x * scale, y: cssW / 2 + (y - VIEW_CY) * scale });
+function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function poly(c, pts) { c.beginPath(); c.moveTo(pts[0].x, pts[0].y); for (let k = 1; k < pts.length; k++) c.lineTo(pts[k].x, pts[k].y); }
+function quad(c, i, a0, a1, l0, l1) { poly(c, [P(i, a0, l0), P(i, a1, l0), P(i, a1, l1), P(i, a0, l1)]); c.closePath(); c.fill(); }
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const SC = { grass: '#8DA66C', walk: '#D4CFC3', curb: '#EEEAE0', asphalt: '#4A4E52', apron: '#BFB6A4', island: '#76974F', paint: '#F4F4EE', yellow: '#E6BC2C', splitter: '#CBC5B7' };
+const ENTRY_CURVES = [0, 1, 2, 3].map(entryCurve), EXIT_CURVES = [0, 1, 2, 3].map(exitCurve);
+
+function roadShapes(c, extra, color) {
+  c.strokeStyle = color; c.lineJoin = 'round';
+  c.lineCap = 'round'; c.lineWidth = 2 * RING_HALF + 2 * extra; c.beginPath(); c.arc(0, 0, R, 0, TAU); c.stroke();
+  for (let i = 0; i < 4; i++) {
+    const u = legU(i);
+    c.lineCap = 'butt'; c.lineWidth = 2 * ROAD_HALF + 2 * extra; c.beginPath(); c.moveTo(u.x * (R + 1), u.y * (R + 1)); c.lineTo(u.x * 120, u.y * 120); c.stroke();
+    c.lineCap = 'round'; c.lineWidth = LANE_W + 1.6 + 2 * extra;
+    poly(c, ENTRY_CURVES[i]); c.stroke(); poly(c, EXIT_CURVES[i]); c.stroke();
+  }
+}
+function edgeOf(pts, side, from, to, i) {
+  const u = legU(i), out = [];
+  for (let k = 0; k < pts.length; k++) {
+    const a = pts[Math.max(0, k - 1)], b = pts[Math.min(pts.length - 1, k + 1)];
+    const hl = Math.hypot(b.x - a.x, b.y - a.y) || 1, hx = (b.x - a.x) / hl, hy = (b.y - a.y) / hl;
+    let e = { x: pts[k].x + hy * side, y: pts[k].y - hx * side };
+    const along = e.x * u.x + e.y * u.y;
+    if (Math.hypot(e.x, e.y) < from || along > to) continue;
+    if (along > to - 7) { const kf = clamp((to - along) / 7, 0, 1); e = { x: u.x * along + (e.x - u.x * along) * kf, y: u.y * along + (e.y - u.y * along) * kf }; }
+    out.push(e);
+  }
+  return out;
+}
+function renderStatic() {
+  sc.width = cv.width; sc.height = cv.height;
+  const c = sctx; c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = SC.grass; c.fillRect(0, 0, sc.width, sc.height);
+  setWorld(c);
+  const rnd = rng(11);
+  for (let k = 0; k < 1400; k++) { c.fillStyle = rnd() < 0.55 ? 'rgba(40,70,20,.12)' : 'rgba(255,255,220,.07)'; c.beginPath(); c.arc((rnd() * 2 - 1) * 64, (rnd() * 2 - 1) * 64 + VIEW_CY, 0.3 + rnd() * 1.3, 0, TAU); c.fill(); }
+  roadShapes(c, WALK, SC.walk);
+  roadShapes(c, 0.22, SC.curb);
+  roadShapes(c, 0, SC.asphalt);
+  // speckle the asphalt
+  for (let k = 0; k < 1600; k++) {
+    const a = rnd() * TAU, r = rnd() * 60; const x = Math.cos(a) * r, y = Math.sin(a) * r;
+    c.fillStyle = rnd() < 0.5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.05)'; c.fillRect(x, y, 0.35, 0.35);
+  }
+  // central island with truck apron
+  c.fillStyle = SC.apron; c.beginPath(); c.arc(0, 0, ISLAND, 0, TAU); c.fill();
+  c.strokeStyle = 'rgba(80,70,55,.28)'; c.lineWidth = 0.07;
+  for (let k = 0; k < 64; k++) { const a = k / 64 * TAU; c.beginPath(); c.moveTo(Math.cos(a) * (ISLAND - APRON), Math.sin(a) * (ISLAND - APRON)); c.lineTo(Math.cos(a) * ISLAND, Math.sin(a) * ISLAND); c.stroke(); }
+  c.beginPath(); c.arc(0, 0, ISLAND - APRON / 2, 0, TAU); c.stroke();
+  c.strokeStyle = SC.curb; c.lineWidth = 0.25; c.beginPath(); c.arc(0, 0, ISLAND, 0, TAU); c.stroke();
+  c.fillStyle = SC.curb; c.beginPath(); c.arc(0, 0, ISLAND - APRON + 0.15, 0, TAU); c.fill();
+  c.fillStyle = SC.island; c.beginPath(); c.arc(0, 0, ISLAND - APRON, 0, TAU); c.fill();
+  c.fillStyle = 'rgba(60,40,20,.25)'; c.beginPath(); c.arc(0, 0, 6.5, 0, TAU); c.fill();
+  c.fillStyle = '#8C6B45'; c.beginPath(); c.arc(0, 0, 6, 0, TAU); c.fill();
+  for (let k = 0; k < 12; k++) { const a = k / 12 * TAU; shrub(c, Math.cos(a) * 10.5, Math.sin(a) * 10.5, 1.3, k % 3 ? '#4E7536' : '#C9A227'); }
+  tree(c, 0, 0, 4.6);
+  // splitter islands, crosswalks, markings
+  for (let i = 0; i < 4; i++) {
+    const ent = edgeOf(entryPts(i), LANE_W / 2 + 0.35, R + RING_HALF + 0.7, 47, i);
+    const ex = edgeOf(exitPts(i), LANE_W / 2 + 0.35, R + RING_HALF + 0.7, 47, i);
+    poly(c, ent.concat(ex)); c.closePath();
+    c.fillStyle = SC.splitter; c.fill(); c.strokeStyle = SC.yellow; c.lineWidth = 0.22; c.stroke();
+    c.fillStyle = SC.asphalt; quad(c, i, R_CW - CW_HALF, R_CW + CW_HALF, -2.6, 2.6);
+    c.fillStyle = SC.paint;
+    for (let lat = -ROAD_HALF + 0.55; lat <= ROAD_HALF - 0.4; lat += 1.15) quad(c, i, R_CW - CW_HALF, R_CW + CW_HALF, lat - 0.28, lat + 0.28);
+    c.fillStyle = SC.yellow; quad(c, i, 47, 120, -0.3, -0.12); quad(c, i, 47, 120, 0.12, 0.3);
+    c.fillStyle = 'rgba(244,244,238,.8)'; quad(c, i, 36, 120, ROAD_HALF - 0.45, ROAD_HALF - 0.3); quad(c, i, 36, 120, -ROAD_HALF + 0.3, -ROAD_HALF + 0.45);
+    // shark teeth at the yield line, pointing at approaching drivers
+    const rt = new Route().add(entryPts(i)), y = rt.at(ENTRY.sYield, 0), hx = Math.cos(y.h), hy = Math.sin(y.h), rx = -hy, ry = hx;
+    c.fillStyle = SC.paint;
+    for (let k = -2; k <= 2; k++) {
+      const cx = y.x + rx * k * 0.78, cy = y.y + ry * k * 0.78;
+      poly(c, [{ x: cx + rx * 0.3, y: cy + ry * 0.3 }, { x: cx - rx * 0.3, y: cy - ry * 0.3 }, { x: cx - hx * 0.95, y: cy - hy * 0.95 }]); c.closePath(); c.fill();
+    }
+    // ring lane arrow between this leg and the next
+    const pa = legAngle(i) - Math.PI / 4, pc = onRing(pa), t = ringTan(pa);
+    c.save(); c.translate(pc.x, pc.y); c.rotate(Math.atan2(t.y, t.x)); c.fillStyle = 'rgba(244,244,238,.85)';
+    c.fillRect(-1.8, -0.18, 2.3, 0.36); poly(c, [{ x: 0.5, y: -0.65 }, { x: 1.8, y: 0 }, { x: 0.5, y: 0.65 }]); c.closePath(); c.fill(); c.restore();
+    // signs
+    const ys = P(i, 26.6, 8.0); yieldSign(c, ys.x, ys.y, 1.5);
+    const ws = P(i, 50, 8.6); warnSign(c, ws.x, ws.y, 1.4);
+  }
+  // corner trees
+  const tr = rng(5);
+  for (let k = 0; k < 70; k++) {
+    const x = (tr() * 2 - 1) * 62, y = (tr() * 2 - 1) * 62 + VIEW_CY;
+    const lim = ROAD_HALF + WALK + 3.2;
+    if (Math.abs(x) < lim || Math.abs(y) < lim || Math.hypot(x, y) < R + RING_HALF + WALK + 9) continue;
+    tree(c, x, y, 2 + tr() * 2.2);
+  }
+}
+function shrub(c, x, y, r, col) { c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.arc(x + 0.25, y + 0.3, r, 0, TAU); c.fill(); c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); }
+function tree(c, x, y, r) {
+  c.fillStyle = 'rgba(20,35,10,.28)'; c.beginPath(); c.arc(x + r * 0.3, y + r * 0.35, r, 0, TAU); c.fill();
+  c.fillStyle = '#3F6A2E'; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill();
+  c.fillStyle = '#4F7F38'; c.beginPath(); c.arc(x - r * 0.25, y - r * 0.25, r * 0.62, 0, TAU); c.fill();
+  c.fillStyle = 'rgba(190,220,140,.25)'; c.beginPath(); c.arc(x - r * 0.38, y - r * 0.38, r * 0.28, 0, TAU); c.fill();
+}
+function yieldSign(c, x, y, s) {
+  c.fillStyle = 'rgba(0,0,0,.25)'; poly(c, [{ x: x - s + 0.2, y: y - s * 0.6 + 0.25 }, { x: x + s + 0.2, y: y - s * 0.6 + 0.25 }, { x: x + 0.2, y: y + s + 0.25 }]); c.closePath(); c.fill();
+  c.fillStyle = '#C3122F'; poly(c, [{ x: x - s, y: y - s * 0.6 }, { x: x + s, y: y - s * 0.6 }, { x, y: y + s }]); c.closePath(); c.fill();
+  c.fillStyle = '#fff'; const k = 0.5; poly(c, [{ x: x - s * k, y: y - s * 0.6 * k }, { x: x + s * k, y: y - s * 0.6 * k }, { x, y: y + s * k }]); c.closePath(); c.fill();
+}
+function warnSign(c, x, y, s) {
+  c.fillStyle = '#F2C300'; c.strokeStyle = '#111'; c.lineWidth = 0.18;
+  poly(c, [{ x, y: y - s }, { x: x + s, y }, { x, y: y + s }, { x: x - s, y }]); c.closePath(); c.fill(); c.stroke();
+  c.lineWidth = 0.2; c.beginPath(); c.arc(x, y, s * 0.42, 0, TAU); c.stroke();
+}
+
+function drawCar(c, mark, blinkOn) {
+  const { x, y, h } = c.pos, L = CAR_L, Wd = CAR_W;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(h);
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; rr(ctx, -L / 2 + 0.2, -Wd / 2 + 0.35, L, Wd, 0.6); ctx.fill();
+  if (mark) { ctx.lineWidth = 0.38; ctx.strokeStyle = mark; rr(ctx, -L / 2 - 0.55, -Wd / 2 - 0.55, L + 1.1, Wd + 1.1, 1); ctx.stroke(); }
+  ctx.fillStyle = c.color; rr(ctx, -L / 2, -Wd / 2, L, Wd, 0.6); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.16)'; rr(ctx, L / 2 - 1.15, -Wd / 2 + 0.16, 0.95, Wd - 0.32, 0.4); ctx.fill();
+  ctx.fillStyle = 'rgba(16,24,32,.85)'; rr(ctx, 0.2, -Wd / 2 + 0.2, 0.9, Wd - 0.4, 0.25); ctx.fill();
+  rr(ctx, -1.8, -Wd / 2 + 0.25, 0.55, Wd - 0.5, 0.2); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.14)'; rr(ctx, -1.25, -Wd / 2 + 0.24, 1.45, Wd - 0.48, 0.25); ctx.fill();
+  if (c.free) { ctx.strokeStyle = 'rgba(20,20,20,.55)'; ctx.lineWidth = 0.12; ctx.beginPath(); ctx.moveTo(L / 2 - 0.2, -0.6); ctx.lineTo(L / 2 - 0.7, 0.1); ctx.lineTo(L / 2 - 0.3, 0.7); ctx.stroke(); }
+  ctx.fillStyle = '#FFF6D6'; ctx.fillRect(L / 2 - 0.18, -Wd / 2 + 0.16, 0.18, 0.42); ctx.fillRect(L / 2 - 0.18, Wd / 2 - 0.58, 0.18, 0.42);
+  ctx.fillStyle = c.braking ? '#FF2B2B' : '#7E1A1A'; ctx.fillRect(-L / 2, -Wd / 2 + 0.16, 0.2, 0.44); ctx.fillRect(-L / 2, Wd / 2 - 0.6, 0.2, 0.44);
+  if (c.braking) { ctx.fillStyle = 'rgba(255,40,40,.32)'; ctx.beginPath(); ctx.arc(-L / 2 - 0.1, -Wd / 2 + 0.38, 0.6, 0, TAU); ctx.arc(-L / 2 - 0.1, Wd / 2 - 0.38, 0.6, 0, TAU); ctx.fill(); }
+  if (c.signal && blinkOn) {
+    const sy = c.signal * (Wd / 2 - 0.1);
+    ctx.fillStyle = 'rgba(255,178,26,.4)'; ctx.beginPath(); ctx.arc(L / 2 - 0.25, sy, 0.75, 0, TAU); ctx.arc(-L / 2 + 0.25, sy, 0.75, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#FFB21A'; ctx.beginPath(); ctx.arc(L / 2 - 0.25, sy, 0.3, 0, TAU); ctx.arc(-L / 2 + 0.25, sy, 0.3, 0, TAU); ctx.fill();
+  }
+  if (!c.ai) { // learner plate on the roof
+    if (mirror === -1) ctx.scale(1, -1);
+    ctx.fillStyle = '#fff'; ctx.fillRect(-0.95, -0.45, 0.9, 0.9);
+    ctx.fillStyle = '#D0102C'; ctx.fillRect(-0.85, -0.3, 0.6, 0.17); ctx.fillRect(-0.85, -0.3, 0.17, 0.62);
+  }
+  ctx.restore();
+}
+function drawPed(d, hl) {
+  const q = pedPos(d), u = legR(d.leg), ang = Math.atan2(u.y * d.dir, u.x * d.dir);
+  ctx.save(); ctx.globalAlpha = clamp(d.fade, 0, 1); ctx.translate(q.x, q.y);
+  if (hl) { ctx.strokeStyle = '#F2C300'; ctx.lineWidth = 0.3; ctx.beginPath(); ctx.arc(0, 0, 1.7, 0, TAU); ctx.stroke(); }
+  if (d.state === 'down') { ctx.strokeStyle = '#E5263F'; ctx.lineWidth = 0.3; ctx.beginPath(); ctx.arc(0, 0, 1.9, 0, TAU); ctx.stroke(); }
+  ctx.rotate(ang + (d.state === 'down' ? 1.4 : 0)); ctx.scale(1.35, 1.35);
+  if (d.state === 'walk') { const s = Math.sin(d.stride) * 0.32; ctx.fillStyle = '#2A2E35'; ctx.beginPath(); ctx.ellipse(s, -0.2, 0.22, 0.13, 0, 0, TAU); ctx.ellipse(-s, 0.2, 0.22, 0.13, 0, 0, TAU); ctx.fill(); }
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0.12, 0.15, 0.36, 0.62, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = d.shirt; ctx.beginPath(); ctx.ellipse(0, 0, 0.32, 0.58, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = d.skin; ctx.beginPath(); ctx.arc(0.04, 0, 0.26, 0, TAU); ctx.fill();
+  ctx.restore();
+}
+function drawParts(under) {
+  for (const q of parts) {
+    const a = clamp(q.life / q.max, 0, 1);
+    if (under !== (q.k === 'skid')) continue;
+    if (q.k === 'skid') { ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(q.h); ctx.fillStyle = `rgba(20,20,20,${0.35 * a})`; ctx.fillRect(-0.5, -0.95, 1, 0.3); ctx.fillRect(-0.5, 0.65, 1, 0.3); ctx.restore(); }
+    else if (q.k === 'glass') { ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(q.rot); ctx.fillStyle = `rgba(200,235,255,${0.9 * a})`; ctx.fillRect(-q.r, -q.r / 2, q.r * 2, q.r); ctx.restore(); }
+    else if (q.k === 'spark') { ctx.fillStyle = `rgba(255,${150 + 80 * a | 0},40,${a})`; ctx.beginPath(); ctx.arc(q.x, q.y, q.r * 0.8, 0, TAU); ctx.fill(); }
+    else if (q.k === 'smoke') { ctx.fillStyle = `rgba(210,210,205,${0.35 * a})`; ctx.beginPath(); ctx.arc(q.x, q.y, q.r, 0, TAU); ctx.fill(); }
+    else if (q.k === 'flash') { ctx.fillStyle = `rgba(255,245,200,${0.8 * a})`; ctx.beginPath(); ctx.arc(q.x, q.y, 3.5 * (1.4 - a), 0, TAU); ctx.fill(); }
+  }
+}
+function tag(x, y, text, bg, fg, fs) {
+  ctx.font = `800 ${fs}px 'Chakra Petch', 'Arial Narrow', sans-serif`;
+  const w = ctx.measureText(text).width + fs * 0.9, h = fs * 1.5;
+  const X = clamp(x - w / 2, 4, cssW - w - 4), Y = clamp(y - h / 2, 4, cssW - h - 4);
+  ctx.fillStyle = bg; rr(ctx, X, Y, w, h, 4); ctx.fill();
+  ctx.fillStyle = fg; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, X + w / 2, Y + h / 2 + 1);
+}
+function guideTag(x, y, l1, l2, fs) {
+  ctx.font = `800 ${fs}px 'Chakra Petch', 'Arial Narrow', sans-serif`;
+  const w = Math.max(ctx.measureText(l1).width, ctx.measureText(l2).width) + fs * 1.4, h = fs * 2.9;
+  const X = clamp(x - w / 2, 4, cssW - w - 4), Y = clamp(y - h / 2, 4, cssW - h - 4);
+  ctx.fillStyle = '#00704A'; rr(ctx, X, Y, w, h, 5); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; rr(ctx, X + 3, Y + 3, w - 6, h - 6, 3); ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(l1, X + w / 2, Y + h * 0.36); ctx.font = `600 ${fs * 0.86}px 'Chakra Petch', 'Arial Narrow', sans-serif`; ctx.fillText(l2, X + w / 2, Y + h * 0.68);
+}
+
+function draw() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(sc, 0, 0);
+  if (shake > 0) { ctx.drawImage(sc, (Math.random() - 0.5) * 8 * shake * dpr, (Math.random() - 0.5) * 8 * shake * dpr); }
+  setWorld(ctx);
+  const p = player, blink = (T % 0.8) < 0.45, hintOn = hints && mission;
+  const looking = p && state === 'drive' && !G.crash && zoneOf(p) === 'approach' && p.sYield - (p.s + CAR_L / 2) < 34;
+  let tr = { conflict: [], leaving: [] };
+  if (hintOn && looking) {
+    tr = circleTraffic(0, p, 3.0, 10);
+    const pm = mergePhi(0); ctx.strokeStyle = 'rgba(255,206,0,.42)'; ctx.lineWidth = 2 * RING_HALF - 0.5; ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.arc(0, 0, R, pm, pm + 1.8); ctx.stroke();
+  }
+  if (hintOn && p && state === 'drive' && !G.crash) {
+    ctx.save(); ctx.lineWidth = 0.45; ctx.setLineDash([1.4, 1.1]); ctx.strokeStyle = 'rgba(46,230,140,.9)'; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(p.pos.x, p.pos.y); const rt = p.route;
+    let out = false;
+    for (let k = p.pos.i + 1; k < rt.x.length; k++) { ctx.lineTo(rt.x[k], rt.y[k]); if (p.decided && Math.hypot(rt.x[k], rt.y[k]) > 60) { out = true; break; } }
+    if (!p.decided && !out) {
+      const tl = mission.target % 4; let pts = p.nextLeg !== tl ? arcPts(divergePhi(p.nextLeg), divergePhi(tl)) : [];
+      pts = pts.concat(exitPts(tl));
+      for (const q of pts) { ctx.lineTo(q.x, q.y); if (Math.hypot(q.x, q.y) > 60) break; }
+    }
+    ctx.stroke(); ctx.restore();
+  }
+  drawParts(true);
+  const relevant = new Set();
+  if (p && state === 'drive') {
+    for (const d of peds) {
+      if (d.leg === 0 && zoneOf(p) === 'approach') relevant.add(d);
+      if (p.decided && d.leg === p.exitLeg) relevant.add(d);
+      if (!p.decided && d.leg === mission.target % 4 && zoneOf(p) !== 'approach') relevant.add(d);
+    }
+  }
+  for (const d of peds) drawPed(d, hintOn && relevant.has(d) && d.state !== 'gone');
+  for (const c of cars) drawCar(c, tr.conflict.includes(c) ? '#FF3B4E' : tr.leaving.includes(c) ? '#3BE08A' : null, blink);
+  if (p) drawCar(p, hints ? 'rgba(255,255,255,.75)' : null, blink);
+  drawParts(false);
+  // labels in screen space
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const fs = clamp(cssW / 48, 10, 14);
+  if (hintOn) {
+    for (let n = 1; n <= 4; n++) {
+      const leg = n % 4, q = P(leg, 39, -(ROAD_HALF + WALK + 5.5)), s = toScreen(q.x, q.y);
+      if (n === mission.target) guideTag(s.x, s.y, 'YOUR EXIT', `${ORD[n]} · ${turnName(n)}`, fs);
+      else tag(s.x, s.y, `${ORD[n]} exit`, 'rgba(16,20,19,.72)', '#F3F5F1', fs * 0.92);
+    }
+    if (looking) { const q = onRing(mergePhi(0) + 1.0), s = toScreen(q.x * 0.72, q.y * 0.72); tag(s.x, s.y, `LOOK ${W().look.toUpperCase()}`, '#F2C300', '#1B1A10', fs * 0.85); }
+    for (const c of tr.conflict) { const s = toScreen(c.pos.x, c.pos.y); tag(s.x, s.y - fs * 2, 'YIELD', '#D61F36', '#fff', fs * 0.85); }
+    for (const c of tr.leaving) { const s = toScreen(c.pos.x, c.pos.y); tag(s.x, s.y - fs * 2, 'LEAVING', '#0F7A47', '#fff', fs * 0.85); }
+    if (p && state === 'drive' && T - p.startT < 4) { const s = toScreen(p.pos.x, p.pos.y); tag(s.x, s.y + fs * 2.2, 'YOU', '#1F6FE5', '#fff', fs * 0.9); }
+  }
+  if (G.crash && state !== 'brief' && p) { const s = toScreen(p.pos.x, p.pos.y); tag(s.x, s.y - fs * 2.6, 'CRASH', '#D61F36', '#fff', fs * 1.2); }
+}
+
+/* ---------- HUD ---------- */
+let lastCoach = '', lastBlink = false;
+function updateHUD(force) {
+  const p = player, w = W();
+  const driving = state === 'drive' && p;
+  $('#dash').hidden = !(driving || state === 'report');
+  $('#targetText').textContent = mission ? `${ORD[mission.target]} exit · ${turnName(mission.target)}` : '';
+  const v = p ? p.v : 0;
+  const sp = $('#speed'); sp.textContent = mph(v); sp.classList.toggle('fast', v > 9.4 && p && zoneOf(p) !== 'exiting');
+  $('#kmh').textContent = `${Math.round(v * 3.6)} km/h`;
+  const blink = (T % 0.8) < 0.45, sig = p ? p.signal : 0;
+  const visLeft = mirror === 1 ? sig === -1 : sig === 1, visRight = mirror === 1 ? sig === 1 : sig === -1;
+  $('#blkL').className = 'blk' + (visLeft ? ' on' + (blink ? '' : ' tick') : '');
+  $('#blkR').className = 'blk r' + (visRight ? ' on' + (blink ? '' : ' tick') : '');
+  if (sig && blink !== lastBlink && driving && !paused) sound('tick', blink ? 1900 : 1500);
+  lastBlink = blink;
+  $('#btnSigL').setAttribute('aria-pressed', String(visLeft));
+  $('#btnSigR').setAttribute('aria-pressed', String(visRight));
+  const cm = coach();
+  const box = $('#coach');
+  if (!cm) { box.hidden = true; lastCoach = ''; }
+  else {
+    box.hidden = false;
+    const key = cm.tone + cm.text;
+    if (key !== lastCoach || force) { lastCoach = key; $('#tone').dataset.tone = cm.tone; $('#coachText').textContent = cm.text; }
+  }
+  const needSig = driving && !G.crash && cm && /signal (right|left) now/i.test(cm.text);
+  const exitBtn = mirror === 1 ? $('#btnSigR') : $('#btnSigL'), otherBtn = mirror === 1 ? $('#btnSigL') : $('#btnSigR');
+  exitBtn.classList.toggle('cue', !!needSig); otherBtn.classList.remove('cue');
+  activateSteps();
+}
+
+/* ---------- input ---------- */
+function pressSignal(visual) {
+  if (!player || state !== 'drive' || G.crash) return;
+  const val = (visual === 'right') === (mirror === 1) ? 1 : -1, p = player;
+  p.signal = p.signal === val ? 0 : val;
+  if (p.signal === 1) p.signalOnS = p.s;
+  if (p.signal === -1) toast('info', mirror === 1 ? 'No left signal needed. Signal right to leave' : 'Optional. UK drivers signal right when going past 12 o\'clock');
+  audio();
+}
+function holdButton(el, key) {
+  const on = e => { e.preventDefault(); input[key] = true; el.classList.add('held'); try { el.setPointerCapture(e.pointerId); } catch (x) { /* fine */ } audio(); };
+  const off = () => { input[key] = false; el.classList.remove('held'); };
+  el.addEventListener('pointerdown', on);
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => el.addEventListener(t, off));
+  el.addEventListener('contextmenu', e => e.preventDefault());
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input[key] = true; el.classList.add('held'); } });
+  el.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') off(); });
+}
+holdButton($('#btnGas'), 'gas');
+holdButton($('#btnBrake'), 'brake');
+$('#btnSigL').addEventListener('click', () => pressSignal('left'));
+$('#btnSigR').addEventListener('click', () => pressSignal('right'));
+$('#btnStart').addEventListener('click', beginDrive);
+$('#btnRetry').addEventListener('click', () => startLesson(lessonIdx, true));
+$('#btnNext').addEventListener('click', () => {
+  const L = LESSONS[lessonIdx];
+  if (L.free) startLesson(lessonIdx, true); else startLesson(Math.min(lessonIdx + 1, LESSONS.length - 1), false);
+});
+$('#btnPause').addEventListener('click', togglePause);
+$('#btnRestart').addEventListener('click', () => startLesson(lessonIdx, state !== 'brief'));
+function togglePause() { if (state !== 'drive') return; paused = !paused; $('#pausedTag').hidden = !paused; input.gas = input.brake = false; }
+
+const typing = t => t && (t.tagName === 'SELECT' || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
+document.addEventListener('keydown', e => {
+  if (typing(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (k === 'ArrowUp' || k === 'w' || k === 'W') { input.gas = true; e.preventDefault(); }
+  else if (k === 'ArrowDown' || k === 's' || k === 'S' || (k === ' ' && state === 'drive')) { input.brake = true; e.preventDefault(); }
+  else if ((k === 'ArrowLeft' || k === 'a' || k === 'A') && !e.repeat) { pressSignal('left'); e.preventDefault(); }
+  else if ((k === 'ArrowRight' || k === 'd' || k === 'D') && !e.repeat) { pressSignal('right'); e.preventDefault(); }
+  else if ((k === 'p' || k === 'P') && !e.repeat) togglePause();
+  else if ((k === 'r' || k === 'R') && !e.repeat) startLesson(lessonIdx, state !== 'brief');
+  else if (k === 'Enter' && state === 'brief' && !(e.target && e.target.tagName === 'BUTTON')) { e.preventDefault(); beginDrive(); }
+});
+document.addEventListener('keyup', e => {
+  const k = e.key;
+  if (k === 'ArrowUp' || k === 'w' || k === 'W') input.gas = false;
+  if (k === 'ArrowDown' || k === 's' || k === 'S' || k === ' ') input.brake = false;
+});
+window.addEventListener('blur', () => { input.gas = input.brake = false; });
+document.addEventListener('visibilitychange', () => { input.gas = input.brake = false; });
+
+/* ---------- side panel ---------- */
+function renderLessons() {
+  const w = W();
+  $('#lessons').innerHTML = LESSONS.map((L, i) => {
+    const st = progress[String(i)] || 0, sub = L.free ? 'Your choice of traffic and exit' : `${ORD[L.target]} exit · ${L.traffic} traffic${L.peds !== 'none' ? ' · walkers' : ''}`;
+    const stars = L.free ? '' : `<span class="mini" aria-label="${st} of 3 stars">${[1, 2, 3].map(k => `<i class="${k <= st ? 'on' : ''}"></i>`).join('')}</span>`;
+    return `<li><button class="lesson" type="button" data-i="${i}" aria-current="${i === lessonIdx}"><span class="n">${L.free ? '∞' : i + 1}</span><span><b>${L.title(w)}</b><span>${sub}</span></span>${stars}</button></li>`;
+  }).join('');
+}
+$('#lessons').addEventListener('click', e => { const b = e.target.closest('.lesson'); if (b) startLesson(+b.dataset.i, false); });
+function renderFree() { const f = !!LESSONS[lessonIdx].free; ['#freeTraffic', '#freePeds', '#freeExit'].forEach(s => { $(s).hidden = !f; }); }
+['#optTraffic', '#optPeds', '#optExit'].forEach(s => $(s).addEventListener('change', () => { if (LESSONS[lessonIdx].free) startLesson(lessonIdx, false); }));
+function renderRules() {
+  const w = W();
+  const items = [
+    `Slow down. Single-lane roundabouts are built for about 15–20 mph (25–30 km/h)`,
+    `Yield to people in the crosswalk, both entering and leaving`,
+    `Yield to traffic already in the circle, coming from your ${w.look}. Enter when there's a gap`,
+    `Drive ${w.rot}. Don't stop inside, don't pass, and stay off the center island`,
+    `Signal ${w.sig} after you pass the exit before yours, so waiting drivers know you're leaving`,
+    `Missed your exit? Go around again`,
+    `Emergency vehicle coming? Don't stop in the circle. Leave at your exit, then pull over`,
+    `Give large trucks room. They may need the raised apron around the island to turn`,
+  ];
+  if (mirror === -1) items.push(`In the UK, also signal right on approach when you'll go past 12 o'clock`);
+  $('#rulesList').innerHTML = items.map(s => `<li>${s}</li>`).join('');
+}
+function setSide(side) {
+  mirror = side === 'left' ? -1 : 1;
+  $('#btnSigL').querySelector('kbd').textContent = '←'; $('#btnSigR').querySelector('kbd').textContent = '→';
+  renderStatic(); renderSteps(); renderLessons(); renderRules(); if (state === 'brief') showBrief(); if (state === 'report') buildReport();
+  try { localStorage.setItem('tct-side', side); } catch (e) { /* storage off */ }
+}
+$('#sideR').addEventListener('change', () => setSide('right'));
+$('#sideL').addEventListener('change', () => setSide('left'));
+$('#optHints').addEventListener('change', e => { hints = e.target.checked; });
+$('#optSound').addEventListener('change', e => { soundOn = e.target.checked; });
+$('#optSpeed').addEventListener('change', e => { simSpeed = +e.target.value; });
+
+/* ---------- boot ---------- */
+function resize() {
+  const w = Math.round(wrap.clientWidth); if (!w) return;
+  dpr = Math.min(2, window.devicePixelRatio || 1); cssW = w;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(w * dpr); scale = w / (2 * VIEW_HALF);
+  renderStatic();
+}
+new ResizeObserver(resize).observe(wrap);
+try { if (localStorage.getItem('tct-side') === 'left') { $('#sideL').checked = true; mirror = -1; } } catch (e) { /* storage off */ }
+resize(); renderRules();
+startLesson(0, false);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderLessons());
+
+const STEP = 1 / 60; let last = performance.now(), acc = 0;
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (!paused) {
+    acc += dt * simSpeed; let n = 0;
+    while (acc >= STEP && n < 8) { stepWorld(STEP); acc -= STEP; n++; }
+    if (n === 8) acc = 0;
+    shake = Math.max(0, shake - dt * 1.6);
+  }
+  draw(); updateHUD(false);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
