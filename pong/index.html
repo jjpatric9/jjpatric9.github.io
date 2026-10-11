@@ -954,7 +954,7 @@ body {
 
   // Full screen
   const full = document.getElementById("full");
-  if (!document.documentElement.requestFullscreen || matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches) {
+  if (!document.documentElement.requestFullscreen || document.fullscreenEnabled === false || matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches) {
     full.hidden = true;
   }
   full.addEventListener("click", () => {
