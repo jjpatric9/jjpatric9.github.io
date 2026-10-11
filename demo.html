@@ -10642,7 +10642,8 @@ var G = {
   started: false,
   welcome: WELCOME,        // the start screen is up: see `drawWelcome`
   welcomeGone: 0,          // when the tap that took it down landed
-  bot: { t: 0, rebuild: false }  // the feed's bot: see `BOT` and `stepBot`
+  bot: { t: 0, rebuild: false },  // the feed's bot: see `BOT` and `stepBot`
+  openingTop: -Infinity    // the highest the opening's camera has had to go: see `airOverSummit`
 };
 
 /* Local instrumentation only: the creative makes no analytics requests. A host
@@ -10843,22 +10844,35 @@ function layout() {
    puzzle, so the coached move and everything it completes are on screen before
    anybody has learned that the tower scrolls. While a piece is aimed or falling,
    its complete landing plus that clear row is kept too: following only the old
-   tower made tall pieces disappear through the top edge until they landed. */
-function airOverSummit() { return E.placedCount > 0 ? E.headroom : 1; }
+   tower made tall pieces disappear through the top edge until they landed.
+
+   **But the opening's camera only ever climbs.** It used to follow the aimed
+   landing both ways, so carrying a crate across the board bobbed the whole view
+   up and down a row or three per column, until the first drop handed it the
+   game's headroom. The game's own camera never follows the aim at all (it is
+   `Camera.forStack`, the tower and nothing else); here the opening still needs
+   room for a tall landing, so it is given it and keeps it (`G.openingTop`,
+   raised in `stepView`) until the first drop, whose headroom is always higher.
+   After that the aim can never ask for more than the headroom gives, so the
+   camera is the game's: the tower and nothing else.
+
+   **The palette vote has no puzzle to frame**, its showcase is taller than the
+   window from the start, so it keeps the game's headroom from the start. */
+function airOverSummit() { return E.placedCount > 0 || HOST_PALETTE ? E.headroom : 1; }
+/** The row the crate on the crane or in the air needs the camera to reach, or -Infinity. */
+function aimCameraTop() {
+  if (!G) return -Infinity;
+  if (G.falling) return G.falling.to + G.falling.shape.h + 1;
+  return aiming() ? placementCameraTop(G.carried.slot, aimedColumn()) : -Infinity;
+}
 function placementCameraTop(slot, column) {
   var sh = handShape(slot); if (!sh) return -Infinity;
   var landing = E.landingY(slot, column);
   return landing < 0 ? -Infinity : landing + sh.h + 1;
 }
 function cameraTopRow() {
-  var top = Math.max(E.stackHeight + airOverSummit(), E.platformRows + L.rows);
-  if (G && aiming()) {
-    top = Math.max(top, placementCameraTop(G.carried.slot, aimedColumn()));
-  }
-  if (G && G.falling) {
-    top = Math.max(top, G.falling.to + G.falling.shape.h + 1);
-  }
-  return top;
+  var top = Math.max(E.stackHeight + airOverSummit(), E.platformRows + L.rows, aimCameraTop());
+  return G && E.placedCount === 0 ? Math.max(top, G.openingTop) : top;
 }
 /* What is drawn: the automatic camera, eased so that a change of rule or an aim
    that needs more room glides rather than cuts, and then wherever the player
@@ -12383,6 +12397,7 @@ function endScroll() {
    coasts down to a stop — or to the summit, where the view takes up following
    it again. */
 function stepView(dt) {
+  if (E.placedCount === 0) G.openingTop = Math.max(G.openingTop, aimCameraTop());
   var target = cameraTopRow();
   if (G.summitTop === null) G.summitTop = target;
   G.summitTop += (target - G.summitTop) * Math.min(1, dt * 10);
@@ -12479,6 +12494,7 @@ function freshShowcase(seed) {
   G.summitTop = null; G.fling = 0; G.scroll = null;
   G.carried = null; G.falling = null; G.projected = null; G.reward = null;
   G.bot.t = 0; G.bot.rebuild = false;
+  G.openingTop = -Infinity;
   shapeCache = [null, null, null];
   wearChrome();
 }
