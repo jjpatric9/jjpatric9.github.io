@@ -39,6 +39,13 @@
   /** How long the first screen waits on the Worker's palettes and tally before it is built without them. */
   var WAIT_MS = 2500;
   var TALLY_EVERY_MS = 60000;
+  /**
+   * **A palette this far under water is not shown.** When its thumbs down outnumber its thumbs up
+   * by this many, the voters have answered it, and it leaves the feed for everyone, the game's own
+   * included. Read off the tally when the feed is built, so nothing vanishes while it is on screen.
+   * The Worker keeps every vote, so `pull.py` still sees it.
+   */
+  var HIDE_AT = 5;
 
   function $(id) { return document.getElementById(id); }
   var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -412,7 +419,8 @@
    * votes. Within each, the game's own come in an order of this visitor's own (the same on every
    * visit) and new ones least-voted first, so each gets its turn; the two are dealt together in
    * proportion, so neither waits behind the other. A link to one palette (`#p=`, which the maker
-   * gives after adding one) puts that one first.
+   * gives after adding one) puts that one first, voted down or not. Any other voted down by
+   * `HIDE_AT` is left out.
    */
   function order(all) {
     var deal = function (list) {
@@ -427,8 +435,9 @@
       }
       return out;
     };
-    var unseen = deal(all.filter(function (i) { return !answerOf(i); }));
-    var seen = deal(all.filter(function (i) { return answerOf(i); }));
+    var shown = all.filter(function (i) { return !votedOut(i); });
+    var unseen = deal(shown.filter(function (i) { return !answerOf(i); }));
+    var seen = deal(shown.filter(function (i) { return answerOf(i); }));
     var wanted = /^#p=(.+)$/.exec(location.hash);
     var pinned = null;
     if (wanted) {
@@ -440,6 +449,11 @@
       }
     }
     return { pinned: pinned, unseen: unseen, seen: seen };
+  }
+  /** Thumbs down ahead of thumbs up by `HIDE_AT` or more, by the Worker's count. */
+  function votedOut(item) {
+    var t = tally && tally[item.kind][item.name];
+    return Boolean(t) && t[1] - t[0] >= HIDE_AT;
   }
   function total(item) {
     var t = tally && tally[item.kind][item.name];
