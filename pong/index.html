@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#120e0b">
+<title>Pong — TallmanGames</title>
+<meta name="description" content="Classic Pong on a 1970s TV, played with a rotary paddle controller. Free in your browser, made for Android phones.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("../fonts/chakra-petch-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --gap: 10px;
+  --wood:
+    repeating-linear-gradient(91deg, rgba(0,0,0,.16) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(89.3deg, rgba(255,214,160,.07) 0 2px, transparent 2px 17px),
+    repeating-linear-gradient(90.6deg, rgba(40,16,4,.22) 0 3px, transparent 3px 29px),
+    linear-gradient(180deg, #8a5530, #6a3d1e 45%, #4f2c14);
+  --label: #e8d9bd;
+  --chrome: linear-gradient(180deg, #f4f4f2, #9c9c98 48%, #e6e6e2 52%, #8a8a86);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #120e0b;
+}
+
+body {
+  font-family: "Chakra Petch", system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--label);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #2a211a, transparent 70%),
+    #120e0b;
+}
+
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding:
+    calc(env(safe-area-inset-top) + var(--gap))
+    calc(env(safe-area-inset-right) + var(--gap))
+    calc(env(safe-area-inset-bottom) + var(--gap))
+    calc(env(safe-area-inset-left) + var(--gap));
+}
+
+/* ───────────── The television ───────────── */
+
+.tv {
+  flex: none;
+  width: 100%;
+  max-width: calc(56dvh * 4 / 3 + 40px);
+  margin: 0 auto;
+  padding: 12px 12px 0;
+  border-radius: 20px;
+  background: var(--wood);
+  box-shadow:
+    inset 0 2px 0 rgba(255,220,180,.25),
+    inset 0 -3px 0 rgba(0,0,0,.35),
+    0 14px 30px rgba(0,0,0,.6);
+}
+
+.bezel {
+  padding: 10px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #3a3631, #1b1916 60%, #252220);
+  box-shadow:
+    inset 0 0 0 2px #0b0a09,
+    inset 0 3px 8px rgba(0,0,0,.8),
+    0 1px 0 rgba(255,230,200,.18);
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 9% / 12%;
+  overflow: hidden;
+  background: #070908;
+  box-shadow: 0 0 0 3px #050505, 0 0 18px rgba(170,210,255,.08);
+}
+
+.screen canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Scanlines and a faint shadow-mask flicker */
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,.34) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+  animation: flicker 4.5s steps(60) infinite;
+}
+
+/* Curved glass: vignette, edge darkening and a soft reflection */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(70% 45% at 30% 12%, rgba(255,255,255,.07), transparent 70%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%);
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,.85),
+    inset 0 0 6px rgba(0,0,0,.9);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .9; }
+  51% { opacity: 1; }
+  77% { opacity: .95; }
+}
+
+.tv-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 4px 9px;
+}
+
+.brand {
+  font-size: 15px;
+  letter-spacing: .28em;
+  background: var(--chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.6));
+  white-space: nowrap;
+}
+
+.tv-knobs { display: flex; gap: 8px; align-items: center; }
+
+.tv-knobs i {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 45%, #d8d2c6 45% 55%, transparent 55%) center / 100% 60% no-repeat,
+    radial-gradient(circle at 40% 35%, #3b3733, #0d0c0b 70%);
+  box-shadow: 0 2px 3px rgba(0,0,0,.6), 0 0 0 2px #2a1709;
+}
+.tv-knobs i:nth-child(2) { transform: rotate(55deg); }
+
+.tv-knobs b {
+  width: 6px;
+  height: 6px;
+  margin-left: 4px;
+  border-radius: 50%;
+  background: #ff3b20;
+  box-shadow: 0 0 6px #ff3b20, 0 0 2px #ffb09f inset;
+}
+
+/* ───────────── The controller ───────────── */
+
+.pad {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px 22px 34px 34px;
+  background:
+    radial-gradient(130% 70% at 50% -10%, rgba(255,255,255,.08), transparent 60%),
+    repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #1f1d1b, #121110);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -4px 0 rgba(0,0,0,.6),
+    0 16px 28px rgba(0,0,0,.65);
+  overflow: hidden;
+}
+
+.strip {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px 9px;
+  background: var(--wood);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.4), inset 0 2px 0 rgba(255,220,180,.18);
+}
+
+.title {
+  font-size: 13px;
+  line-height: 1.15;
+  letter-spacing: .16em;
+  color: var(--label);
+  text-shadow: 0 1px 0 rgba(0,0,0,.6);
+}
+.title small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .3em;
+  opacity: .7;
+}
+
+.switches { display: flex; gap: 14px; align-items: flex-end; }
+
+.switch {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--label);
+  font-size: 10px;
+  letter-spacing: .12em;
+  cursor: pointer;
+}
+
+.switch .slot {
+  position: relative;
+  width: 18px;
+  height: 30px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #070605, #1d1a17 50%, #070605);
+  box-shadow: inset 0 1px 3px #000, 0 1px 0 rgba(255,220,180,.25);
+}
+
+.switch .lever {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4a4642, #1a1816);
+  box-shadow: 0 2px 2px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.2);
+  transition: top .09s ease-out;
+}
+.switch[aria-checked="false"] .lever { top: 14px; }
+
+.switch .marks { display: flex; gap: 6px; opacity: .85; }
+.switch .marks span { opacity: .45; }
+.switch[aria-checked="true"] .marks span:first-child,
+.switch[aria-checked="false"] .marks span:last-child { opacity: 1; }
+
+.deck {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  justify-items: center;
+  padding: 6px 10px 14px;
+  --k: min(42vw, 30dvh, 250px);
+}
+
+/* Rotary paddle knob */
+.knob-zone {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  cursor: grab;
+  touch-action: none;
+}
+.knob-zone:active { cursor: grabbing; }
+
+.dial {
+  position: absolute;
+  width: calc(var(--k) * 1.22);
+  height: calc(var(--k) * 1.22);
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.knob {
+  position: relative;
+  width: var(--k);
+  height: var(--k);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,.7));
+}
+
+.knob .rot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.knob .skirt {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(#2c2a28 0 4deg, #090808 4deg 8deg);
+  box-shadow: 0 0 0 3px #0a0908, inset 0 0 0 2px rgba(255,255,255,.05);
+}
+
+.knob .face {
+  position: absolute;
+  inset: 13%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #1d1b1a, #0b0a0a 70%);
+  box-shadow:
+    0 0 0 2px #050505,
+    inset 0 2px 3px rgba(255,255,255,.12),
+    inset 0 -3px 6px rgba(0,0,0,.8);
+}
+
+.knob .face::before {
+  /* the white pointer line */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  width: 7%;
+  height: 34%;
+  translate: -50% 0;
+  border-radius: 99px;
+  background: #ece6d8;
+  box-shadow: 0 0 2px rgba(0,0,0,.6);
+}
+
+.knob .face::after {
+  /* the chrome hub */
+  content: "";
+  position: absolute;
+  inset: 34%;
+  border-radius: 50%;
+  background: conic-gradient(from 20deg, #d9d9d6, #7d7d79, #f2f2ef, #8c8c88, #d9d9d6, #6f6f6b, #e9e9e6, #8a8a86, #d9d9d6);
+  box-shadow: 0 0 0 2px #050505, 0 2px 3px rgba(0,0,0,.6);
+}
+
+.knob .shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255,255,255,.22), transparent 38%),
+    radial-gradient(circle at 70% 85%, rgba(0,0,0,.35), transparent 50%);
+}
+
+.cap {
+  position: absolute;
+  top: calc(50% + var(--k) * .66);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .25em;
+  opacity: .7;
+  pointer-events: none;
+}
+
+/* Big red fire button */
+.fire-zone {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.fire-ring {
+  width: calc(var(--k) * .72);
+  height: calc(var(--k) * .72);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 210deg, #6f6f6b, #e8e8e5, #6f6f6b, #cfcfcb, #6f6f6b);
+  box-shadow: 0 6px 12px rgba(0,0,0,.7), inset 0 0 0 3px #111;
+}
+
+.fire {
+  width: 80%;
+  height: 80%;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: radial-gradient(circle at 40% 32%, #ff8a72, #e3261a 42%, #9d0d07 80%);
+  box-shadow:
+    0 7px 0 #5b0603,
+    0 9px 6px rgba(0,0,0,.6),
+    inset 0 -4px 8px rgba(80,0,0,.6),
+    inset 0 3px 2px rgba(255,200,190,.5);
+  translate: 0 -6px;
+  transition: translate .05s, box-shadow .05s;
+}
+
+.fire.down {
+  translate: 0 0;
+  box-shadow:
+    0 1px 0 #5b0603,
+    0 2px 3px rgba(0,0,0,.6),
+    inset 0 -2px 6px rgba(80,0,0,.6),
+    inset 0 3px 3px rgba(255,200,190,.35);
+}
+
+.fire:focus-visible { outline: 3px solid #ffd27a; outline-offset: 6px; }
+
+.full {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  width: 34px;
+  height: 22px;
+  border: 0;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #34312d, #161412);
+  box-shadow: 0 2px 0 #000, inset 0 1px 0 rgba(255,255,255,.12);
+  color: var(--label);
+  font: inherit;
+  font-size: 9px;
+  letter-spacing: .1em;
+  cursor: pointer;
+}
+
+/* Landscape phone: TV on the left, controller on the right */
+@media (orientation: landscape) and (max-height: 700px) {
+  .app { flex-direction: row; }
+  /* The screen is sized from the height: app padding, TV padding, bezel and foot take 84px */
+  .app { --screen-h: calc(100dvh - 84px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+  .tv { flex: none; width: auto; max-width: none; margin: 0; align-self: center; }
+  .screen { height: var(--screen-h); width: calc(var(--screen-h) * 4 / 3); }
+  .pad { max-width: none; }
+  .deck { --k: min(17vw, 36dvh, 230px); grid-template-columns: 1.2fr 1fr; }
+  .tv-foot { height: 30px; padding: 0 4px; }
+  .brand { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen::before { animation: none; }
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="tv" aria-label="Television">
+    <div class="bezel">
+      <div class="screen"><canvas id="crt" aria-label="Pong game screen"></canvas></div>
+    </div>
+    <div class="tv-foot">
+      <span class="brand">TALLMAN</span>
+      <span class="tv-knobs" aria-hidden="true"><i></i><i></i><b></b></span>
+    </div>
+  </section>
+
+  <section class="pad" aria-label="Controller">
+    <div class="strip">
+      <div class="title">VIDEO&nbsp;PONG<small>PADDLE CONTROLLER</small></div>
+      <div class="switches">
+        <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>A</span><span>B</span></span>
+        </button>
+        <button class="switch" id="snd" role="switch" aria-checked="true" aria-label="Sound">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>ON</span><span>OFF</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="deck">
+      <div class="knob-zone" id="knobZone" role="slider" tabindex="0" aria-label="Paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <svg class="dial" id="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+        <div class="knob" id="knob">
+          <div class="rot" id="knobRot"><div class="skirt"></div><div class="face"></div></div>
+          <div class="shine"></div>
+        </div>
+        <span class="cap">TURN</span>
+      </div>
+      <div class="fire-zone">
+        <div class="fire-ring"><button class="fire" id="fire" aria-label="Serve"></button></div>
+        <span class="cap">SERVE</span>
+      </div>
+    </div>
+    <button class="full" id="full" aria-label="Full screen">FULL</button>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  // ───────────── Settings ─────────────
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("pong." + k); return v === null ? d : v === "1"; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem("pong." + k, v ? "1" : "0"); } catch {} },
+  };
+  let hard = store.get("hard", false);
+  let soundOn = store.get("sound", true);
+
+  const LEVELS = {
+    easy: { start: 105, cap: 250, speedUp: 1.05, cpuSpeed: 95, aimErr: 14, react: 0.45 },
+    hard: { start: 130, cap: 310, speedUp: 1.065, cpuSpeed: 130, aimErr: 11, react: 0.35 },
+  };
+  const level = () => (hard ? LEVELS.hard : LEVELS.easy);
+
+  // ───────────── Sound: square-wave blips like the original ─────────────
+  let ac = null;
+  function audio() {
+    if (!ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) ac = new AC();
+    }
+    if (ac && ac.state === "suspended") ac.resume();
+    return ac;
+  }
+  function beep(freq, dur) {
+    if (!soundOn || !ac) return;
+    const t = ac.currentTime;
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = "square";
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.11, t + 0.003);
+    g.gain.setValueAtTime(0.11, t + dur);
+    g.gain.linearRampToValueAtTime(0.0001, t + dur + 0.008);
+    o.connect(g).connect(ac.destination);
+    o.start(t);
+    o.stop(t + dur + 0.02);
+  }
+  const SFX = {
+    paddle: () => beep(459, 0.034),
+    wall: () => beep(226, 0.017),
+    score: () => beep(490, 0.257),
+  };
+  const buzz = (ms) => { if (navigator.vibrate) try { navigator.vibrate(ms); } catch {} };
+
+  // ───────────── Field (in TV pixels) ─────────────
+  const W = 256, H = 192;
+  const PW = 4, PH = 24, BALL = 4;
+  const PX = 14, CX = W - 14 - PW;
+  const WIN = 11;
+  const PHOSPHOR = "#eaf3ff";
+
+  // 3×5 bitmap font, rows top to bottom
+  const FONT = {
+    "0":"111101101101111","1":"010110010010111","2":"111001111100111","3":"111001111001111",
+    "4":"101101111001001","5":"111100111001111","6":"111100111101111","7":"111001001001001",
+    "8":"111101111101111","9":"111101111001111",
+    A:"010101111101101",B:"110101110101110",C:"011100100100011",D:"110101101101110",
+    E:"111100110100111",F:"111100110100100",G:"011100101101011",H:"101101111101101",
+    I:"111010010010111",J:"001001001101010",K:"101101110101101",L:"100100100100111",
+    M:"101111111101101",N:"110101101101101",O:"010101101101010",P:"110101110100100",
+    Q:"010101101110011",R:"110101110101101",S:"011100010001110",T:"111010010010010",
+    U:"101101101101111",V:"101101101101010",W:"101101111111101",X:"101101010101101",
+    Y:"101101010010010",Z:"111001010100111","!":"010010010000010","-":"000000111000000",
+    " ":"000000000000000",
+  };
+
+  // ───────────── Game state ─────────────
+  const game = {
+    mode: "attract",       // attract | serve | play | over
+    score: [0, 0],         // [you, cpu]
+    ball: { x: W / 2, y: H / 2, vx: 70, vy: 45 },
+    speed: 0,
+    py: (H - PH) / 2,
+    cy: (H - PH) / 2,
+    cpuAim: 0,
+    serveTimer: 0,
+    serveDir: 1,
+    clock: 0,
+  };
+
+  // Knob: −135° … +135°, clockwise moves the paddle down
+  const KNOB_MAX = (135 * Math.PI) / 180;
+  let knobAngle = 0;
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  function newGame() {
+    game.score = [0, 0];
+    game.mode = "serve";
+    game.serveTimer = 0.9;
+    game.serveDir = 1;
+    keepAwake(true);
+  }
+
+  function launch() {
+    const L = level();
+    const b = game.ball;
+    const a = (rand(12, 38) * Math.PI) / 180 * (Math.random() < 0.5 ? -1 : 1);
+    game.speed = L.start;
+    b.x = W / 2 - BALL / 2;
+    b.y = rand(H * 0.25, H * 0.75 - BALL);
+    b.vx = Math.cos(a) * game.speed * game.serveDir;
+    b.vy = Math.sin(a) * game.speed;
+    game.cpuAim = rand(-L.aimErr, L.aimErr);
+    game.mode = "play";
+  }
+
+  function serve() {
+    audio();
+    if (game.mode === "attract" || game.mode === "over") {
+      newGame();
+      buzz(25);
+    }
+  }
+
+  // Where the ball will cross x, bouncing off the top and bottom
+  function predictY(b, x) {
+    if (b.vx <= 0) return H / 2;
+    const t = (x - (b.x + BALL)) / b.vx;
+    const span = H - BALL;
+    let y = b.y + b.vy * t;
+    y = ((y % (2 * span)) + 2 * span) % (2 * span);
+    if (y > span) y = 2 * span - y;
+    return y + BALL / 2;
+  }
+
+  // Eight zones across the paddle, like the original circuit
+  const ZONES = [-58, -42, -26, -10, 10, 26, 42, 58].map((d) => (d * Math.PI) / 180);
+
+  function hit(paddleY, dir) {
+    const L = level();
+    const b = game.ball;
+    const rel = clamp(((b.y + BALL / 2) - paddleY) / PH, 0, 0.999);
+    const a = ZONES[Math.floor(rel * ZONES.length)];
+    game.speed = Math.min(L.cap, game.speed * L.speedUp);
+    b.vx = Math.cos(a) * game.speed * dir;
+    b.vy = Math.sin(a) * game.speed;
+    b.x = dir > 0 ? PX + PW : CX - BALL;
+    SFX.paddle();
+    if (dir > 0) {
+      game.cpuAim = rand(-L.aimErr, L.aimErr);
+      buzz(12);
+    }
+  }
+
+  function point(who) {
+    game.score[who]++;
+    SFX.score();
+    if (who === 1) buzz([40, 40, 40]);
+    if (game.score[who] >= WIN) {
+      game.mode = "over";
+      keepAwake(false);
+    } else {
+      game.mode = "serve";
+      game.serveTimer = 1.0;
+      game.serveDir = who === 0 ? 1 : -1; // serve toward whoever lost the point
+    }
+  }
+
+  function step(dt) {
+    const L = level();
+    const b = game.ball;
+    game.clock += dt;
+
+    // Your paddle follows the knob exactly, like a potentiometer
+    game.py = ((knobAngle + KNOB_MAX) / (2 * KNOB_MAX)) * (H - PH);
+
+    // CPU paddle
+    let target = H / 2;
+    if (game.mode !== "serve" && game.mode !== "over" && b.vx > 0 && b.x > W * L.react) {
+      target = predictY(b, CX) + game.cpuAim;
+    }
+    const d = target - (game.cy + PH / 2);
+    const maxMove = L.cpuSpeed * dt;
+    game.cy = clamp(game.cy + clamp(d, -maxMove, maxMove), 0, H - PH);
+
+    if (game.mode === "serve") {
+      game.serveTimer -= dt;
+      if (game.serveTimer <= 0) launch();
+      return;
+    }
+    if (game.mode === "over") return;
+
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+
+    if (b.y < 0) { b.y = -b.y; b.vy = Math.abs(b.vy); if (game.mode === "play") SFX.wall(); }
+    if (b.y > H - BALL) { b.y = 2 * (H - BALL) - b.y; b.vy = -Math.abs(b.vy); if (game.mode === "play") SFX.wall(); }
+
+    if (game.mode === "attract") {
+      // The ball wanders the screen until someone presses SERVE
+      if (b.x < 0) { b.x = -b.x; b.vx = Math.abs(b.vx); }
+      if (b.x > W - BALL) { b.x = 2 * (W - BALL) - b.x; b.vx = -Math.abs(b.vx); }
+      return;
+    }
+
+    if (b.vx < 0 && b.x <= PX + PW && b.x + BALL >= PX && b.y + BALL >= game.py && b.y <= game.py + PH) hit(game.py, 1);
+    if (b.vx > 0 && b.x + BALL >= CX && b.x <= CX + PW && b.y + BALL >= game.cy && b.y <= game.cy + PH) hit(game.cy, -1);
+
+    if (b.x + BALL < -8) point(1);
+    else if (b.x > W + 8) point(0);
+  }
+
+  // ───────────── Drawing: low-res phosphor buffer, bloomed onto the CRT ─────────────
+  const crt = document.getElementById("crt");
+  const out = crt.getContext("2d");
+  const fb = document.createElement("canvas");
+  fb.width = W;
+  fb.height = H;
+  const g = fb.getContext("2d");
+  const canBlur = "filter" in out;
+
+  function rect(x, y, w, h) { g.fillRect(Math.round(x), Math.round(y), w, h); }
+
+  function text(str, cx, y, s) {
+    const width = str.length * 4 * s - s;
+    let x = Math.round(cx - width / 2);
+    g.fillStyle = "#000";
+    g.fillRect(x - s, y - s, width + 2 * s, 7 * s);
+    g.fillStyle = PHOSPHOR;
+    for (const ch of str) {
+      const glyph = FONT[ch] || FONT[" "];
+      for (let i = 0; i < 15; i++) if (glyph[i] === "1") g.fillRect(x + (i % 3) * s, y + ((i / 3) | 0) * s, s, s);
+      x += 4 * s;
+    }
+  }
+
+  function draw(dt) {
+    // Phosphor persistence: the last frame fades rather than vanishing
+    g.globalAlpha = 1 - Math.pow(0.4, dt * 60);
+    g.fillStyle = "#000";
+    g.fillRect(0, 0, W, H);
+    g.globalAlpha = 1;
+    g.fillStyle = PHOSPHOR;
+
+    // Net
+    for (let y = 2; y < H; y += 8) rect(W / 2 - 1, y, 2, 4);
+
+    const blink = Math.floor(game.clock * 2.2) % 2 === 0;
+
+    if (game.mode === "attract") {
+      rect(PX, game.py, PW, PH);
+      rect(CX, game.cy, PW, PH);
+      rect(game.ball.x, game.ball.y, BALL, BALL);
+      text("PONG", W / 2, 30, 6);
+      if (blink) text("PRESS SERVE", W / 2, 112, 2);
+      text("TURN THE KNOB TO MOVE", W / 2, 140, 1);
+      return;
+    }
+
+    text(String(game.score[0]), W / 4, 10, 4);
+    text(String(game.score[1]), (3 * W) / 4, 10, 4);
+    g.fillStyle = PHOSPHOR;
+    rect(PX, game.py, PW, PH);
+    rect(CX, game.cy, PW, PH);
+
+    if (game.mode === "play") rect(game.ball.x, game.ball.y, BALL, BALL);
+
+    if (game.mode === "over") {
+      text(game.score[0] > game.score[1] ? "YOU WIN!" : "CPU WINS", W / 2, 76, 3);
+      if (blink) text("PRESS SERVE", W / 2, 116, 2);
+    }
+  }
+
+  function present() {
+    const w = crt.width, h = crt.height;
+    out.globalCompositeOperation = "source-over";
+    out.globalAlpha = 1;
+    out.imageSmoothingEnabled = false;
+    out.fillStyle = "#06080a";
+    out.fillRect(0, 0, w, h);
+    out.drawImage(fb, 0, 0, w, h);
+    // Bloom
+    out.globalCompositeOperation = "lighter";
+    out.imageSmoothingEnabled = true;
+    if (canBlur) {
+      out.filter = `blur(${Math.max(1.5, w / 150)}px)`;
+      out.globalAlpha = 0.85;
+      out.drawImage(fb, 0, 0, w, h);
+      out.filter = `blur(${Math.max(4, w / 45)}px)`;
+      out.globalAlpha = 0.5;
+      out.drawImage(fb, 0, 0, w, h);
+      out.filter = "none";
+    } else {
+      out.globalAlpha = 0.3;
+      out.drawImage(fb, 0, 0, w, h);
+    }
+    out.globalAlpha = 1;
+    out.globalCompositeOperation = "source-over";
+  }
+
+  function fit() {
+    const r = crt.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    crt.width = Math.max(1, Math.round(r.width * dpr));
+    crt.height = Math.max(1, Math.round(r.height * dpr));
+  }
+  new ResizeObserver(fit).observe(crt);
+  fit();
+
+  // ───────────── Loop ─────────────
+  const STEP = 1 / 240;
+  let acc = 0, last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    acc += dt;
+    while (acc >= STEP) { step(STEP); acc -= STEP; }
+    draw(dt);
+    present();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ───────────── Controller ─────────────
+  const zone = document.getElementById("knobZone");
+  const knob = document.getElementById("knob");
+  const knobRot = document.getElementById("knobRot");
+
+  function setKnob(a) {
+    knobAngle = clamp(a, -KNOB_MAX, KNOB_MAX);
+    knobRot.style.transform = `rotate(${knobAngle}rad)`;
+    zone.setAttribute("aria-valuenow", String(Math.round(((knobAngle + KNOB_MAX) / (2 * KNOB_MAX)) * 100)));
+  }
+  setKnob(0);
+
+  // Painted scale around the knob
+  (function dial() {
+    const svg = document.getElementById("dial");
+    const ns = "http://www.w3.org/2000/svg";
+    for (let i = 0; i <= 20; i++) {
+      const a = -135 + i * 13.5;
+      const major = i % 5 === 0;
+      const l = document.createElementNS(ns, "line");
+      l.setAttribute("x1", "0");
+      l.setAttribute("x2", "0");
+      l.setAttribute("y1", String(major ? -98 : -96));
+      l.setAttribute("y2", String(major ? -86 : -90));
+      l.setAttribute("stroke", "#e8d9bd");
+      l.setAttribute("stroke-opacity", major ? "0.85" : "0.45");
+      l.setAttribute("stroke-width", major ? "3" : "2");
+      l.setAttribute("stroke-linecap", "round");
+      l.setAttribute("transform", `rotate(${a})`);
+      svg.appendChild(l);
+    }
+  })();
+
+  // Drag around the knob: the change in angle turns it, just like a real dial
+  let grab = null;
+  function angleAt(e) {
+    const r = knob.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    return { a: Math.atan2(dy, dx), dist: Math.hypot(dx, dy), radius: r.width / 2 };
+  }
+  zone.addEventListener("pointerdown", (e) => {
+    audio();
+    zone.setPointerCapture(e.pointerId);
+    const p = angleAt(e);
+    grab = { id: e.pointerId, last: p.a, y: e.clientY };
+    e.preventDefault();
+  });
+  zone.addEventListener("pointermove", (e) => {
+    if (!grab || e.pointerId !== grab.id) return;
+    const p = angleAt(e);
+    if (p.dist < p.radius * 0.18) {
+      // Too close to the hub to read a direction: treat it as a vertical slide
+      setKnob(knobAngle + ((e.clientY - grab.y) / p.radius) * 1.2);
+    } else {
+      let d = p.a - grab.last;
+      if (d > Math.PI) d -= 2 * Math.PI;
+      if (d < -Math.PI) d += 2 * Math.PI;
+      setKnob(knobAngle + d);
+    }
+    grab.last = p.a;
+    grab.y = e.clientY;
+  });
+  const release = (e) => { if (grab && e.pointerId === grab.id) grab = null; };
+  zone.addEventListener("pointerup", release);
+  zone.addEventListener("pointercancel", release);
+  zone.addEventListener("wheel", (e) => { e.preventDefault(); setKnob(knobAngle + Math.sign(e.deltaY) * 0.18); }, { passive: false });
+
+  const fire = document.getElementById("fire");
+  fire.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    fire.classList.add("down");
+    serve();
+  });
+  ["pointerup", "pointercancel", "pointerleave"].forEach((t) => fire.addEventListener(t, () => fire.classList.remove("down")));
+  fire.addEventListener("click", (e) => { if (e.detail === 0) serve(); }); // keyboard activation
+
+  // Keyboard for desktop: arrows or W/S turn the knob, Space or Enter serves
+  const keys = new Set();
+  addEventListener("keydown", (e) => {
+    const k = e.key.toLowerCase();
+    if (["arrowup", "arrowdown", "w", "s"].includes(k)) { keys.add(k); e.preventDefault(); }
+    if ((k === " " || k === "enter") && !e.repeat && document.activeElement !== fire) {
+      e.preventDefault();
+      fire.classList.add("down");
+      serve();
+    }
+  });
+  addEventListener("keyup", (e) => {
+    keys.delete(e.key.toLowerCase());
+    if (e.key === " " || e.key === "Enter") fire.classList.remove("down");
+  });
+  (function keyLoop() {
+    const up = keys.has("arrowup") || keys.has("w");
+    const down = keys.has("arrowdown") || keys.has("s");
+    if (up !== down) setKnob(knobAngle + (down ? 0.075 : -0.075));
+    requestAnimationFrame(keyLoop);
+  })();
+
+  // Toggle switches
+  function wireSwitch(id, get, set) {
+    const el = document.getElementById(id);
+    el.setAttribute("aria-checked", String(get()));
+    el.addEventListener("click", () => {
+      set(!get());
+      el.setAttribute("aria-checked", String(get()));
+      audio();
+      buzz(10);
+      beep(1200, 0.006);
+    });
+  }
+  wireSwitch("diff", () => hard, (v) => { hard = v; store.set("hard", v); });
+  wireSwitch("snd", () => soundOn, (v) => { soundOn = v; store.set("sound", v); });
+
+  // Full screen
+  const full = document.getElementById("full");
+  if (!document.documentElement.requestFullscreen || matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches) {
+    full.hidden = true;
+  }
+  full.addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen({ navigationUI: "hide" }).catch(() => {});
+  });
+
+  // Keep the screen awake during a game
+  let lock = null;
+  async function keepAwake(on) {
+    try {
+      if (on && !lock && navigator.wakeLock) {
+        lock = await navigator.wakeLock.request("screen");
+        lock.addEventListener("release", () => { lock = null; });
+      } else if (!on && lock) {
+        await lock.release();
+        lock = null;
+      }
+    } catch {}
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && (game.mode === "play" || game.mode === "serve")) keepAwake(true);
+  });
+
+  addEventListener("contextmenu", (e) => e.preventDefault());
+
+  // Test hook (harmless in play)
+  window.__pong = { game, setKnob, serve, step, LEVELS, setHard: (v) => { hard = v; } };
+})();
+</script>
+</body>
+</html>
