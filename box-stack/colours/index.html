@@ -4,19 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pick Box Stack's colours · TallmanGames</title>
-<meta name="description" content="Help pick the colours Box Stack's towers climb through. Every palette is shown on the real game, where you can drop crates to try it: keep or remove the ones in the game, vote on palettes other players made, or make your own from any picture.">
+<meta name="description" content="Swipe through Box Stack's colour palettes, the ones in the game and new ones players made, each played live, and give each a thumbs up or down.">
 <link rel="canonical" href="https://tallman-games.com/box-stack/colours/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TallmanGames">
 <meta property="og:title" content="Pick Box Stack's colours">
-<meta property="og:description" content="Vote on the colours Box Stack's towers climb through, or make your own palette from any picture.">
+<meta property="og:description" content="Swipe through Box Stack's palettes, played live, and give each a thumbs up or down.">
 <meta property="og:url" content="https://tallman-games.com/box-stack/colours/">
 <meta property="og:image" content="https://tallman-games.com/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0e15">
 <link rel="icon" href="../../img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../../style.css?v=c73807eb7d">
+<link rel="stylesheet" href="../../style.css?v=7f5bc12436">
+<script>
+  // The maker had a tab here once; its old address goes to its own page now.
+  if (location.hash === "#make") location.replace("make/");
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -29,11 +33,13 @@
 }
 </script>
 </head>
-<body class="colours">
-<a class="skip-link" href="#panel">Skip to the palette</a>
+<body class="colours feed-page">
+<a class="skip-link" href="#feed">Skip to the palettes</a>
 
-<!-- One screen: where you are, the three things to do, the game wearing the palette, and the choice. -->
-<div class="app" id="app">
+<!-- One screen: the site's bar, then the feed. Each palette is a screen of its own, the game played
+     on it by the bot, with its tag over it and its thumbs beside it. Swipe, scroll or use the arrow
+     keys to move between them. -->
+<div class="app feed-app">
   <header class="topbar">
     <div class="wrap">
       <a class="brand" href="../../"><span class="studio-mark tower" aria-hidden="true"></span><span class="brand-name">TallmanGames</span></a>
@@ -45,144 +51,12 @@
       </nav>
     </div>
   </header>
-  <div class="app-bar">
-    <h1 class="sr-only">Pick Box Stack's colours</h1>
-    <div class="tabs" role="tablist" aria-label="What to do">
-      <button class="tab" role="tab" id="tab-current" data-mode="current" aria-selected="true" aria-controls="panel">
-        <span class="tab-name">In the game</span><span class="tab-count" id="count-current"></span>
-      </button>
-      <button class="tab" role="tab" id="tab-new" data-mode="new" aria-selected="false" aria-controls="panel" tabindex="-1">
-        <span class="tab-name">New palettes</span><span class="tab-count" id="count-new"></span>
-      </button>
-      <button class="tab" role="tab" id="tab-make" data-mode="make" aria-selected="false" aria-controls="panel" tabindex="-1">
-        <span class="tab-name">Make your own</span>
-      </button>
-    </div>
-  </div>
+  <h1 class="sr-only">Pick Box Stack's colours</h1>
 
-  <div class="app-body" id="panel" role="tabpanel" aria-labelledby="tab-current" tabindex="-1">
-    <div class="stage-game" id="stage-game">
-      <iframe id="game" title="Box Stack, wearing the palette. Drag a crate from the hand to try it"></iframe>
-      <p class="stage-loading" id="stage-loading" aria-live="polite">Loading the game…</p>
-
-      <div class="stage-top">
-        <span class="count" id="stage-count" aria-live="polite"></span>
-        <span class="spacer"></span>
-        <button class="round info" id="info" aria-label="About this page" aria-haspopup="dialog"><span aria-hidden="true">?</span></button>
-        <button class="round" id="stage-undo" aria-label="Undo the last one" title="Undo the last one (Z)"><span aria-hidden="true">↶</span></button>
-        <button class="round" id="stage-menu" aria-label="Options" aria-expanded="false" aria-controls="stage-options"><span aria-hidden="true">⋯</span></button>
-      </div>
-      <div class="stage-options" id="stage-options" hidden>
-        <button class="link" id="opt-review">Your choices so far</button>
-        <button class="link" id="opt-tweak">Tweak this one in the maker</button>
-        <label class="toggle">
-          <input type="checkbox" id="opt-cleanser">
-          <span><b>Palette cleanser</b><br>A plain grey screen for a moment between palettes</span>
-        </label>
-      </div>
-
-      <!-- Make your own: a picture of your choosing, to take colours from. It never leaves the device. -->
-      <div class="picker" id="picker" hidden>
-        <div class="picker-empty" id="picker-empty">
-          <h2>Take colours from a picture</h2>
-          <div class="local-note" id="local-note">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></g></svg>
-            <p><b>Your picture stays on your device.</b> It's read here in your browser and never
-            uploaded or saved. Only the colours you pick are sent, when you add your palette to the
-            vote</p>
-          </div>
-          <div class="picker-actions">
-            <label class="btn primary file-btn">
-              <input type="file" id="picker-file" accept="image/*">
-              <span>Choose a picture</span>
-            </label>
-            <button class="btn" id="picker-paste" hidden>Paste</button>
-          </div>
-          <p class="meta">Or paste one, or drop one here</p>
-          <p class="meta picker-status" id="picker-status" aria-live="polite"></p>
-        </div>
-        <div class="picker-view" id="picker-view" hidden>
-          <canvas id="picker-canvas" aria-label="Your picture. Tap or drag on it to take a colour"></canvas>
-          <p class="picker-hint" id="picker-hint" aria-live="polite">Tap the picture to set the background</p>
-          <p class="local-badge" id="local-badge" title="The picture is read in your browser. It is never uploaded or saved"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></g></svg><span>On your device only · not uploaded</span></p>
-          <canvas class="loupe" id="loupe" width="120" height="120" aria-hidden="true" hidden></canvas>
-        </div>
-        <div class="picker-bar">
-          <div class="picker-buttons">
-            <button class="link" id="picker-suggest" disabled>Suggest a palette</button>
-            <button class="link" id="picker-other" hidden>Another picture</button>
-            <button class="link" id="picker-close">Done with picture</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="stage-done" id="stage-done" hidden>
-        <div class="done-card">
-          <h2 id="done-text"></h2>
-          <p class="meta" id="done-note" hidden></p>
-          <div class="grid" id="done-grid"></div>
-          <div class="choose">
-            <button class="btn" id="done-other"></button>
-            <button class="btn primary" id="done-more"></button>
-          </div>
-        </div>
-      </div>
-
-      <div class="cleanser" id="cleanser" hidden><span>Next palette</span></div>
-    </div>
-
-    <!-- Where the game's banner sits: what is being asked, and the two answers. -->
-    <div class="stage-bar" id="bar-decide">
-      <p class="ask"><span id="ask-text">Keep this one in the game?</span> <span class="tag" id="stage-tag" hidden>Made by a player</span></p>
-      <div class="decide">
-        <button class="btn skip" id="decide-no"><span aria-hidden="true">✕</span> <span id="no-text">Remove</span></button>
-        <button class="btn keep" id="decide-yes"><span aria-hidden="true">✓</span> <span id="yes-text">Keep</span></button>
-      </div>
-      <p class="meta sync" id="sync" aria-live="polite"></p>
-    </div>
-
-    <div class="stage-sheet" id="bar-make" hidden>
-      <div class="chips" role="radiogroup" aria-label="Colour to change" id="make-slots"></div>
-      <div class="sheet-row">
-        <button class="btn small tool" id="make-image" title="Take colours from a picture. It stays on your device and is never uploaded">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></g></svg>
-          <span>Picture</span>
-        </button>
-        <button class="btn small tool" id="make-dropper" hidden title="Take a colour from anywhere on your screen">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14.5 5.5l4 4M3 21l1.5-4.5L14 7l3 3-9.5 9.5L3 21zM13 3.5a2.1 2.1 0 013 0l4.5 4.5a2.1 2.1 0 010 3L19 12.5 11.5 5 13 3.5z"/></svg>
-          <span>Eyedropper</span>
-        </button>
-        <span class="spacer"></span>
-        <button class="link" id="make-fold" aria-expanded="true" aria-controls="make-body">Show less</button>
-      </div>
-      <div class="sheet-body" id="make-body">
-        <p class="meta sheet-hint">Tap a colour above, or a crate on the game, to change it</p>
-        <div class="editor-row">
-          <label class="swatch-picker">
-            <span class="sr-only">Pick a colour</span>
-            <input type="color" id="make-picker">
-          </label>
-          <label class="hex-field">
-            <span class="sr-only">Hex code</span>
-            <input type="text" id="make-hex" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7">
-          </label>
-        </div>
-        <label class="slider"><span>Hue</span><input type="range" id="make-h" min="0" max="359" step="1"></label>
-        <label class="slider"><span>Saturation</span><input type="range" id="make-s" min="0" max="100" step="1"></label>
-        <label class="slider"><span>Lightness</span><input type="range" id="make-l" min="0" max="100" step="1"></label>
-        <div class="minor">
-          <button class="link" id="make-random-one">Random colour</button>
-          <button class="link" id="make-random-all">Random palette</button>
-          <button class="link" id="make-as-field">Use as background</button>
-          <button class="link" id="make-remove">Remove this colour</button>
-        </div>
-      </div>
-      <div class="sheet-foot">
-        <button class="btn primary" id="make-submit">Add it to the vote</button>
-        <p class="meta status" id="make-status" aria-live="polite"></p>
-      </div>
-    </div>
-  </div>
+  <main class="feed" id="feed" tabindex="-1" aria-label="Palettes" aria-busy="true">
+    <p class="feed-loading" id="feed-loading" aria-live="polite">Loading the palettes…</p>
+  </main>
+  <p class="meta sync" id="sync" aria-live="polite"></p>
 </div>
 
 <!-- What the page is, how it works and what it keeps. Opens by itself on a first visit. -->
@@ -190,23 +64,25 @@
   <div class="about-body">
     <h2 id="about-title" tabindex="-1" autofocus>Help pick Box Stack's colours</h2>
     <p>
-      Every tower in <a href="../">Box Stack</a> climbs through bands of colour. Each palette here is
-      shown on the real game: drag a crate from the hand to try it
+      Every tower in <a href="../">Box Stack</a> climbs through bands of colour. Here is every
+      palette there is, one at a time, each played live on the real game
     </p>
     <ul class="about-list">
-      <li><b>In the game:</b> keep or remove each palette the game has now</li>
-      <li><b>New palettes:</b> vote on ones other players made</li>
-      <li><b>Make your own:</b> by hand or from a picture, then add it to the vote</li>
+      <li><b>Swipe up</b> for the next palette, or scroll</li>
+      <li><b>Thumbs up</b> if you want it in the game, <b>thumbs down</b> if you don't. Tap it again to take it back</li>
+      <li><b>In the game</b> means Box Stack has it now. <b>New</b> ones were made by players</li>
+      <li><b>+</b> makes your own, by hand or from a picture</li>
     </ul>
-    <p class="meta keys">On a keyboard: <kbd>→</kbd> keep or yes, <kbd>←</kbd> remove or no, <kbd>Z</kbd> undo</p>
+    <p class="meta keys">On a keyboard: <kbd>↓</kbd> next, <kbd>↑</kbd> back, <kbd>→</kbd> thumbs up, <kbd>←</kbd> thumbs down</p>
 
     <details class="saves">
       <summary>What this page saves</summary>
       <p class="meta">
         Your votes and the palettes you make, with a random ID your browser makes up so each person
         counts once. No name, no account, no cookies, and your IP address isn't stored. It's kept on
-        Cloudflare and only used to pick Box Stack's colours. Your browser remembers which palettes
-        you've seen, on your device only. A picture you take colours from never leaves your device
+        Cloudflare and only used to pick Box Stack's colours. The number of thumbs up and down on
+        each palette is shown to everyone, but never who gave them. Your browser remembers your
+        votes, on your device only. A picture you take colours from never leaves your device
       </p>
     </details>
     <p class="meta about-links"><a href="../../privacy.html">Privacy</a> · <a href="../../support.html">Support</a> · <a href="https://play.google.com/store/apps/details?id=com.boxstacker.app" rel="noopener">Google Play</a></p>
@@ -216,6 +92,6 @@
 
 <noscript><p class="callout noscript">This page needs JavaScript to show the palettes.</p></noscript>
 
-<script src="colours.js?v=3231b68d73"></script>
+<script src="feed.js?v=f1001b6419"></script>
 </body>
 </html>

@@ -1,11 +1,13 @@
-/* Box Stack colours: box-stack/colours/.
+/* Box Stack colours, the maker: box-stack/colours/make/.
  *
- * One page with three things to do, a tab each: go through the palettes **in the game** now and
- * keep or remove each, vote on **new palettes** other players made, and **make your own**. All
- * three happen on the same stage: Box Stack itself running in the frame — the playable, as
- * demo.html?host=palette — wearing the palette being decided, on a tower that shows every colour
- * in its share, with a hand to play from so a crate can be seen on the crane and over its landing
- * outline. Nothing on the page says which palettes are good or would be used; that is the vote.
+ * Make your own palette, by hand or from a picture, on Box Stack itself running in the frame — the
+ * playable, as demo.html?host=palette — wearing the palette being made, on a tower that shows every
+ * colour in its share, with a hand to play from so a crate can be seen on the crane and over its
+ * landing outline. Then add it to the vote, which is the feed one folder up (`../feed.js`).
+ *
+ * **This was the whole colour vote once**, a tab each for the palettes in the game, new ones, and
+ * this. The vote is the feed now; this script still carries the old tabs' voting code, held to the
+ * maker by `MODES`, because the stage they share is built around it.
  *
  * The page reads palettes.json (the new palettes on offer, and the ones already in the game) and
  * talks to one small Cloudflare Worker for everything shared between visitors. Its source and the
@@ -19,7 +21,7 @@
   /** Where the Worker lives; tools/palette-votes/local.mjs points a local copy of the page elsewhere. */
   var API = window.PALETTE_VOTE_API || "https://palette-votes.joshua-e59.workers.dev";
 
-  var ROOT = "../../";
+  var ROOT = "../../../";
   /** The game, in the mode that takes a palette from this page and says what was tapped. */
   var GAME_URL = ROOT + "demo.html?host=palette&pick=1";
   /** Messages go to this site only; a page opened from a file has no origin to name. */
@@ -35,7 +37,8 @@
   /** The most of a long list of new palettes the review shows: the latest decided. */
   var REVIEW_MAX = 120;
 
-  var MODES = ["current", "new", "make"];
+  /** Only the maker is reachable here: the vote is the feed, `../`. */
+  var MODES = ["make"];
 
   function $(id) { return document.getElementById(id); }
 
@@ -361,7 +364,7 @@
 
   var loaded = false;
   var mode = null;
-  var tabs = MODES.map(function (m) { return $("tab-" + m); });
+  var tabs = MODES.map(function (m) { return $("tab-" + m); }).filter(Boolean);
   var ASK = {
     current: { ask: "Keep this one in the game?", no: "Remove", yes: "Keep" },
     new: { ask: "Want this one in the game?", no: "No", yes: "Yes" },
@@ -369,9 +372,6 @@
 
   function modeFromHash() {
     var id = location.hash.slice(1);
-    // The addresses the page had before it was one page still arrive at the right place.
-    if (id === "game") return "current";
-    if (id === "vote") return "new";
     return MODES.indexOf(id) >= 0 ? id : null;
   }
 
@@ -387,7 +387,6 @@
       if (on && focusTab) t.focus();
     });
     $("panel").setAttribute("aria-labelledby", "tab-" + next);
-    if (location.hash.slice(1) !== next) history.replaceState(null, "", "#" + next);
     menu(false);
     $("cleanser").hidden = true;
     locked = false;
@@ -530,7 +529,8 @@
     ["current", "new"].forEach(function (k) {
       var l = lists[k];
       var done = l.all.filter(function (p) { return l.answered(p); }).length;
-      $("count-" + k).textContent = l.all.length ? done + "/" + l.all.length : "";
+      var el = $("count-" + k);
+      if (el) el.textContent = l.all.length ? done + "/" + l.all.length : "";
     });
   }
 
@@ -876,8 +876,13 @@
       if (res.ok) {
         var body = await res.json().catch(function () { return {}; });
         status.textContent = body.duplicate
-          ? "Someone already made exactly this one. It's in the vote"
-          : "Added! It's in the vote now, for everyone";
+          ? "Someone already made exactly this one. It's in the vote. "
+          : "Added! It's in the vote now, for everyone. ";
+        // The feed opens on it, so its maker can watch it played and see the thumbs come in.
+        var see = document.createElement("a");
+        see.href = "../#p=" + encodeURIComponent(name);
+        see.textContent = "See it in the vote";
+        status.appendChild(see);
         if (!lists.new.all.some(function (q) { return nameOf(q) === name; })) {
           lists.new.all.push({ field: p.field, crates: p.crates.slice(), player: true });
           paintCounts();
@@ -1243,7 +1248,7 @@
     // Folded on a phone, so the first thing seen is the palette on the game; beside the stage on a
     // wide screen there is room for all of it.
     fold(!roomy.matches);
-    show(modeFromHash() || "current");
+    show("make");
     if (!memory.introduced) about.showModal();
     flush();
     catchUpKeeps();
