@@ -410,6 +410,11 @@
     card.appendChild(p);
     card.appendChild(make);
     reel.appendChild(card);
+    // An empty rail where the thumbs are on every other screen, so the card lines up with them.
+    var rail = document.createElement("div");
+    rail.className = "rail";
+    rail.setAttribute("aria-hidden", "true");
+    reel.appendChild(rail);
     return reel;
   }
 
@@ -575,16 +580,23 @@
     feed.scrollTo({ top: i * heightOf(), behavior: still ? "auto" : "smooth" });
   }
 
-  // A resize keeps the same palette on screen, and the frames follow their screens.
-  var resizing = null;
-  addEventListener("resize", function () {
-    clearTimeout(resizing);
-    resizing = setTimeout(function () {
-      if (active >= 0) feed.scrollTop = active * heightOf();
-      frames.forEach(lay);
-    }, 60);
-  });
+  /*
+   * **Whenever the feed changes size, the same palette stays on screen and the frames follow
+   * their screens**, in the same frame. A window resize is only one of the ways it changes: a
+   * phone's toolbar coming back after a switch of apps, the bar's font arriving late, anything
+   * above the feed growing. On the first screen none of those scrolls the feed, so nothing else
+   * re-lays the frames, and the game was left the old size, hanging off the foot of its screen.
+   * So the feed itself is watched, not the window.
+   */
+  function relayout() {
+    if (active >= 0 && reels.length) feed.scrollTop = active * heightOf();
+    frames.forEach(lay);
+  }
+  if (window.ResizeObserver) new ResizeObserver(relayout).observe(feed);
+  else addEventListener("resize", relayout);
   document.addEventListener("visibilitychange", function () { frames.forEach(tell); });
+  // Back to the page from the maker or elsewhere, kept whole by the browser: lay and wake again.
+  addEventListener("pageshow", function (e) { if (e.persisted) { relayout(); settle(); } });
 
   function onKey(e) {
     if (e.ctrlKey || e.metaKey || e.altKey || about.open) return;
