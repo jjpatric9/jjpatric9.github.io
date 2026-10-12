@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#120e0b">
 <title>Pong — TallmanGames</title>
-<meta name="description" content="Classic Pong on a 1970s TV, played with a rotary paddle controller. Free in your browser, made for Android phones.">
+<meta name="description" content="Classic Pong on a 1970s TV, played with rotary paddle controllers: eight games, one or two players. Free in your browser, made for Android phones.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -174,7 +174,7 @@ body {
     radial-gradient(circle at 40% 35%, #3b3733, #0d0c0b 70%);
   box-shadow: 0 2px 3px rgba(0,0,0,.6), 0 0 0 2px #2a1709;
 }
-.tv-knobs i:nth-child(2) { transform: rotate(55deg); }
+.tv-knobs i:nth-of-type(2) { transform: rotate(55deg); }
 
 .tv-knobs b {
   width: 6px;
@@ -214,12 +214,13 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 16px 9px;
+  padding: 10px 14px 9px;
   background: var(--wood);
   box-shadow: inset 0 -2px 0 rgba(0,0,0,.4), inset 0 2px 0 rgba(255,220,180,.18);
 }
 
 .title {
+  min-width: 0;
   font-size: 13px;
   line-height: 1.15;
   letter-spacing: .16em;
@@ -233,7 +234,7 @@ body {
   opacity: .7;
 }
 
-.switches { display: flex; gap: 14px; align-items: flex-end; }
+.switches { flex: none; display: flex; gap: 12px; align-items: flex-end; }
 
 .switch {
   display: grid;
@@ -248,6 +249,8 @@ body {
   letter-spacing: .12em;
   cursor: pointer;
 }
+
+.switch:focus-visible { outline: 2px solid #ffd27a; outline-offset: 3px; border-radius: 4px; }
 
 .switch .slot {
   position: relative;
@@ -271,8 +274,13 @@ body {
 }
 .switch[aria-checked="false"] .lever { top: 14px; }
 
+/* GAME SELECT is a spring-loaded switch: it rests in the middle and dips when pushed */
+.switch.momentary .lever { top: 8px; background: linear-gradient(180deg, #8a8580, #3a3632); }
+.switch.momentary.down .lever { top: 14px; }
+
 .switch .marks { display: flex; gap: 6px; opacity: .85; }
 .switch .marks span { opacity: .45; }
+.switch.momentary .marks span,
 .switch[aria-checked="true"] .marks span:first-child,
 .switch[aria-checked="false"] .marks span:last-child { opacity: 1; }
 
@@ -280,15 +288,38 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 6px 10px 14px;
+  --k: min(42vw, 30dvh, 250px);
+  --fk: calc(var(--k) * .72);
+}
+
+.cluster {
+  min-height: 0;
+  display: grid;
   grid-template-columns: 1.15fr 1fr;
   align-items: center;
   justify-items: center;
-  padding: 6px 10px 14px;
-  --k: min(42vw, 30dvh, 250px);
 }
+
+.deck[data-players="1"] .cluster[data-p="1"] { display: none; }
+
+/* Two players: a knob and a button each, like the console with both controllers plugged in */
+.deck[data-players="2"] {
+  grid-template-columns: 1fr 1fr;
+  --k: min(34vw, 17dvh, 200px);
+  --fk: calc(var(--k) * .5);
+}
+.deck[data-players="2"] .cluster {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+}
+.deck[data-players="2"] .fire-zone { height: calc(var(--fk) + 34px); }
 
 /* Rotary paddle knob */
 .knob-zone {
+  --r: calc(var(--k) * .61);
   position: relative;
   width: 100%;
   height: 100%;
@@ -298,6 +329,8 @@ body {
   touch-action: none;
 }
 .knob-zone:active { cursor: grabbing; }
+.knob-zone:focus-visible { outline: none; }
+.knob-zone:focus-visible .knob { outline: 3px solid #ffd27a; outline-offset: 10px; border-radius: 50%; }
 
 .dial {
   position: absolute;
@@ -380,28 +413,31 @@ body {
 
 .cap {
   position: absolute;
-  top: calc(50% + var(--k) * .66);
+  top: calc(50% + var(--r) + 6px);
   left: 0;
   right: 0;
   text-align: center;
   font-size: 11px;
   letter-spacing: .25em;
   opacity: .7;
+  white-space: nowrap;
   pointer-events: none;
 }
 
 /* Big red fire button */
 .fire-zone {
+  --r: calc(var(--fk) / 2);
   position: relative;
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
 }
+.deck[data-players="2"] .fire-zone .cap { top: auto; bottom: 2px; }
 
 .fire-ring {
-  width: calc(var(--k) * .72);
-  height: calc(var(--k) * .72);
+  width: var(--fk);
+  height: var(--fk);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -416,6 +452,7 @@ body {
   padding: 0;
   border-radius: 50%;
   cursor: pointer;
+  touch-action: none;
   background: radial-gradient(circle at 40% 32%, #ff8a72, #e3261a 42%, #9d0d07 80%);
   box-shadow:
     0 7px 0 #5b0603,
@@ -438,9 +475,6 @@ body {
 .fire:focus-visible { outline: 3px solid #ffd27a; outline-offset: 6px; }
 
 .full {
-  position: absolute;
-  right: 12px;
-  bottom: 10px;
   width: 34px;
   height: 22px;
   border: 0;
@@ -454,6 +488,12 @@ body {
   cursor: pointer;
 }
 
+@media (max-width: 430px) {
+  .switches { gap: 10px; }
+  .title { font-size: 12px; letter-spacing: .12em; }
+  .title small { font-size: 9px; letter-spacing: .14em; }
+}
+
 /* Landscape phone: TV on the left, controller on the right */
 @media (orientation: landscape) and (max-height: 700px) {
   .app { flex-direction: row; }
@@ -462,7 +502,12 @@ body {
   .tv { flex: none; width: auto; max-width: none; margin: 0; align-self: center; }
   .screen { height: var(--screen-h); width: calc(var(--screen-h) * 4 / 3); }
   .pad { max-width: none; }
-  .deck { --k: min(17vw, 36dvh, 230px); grid-template-columns: 1.2fr 1fr; }
+  .deck { --k: min(17vw, 36dvh, 230px); }
+  .cluster { grid-template-columns: 1.2fr 1fr; }
+  .deck[data-players="2"] { --k: min(11vw, 34dvh, 160px); --fk: calc(var(--k) * .6); }
+  .deck[data-players="2"] .cluster { grid-template-columns: 1.3fr 1fr; grid-template-rows: 1fr; }
+  .deck[data-players="2"] .fire-zone { height: 100%; }
+  .deck[data-players="2"] .fire-zone .cap { top: calc(50% + var(--r) + 6px); bottom: auto; }
   .tv-foot { height: 30px; padding: 0 4px; }
   .brand { font-size: 12px; }
 }
@@ -480,7 +525,7 @@ body {
     </div>
     <div class="tv-foot">
       <span class="brand">TALLMAN</span>
-      <span class="tv-knobs" aria-hidden="true"><i></i><i></i><b></b></span>
+      <span class="tv-knobs"><button class="full" id="full" aria-label="Full screen">FULL</button><i aria-hidden="true"></i><i aria-hidden="true"></i><b aria-hidden="true"></b></span>
     </div>
   </section>
 
@@ -488,6 +533,14 @@ body {
     <div class="strip">
       <div class="title">VIDEO&nbsp;PONG<small>PADDLE CONTROLLER</small></div>
       <div class="switches">
+        <button class="switch momentary" id="gameBtn" aria-label="Game select">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>GAME</span></span>
+        </button>
+        <button class="switch" id="plyr" role="switch" aria-checked="true" aria-label="Players: on is one player, off is two">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>1P</span><span>2P</span></span>
+        </button>
         <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>A</span><span>B</span></span>
@@ -499,21 +552,30 @@ body {
       </div>
     </div>
 
-    <div class="deck">
-      <div class="knob-zone" id="knobZone" role="slider" tabindex="0" aria-label="Paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-        <svg class="dial" id="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
-        <div class="knob" id="knob">
-          <div class="rot" id="knobRot"><div class="skirt"></div><div class="face"></div></div>
-          <div class="shine"></div>
+    <div class="deck" id="deck" data-players="1">
+      <div class="cluster" data-p="0">
+        <div class="knob-zone" id="zone0" role="slider" tabindex="0" aria-label="Left player's paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <svg class="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+          <div class="knob"><div class="rot"><div class="skirt"></div><div class="face"></div></div><div class="shine"></div></div>
+          <span class="cap" data-cap="knob">TURN</span>
         </div>
-        <span class="cap">TURN</span>
+        <div class="fire-zone">
+          <div class="fire-ring"><button class="fire" id="fire0" aria-label="Serve"></button></div>
+          <span class="cap" data-cap="fire">SERVE</span>
+        </div>
       </div>
-      <div class="fire-zone">
-        <div class="fire-ring"><button class="fire" id="fire" aria-label="Serve"></button></div>
-        <span class="cap">SERVE</span>
+      <div class="cluster" data-p="1">
+        <div class="knob-zone" id="zone1" role="slider" tabindex="0" aria-label="Right player's paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <svg class="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+          <div class="knob"><div class="rot"><div class="skirt"></div><div class="face"></div></div><div class="shine"></div></div>
+          <span class="cap" data-cap="knob">P2</span>
+        </div>
+        <div class="fire-zone">
+          <div class="fire-ring"><button class="fire" id="fire1" aria-label="Player 2 serve"></button></div>
+          <span class="cap" data-cap="fire">SERVE</span>
+        </div>
       </div>
     </div>
-    <button class="full" id="full" aria-label="Full screen">FULL</button>
   </section>
 </main>
 
@@ -523,15 +585,18 @@ body {
 
   // ───────────── Settings ─────────────
   const store = {
-    get(k, d) { try { const v = localStorage.getItem("pong." + k); return v === null ? d : v === "1"; } catch { return d; } },
-    set(k, v) { try { localStorage.setItem("pong." + k, v ? "1" : "0"); } catch {} },
+    get(k, d) { try { const v = localStorage.getItem("pong." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem("pong." + k, JSON.stringify(v)); } catch {} },
   };
-  let hard = store.get("hard", false);
-  let soundOn = store.get("sound", true);
+  let hard = !!store.get("hard", false);
+  let soundOn = !!store.get("sound", true);
+  let players = store.get("players", 1) === 2 ? 2 : 1;
+  let gameNo = 0;
 
+  // Ball speed steps up after the 4th and 12th return of a volley, as the arcade circuit did
   const LEVELS = {
-    easy: { start: 105, cap: 250, speedUp: 1.05, cpuSpeed: 95, aimErr: 14, react: 0.45 },
-    hard: { start: 130, cap: 310, speedUp: 1.065, cpuSpeed: 130, aimErr: 11, react: 0.35 },
+    easy: { speeds: [110, 150, 200], cpuSpeed: 95, aimErr: 12, react: 150, whiff: 0.1, vSpeed: 205, gravity: 160 },
+    hard: { speeds: [130, 185, 250], cpuSpeed: 130, aimErr: 10, react: 200, whiff: 0.05, vSpeed: 220, gravity: 175 },
   };
   const level = () => (hard ? LEVELS.hard : LEVELS.easy);
 
@@ -545,8 +610,8 @@ body {
     if (ac && ac.state === "suspended") ac.resume();
     return ac;
   }
-  function beep(freq, dur) {
-    if (!soundOn || !ac) return;
+  function beep(freq, dur, always) {
+    if (!soundOn || !ac || (game.demo && !always)) return;
     const t = ac.currentTime;
     const o = ac.createOscillator();
     const g = ac.createGain();
@@ -564,15 +629,17 @@ body {
     paddle: () => beep(459, 0.034),
     wall: () => beep(226, 0.017),
     score: () => beep(490, 0.257),
+    click: () => beep(1200, 0.006, true),
   };
-  const buzz = (ms) => { if (navigator.vibrate) try { navigator.vibrate(ms); } catch {} };
+  const buzz = (ms) => { if (!game.demo && navigator.vibrate) try { navigator.vibrate(ms); } catch {} };
 
   // ───────────── Field (in TV pixels) ─────────────
   const W = 256, H = 192;
-  const PW = 4, PH = 24, BALL = 4;
-  const PX = 14, CX = W - 14 - PW;
-  const WIN = 11;
+  const BALL = 4, PT = 4, PL = 24;
   const PHOSPHOR = "#eaf3ff";
+  const DEG = Math.PI / 180;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   // 3×5 bitmap font, rows top to bottom
   const FONT = {
@@ -589,142 +656,480 @@ body {
     " ":"000000000000000",
   };
 
+  // A paddle belongs to an owner (a knob or the computer) and slides along one axis.
+  // `segs` lets one knob drive a rod of several paddles, as in table soccer.
+  function pad(owner, axis, at, normal, len, segs, from, to) {
+    return { owner, axis, at, normal, len, segs, lo: from, hi: to - len - segs[segs.length - 1] };
+  }
+  const vpad = (owner, x, normal, o = {}) => pad(owner, "y", x, normal, o.len || PL, o.segs || [0], o.from ?? 0, o.to ?? H);
+  const hpad = (owner, y, normal, o = {}) => pad(owner, "x", y, normal, o.len || PL, o.segs || [0], o.from ?? 0, o.to ?? W);
+  const R = (x, y, w, h) => ({ x, y, w, h });
+  const IN = { from: 3, to: H - 3 };
+  const rink = (gap) => [
+    R(0, 0, W, 3), R(0, H - 3, W, 3),
+    R(0, 0, 3, H / 2 - gap), R(0, H / 2 + gap, 3, H / 2 - gap),
+    R(W - 3, 0, 3, H / 2 - gap), R(W - 3, H / 2 + gap, 3, H / 2 - gap),
+  ];
+  function quadWalls(g) {
+    const w = [R(0, 0, 16, 16), R(W - 16, 0, 16, 16), R(0, H - 16, 16, 16), R(W - 16, H - 16, 16, 16)];
+    if (g.out[0]) w.push(R(0, 0, 3, H));
+    if (g.out[1]) w.push(R(W - 3, 0, 3, H));
+    if (g.out[2]) w.push(R(0, 0, W, 3));
+    if (g.out[3]) w.push(R(0, H - 3, W, 3));
+    return w;
+  }
+
+  // Which team concedes when the ball leaves by each edge; "bounce" is an invisible wall
+  const EDGES = { top: "bounce", bottom: "bounce", left: 0, right: 1 };
+
+  const MODES = [
+    { name: "PONG", net: true,
+      pads: () => [vpad(0, 14, 1), vpad(1, W - 18, -1)] },
+    { name: "CATCH", net: true, catch: true,
+      pads: () => [vpad(0, 14, 1), vpad(1, W - 18, -1)] },
+    { name: "DOUBLES", net: true, team: [0, 1, 0, 1],
+      pads: () => [vpad(0, 14, 1), vpad(1, W - 18, -1), vpad(2, 76, 1), vpad(3, W - 80, -1)] },
+    { name: "HOCKEY", net: true, walls: () => rink(28),
+      pads: () => [vpad(0, 12, 1, IN), vpad(0, 160, 1, IN), vpad(1, W - 16, -1, IN), vpad(1, W - 164, -1, IN)] },
+    { name: "SOCCER", net: true, walls: () => rink(32),
+      pads: () => [
+        vpad(0, 16, 1, { ...IN, len: 20 }), vpad(0, 66, 1, { ...IN, len: 16, segs: [0, 64] }), vpad(0, 150, 1, { ...IN, len: 12, segs: [0, 48, 96] }),
+        vpad(1, W - 20, -1, { ...IN, len: 20 }), vpad(1, W - 70, -1, { ...IN, len: 16, segs: [0, 64] }), vpad(1, W - 154, -1, { ...IN, len: 12, segs: [0, 48, 96] }),
+      ] },
+    { name: "HANDBALL", turns: true, edges: { left: "turn", right: "bounce" },
+      walls: () => [R(0, 0, W, 3), R(0, H - 3, W, 3), R(W - 4, 0, 4, H)],
+      pads: () => [vpad(0, 16, 1, IN), vpad(1, 44, 1, IN)] },
+    { name: "VOLLEYBALL", volley: true, win: 15, edges: { left: "bounce", right: "bounce" },
+      walls: () => [R(W / 2 - 1, 124, 2, H - 124)], deco: [R(0, H - 3, W, 3)],
+      pads: () => [hpad(0, H - 16, -1, { len: 28, from: 2, to: W / 2 - 3 }), hpad(1, H - 16, -1, { len: 28, from: W / 2 + 3, to: W - 2 })] },
+    { name: "QUADRAPONG", quad: true, teams: 4, lives: 5, edges: { left: 0, right: 1, top: 2, bottom: 3 },
+      walls: quadWalls,
+      pads: () => [vpad(0, 8, 1, { from: 16, to: H - 16 }), vpad(1, W - 12, -1, { from: 16, to: H - 16 }), hpad(2, 8, 1, { from: 16, to: W - 16 }), hpad(3, H - 12, -1, { from: 16, to: W - 16 })] },
+  ];
+  gameNo = clamp(Math.floor(Number(store.get("game", 0))) || 0, 0, MODES.length - 1);
+  let mode = MODES[gameNo];
+
+  // Eight zones across a paddle, like the original circuit; volleyball lofts the ball instead
+  const ZONES = [-58, -42, -26, -10, 10, 26, 42, 58].map((d) => d * DEG);
+  const VZONES = [-45, -34, -22, -10, 10, 22, 34, 45].map((d) => d * DEG);
+
   // ───────────── Game state ─────────────
+  const ball = { x: W / 2, y: H / 2, vx: 0, vy: 0, held: null };
   const game = {
-    mode: "attract",       // attract | serve | play | over
-    score: [0, 0],         // [you, cpu]
-    ball: { x: W / 2, y: H / 2, vx: 70, vy: 45 },
-    speed: 0,
-    py: (H - PH) / 2,
-    cy: (H - PH) / 2,
-    cpuAim: 0,
-    serveTimer: 0,
-    serveDir: 1,
-    clock: 0,
+    state: "serve",        // serve | play | over
+    demo: true,            // the attract screen: the computer plays every side, silently
+    pads: [], walls: [], owners: 2, teams: 2,
+    score: [0, 0], lives: [], out: [],
+    ctrl: [], vel: [], aim: [], whiff: [], pred: [], holdTo: [],
+    serveTimer: 0, serveTo: 1, server: 0, turn: 0, touchTeam: -1, touches: 0,
+    hits: 0, sinceHit: 0, overT: 0, winner: null, clock: 0,
   };
+  const pressed = [false, false];
+  const hook = (window.__pong = { perfect: -1 });
 
-  // Knob: −135° … +135°, clockwise moves the paddle down
-  const KNOB_MAX = (135 * Math.PI) / 180;
-  let knobAngle = 0;
+  const edges = () => ({ ...EDGES, ...(mode.edges || {}) });
+  const teamOf = (o) => (mode.team ? mode.team[o] : o);
+  const isHuman = (o) => !game.demo && (o === 0 || (o === 1 && players === 2));
+  const padPos = (p) => p.lo + game.ctrl[p.owner] * (p.hi - p.lo);
+  const active = (p) =>
+    !(mode.quad && game.out[p.owner]) && !(mode.turns && teamOf(p.owner) !== game.turn);
+  const volleyLevel = () => (game.hits < 4 ? 0 : game.hits < 12 ? 1 : 2);
+  const speed = () => (mode.volley ? level().vSpeed : level().speeds[volleyLevel()]);
 
-  const rand = (a, b) => a + Math.random() * (b - a);
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function setup(demo) {
+    mode = MODES[gameNo];
+    game.demo = demo;
+    game.pads = mode.pads();
+    game.owners = Math.max(...game.pads.map((p) => p.owner)) + 1;
+    game.teams = mode.teams || 2;
+    game.score = Array(game.teams).fill(0);
+    game.lives = Array(game.teams).fill(mode.lives || 0);
+    game.out = Array(game.teams).fill(false);
+    game.ctrl = Array(game.owners).fill(0.5);
+    game.vel = Array(game.owners).fill(0);
+    game.aim = Array(game.owners).fill(0);
+    game.whiff = Array(game.owners).fill(false);
+    game.holdTo = Array(game.owners).fill(0.5);
+    game.pred = [];
+    game.walls = mode.walls ? mode.walls(game) : [];
+    game.serveTo = mode.quad ? Math.floor(Math.random() * 4) : mode.turns ? 0 : 1;
+    game.server = 0;
+    game.turn = 0;
+    game.winner = null;
+    game.state = "serve";
+    game.serveTimer = demo ? 0.6 : 0.9;
+    ball.held = null;
+    updateCaps();
+  }
 
   function newGame() {
-    game.score = [0, 0];
-    game.mode = "serve";
-    game.serveTimer = 0.9;
-    game.serveDir = 1;
+    setup(false);
     keepAwake(true);
   }
 
-  function launch() {
+  // Each return, every computer player picks where on its paddle to meet the ball,
+  // and now and then misjudges it altogether, so every game can be won
+  function newAims() {
     const L = level();
-    const b = game.ball;
-    const a = (rand(12, 38) * Math.PI) / 180 * (Math.random() < 0.5 ? -1 : 1);
-    game.speed = L.start;
+    const e = mode.volley ? 3 : L.aimErr;
+    for (let o = 0; o < game.owners; o++) {
+      game.aim[o] = rand(-e, e);
+      game.whiff[o] = Math.random() < L.whiff;
+    }
+  }
+
+  function launch() {
+    const b = ball;
+    game.hits = 0;
+    game.sinceHit = 0;
+    game.touchTeam = -1;
+    b.held = null;
+    newAims();
+    game.state = "play";
+
+    if (mode.volley) {
+      // The server's ball drops from above their paddle
+      const p = game.pads.find((q) => q.owner === game.server);
+      b.x = (p.lo + p.hi + p.len) / 2 - BALL / 2;
+      b.y = 30;
+      b.vx = 0;
+      b.vy = 0;
+      return;
+    }
+
+    const s = level().speeds[0];
+    const a = rand(12, 38) * DEG * (Math.random() < 0.5 ? -1 : 1);
+
+    if (mode.turns) {
+      // Off the back wall toward whoever is up
+      game.turn = game.serveTo;
+      b.x = W - 4 - BALL;
+      b.y = rand(H * 0.25, H * 0.75 - BALL);
+      b.vx = -Math.cos(a) * s;
+      b.vy = Math.sin(a) * s;
+      return;
+    }
+
     b.x = W / 2 - BALL / 2;
+    if (mode.quad) {
+      b.y = H / 2 - BALL / 2;
+      const t = game.serveTo;
+      const dx = t === 0 ? -1 : t === 1 ? 1 : 0;
+      const dy = t === 2 ? -1 : t === 3 ? 1 : 0;
+      b.vx = (dx * Math.cos(a) - dy * Math.sin(a)) * s;
+      b.vy = (dx * Math.sin(a) + dy * Math.cos(a)) * s;
+      return;
+    }
+
+    // Serve toward the side that lost the last point
+    const dir = game.serveTo === 0 ? -1 : 1;
     b.y = rand(H * 0.25, H * 0.75 - BALL);
-    b.vx = Math.cos(a) * game.speed * game.serveDir;
-    b.vy = Math.sin(a) * game.speed;
-    game.cpuAim = rand(-L.aimErr, L.aimErr);
-    game.mode = "play";
+    b.vx = dir * Math.cos(a) * s;
+    b.vy = Math.sin(a) * s;
+  }
+
+  function nextServe(delay) {
+    game.state = "serve";
+    game.serveTimer = delay;
+    ball.held = null;
+  }
+
+  function concede(team) {
+    SFX.score();
+    if (isHuman(team)) buzz([40, 40, 40]);
+
+    if (mode.quad) {
+      game.lives[team]--;
+      if (game.lives[team] <= 0) {
+        game.out[team] = true;
+        game.walls = mode.walls(game);
+      }
+      const alive = [0, 1, 2, 3].filter((t) => !game.out[t]);
+      const humansIn = [0, 1].filter((o) => isHuman(o) && !game.out[o]).length;
+      const humansAll = [0, 1].filter((o) => isHuman(o)).length;
+      if (alive.length <= 1 || (humansAll > 0 && humansIn === 0)) return over(alive.length === 1 ? alive[0] : null);
+      game.serveTo = game.out[team] ? alive[Math.floor(Math.random() * alive.length)] : team;
+      return nextServe(1.0);
+    }
+
+    const scorer = 1 - team;
+    game.score[scorer]++;
+    if (game.score[scorer] >= (mode.win || 11)) return over(scorer);
+    game.serveTo = team;          // serve toward whoever lost the point
+    game.server = scorer;         // in volleyball the winner of the point serves
+    nextServe(1.0);
+  }
+
+  function over(winner) {
+    game.state = "over";
+    game.overT = 0;
+    game.winner = winner;
+    ball.held = null;
+    if (!game.demo) keepAwake(false);
   }
 
   function serve() {
     audio();
-    if (game.mode === "attract" || game.mode === "over") {
+    if (game.demo || game.state === "over") {
       newGame();
       buzz(25);
     }
   }
 
-  // Where the ball will cross x, bouncing off the top and bottom
-  function predictY(b, x) {
-    if (b.vx <= 0) return H / 2;
-    const t = (x - (b.x + BALL)) / b.vx;
-    const span = H - BALL;
-    let y = b.y + b.vy * t;
-    y = ((y % (2 * span)) + 2 * span) % (2 * span);
-    if (y > span) y = 2 * span - y;
-    return y + BALL / 2;
+  // ───────────── Physics ─────────────
+  function bounceWall(b, r) {
+    const ox = Math.min(b.x + BALL - r.x, r.x + r.w - b.x);
+    const oy = Math.min(b.y + BALL - r.y, r.y + r.h - b.y);
+    if (ox <= 0 || oy <= 0) return false;
+    if (ox < oy) {
+      if (b.x + BALL / 2 < r.x + r.w / 2) { b.x = r.x - BALL; b.vx = -Math.abs(b.vx); }
+      else { b.x = r.x + r.w; b.vx = Math.abs(b.vx); }
+    } else {
+      if (b.y + BALL / 2 < r.y + r.h / 2) { b.y = r.y - BALL; b.vy = -Math.abs(b.vy); }
+      else { b.y = r.y + r.h; b.vy = Math.abs(b.vy); }
+    }
+    return true;
   }
 
-  // Eight zones across the paddle, like the original circuit
-  const ZONES = [-58, -42, -26, -10, 10, 26, 42, 58].map((d) => (d * Math.PI) / 180);
+  // Bounce off invisible edges; returns the edge the ball has left by, if any
+  function edgeCheck(b, E, sound) {
+    if (b.y < 0 && E.top === "bounce") { b.y = -b.y; b.vy = Math.abs(b.vy); if (sound) SFX.wall(); }
+    if (b.y > H - BALL && E.bottom === "bounce") { b.y = 2 * (H - BALL) - b.y; b.vy = -Math.abs(b.vy); if (sound) SFX.wall(); }
+    if (b.x < 0 && E.left === "bounce") { b.x = -b.x; b.vx = Math.abs(b.vx); if (sound) SFX.wall(); }
+    if (b.x > W - BALL && E.right === "bounce") { b.x = 2 * (W - BALL) - b.x; b.vx = -Math.abs(b.vx); if (sound) SFX.wall(); }
+    if (b.x < -BALL - 6) return "left";
+    if (b.x > W + 6) return "right";
+    if (b.y < -BALL - 6) return "top";
+    if (b.y > H + 6) return "bottom";
+    return null;
+  }
 
-  function hit(paddleY, dir) {
-    const L = level();
-    const b = game.ball;
-    const rel = clamp(((b.y + BALL / 2) - paddleY) / PH, 0, 0.999);
-    const a = ZONES[Math.floor(rel * ZONES.length)];
-    game.speed = Math.min(L.cap, game.speed * L.speedUp);
-    b.vx = Math.cos(a) * game.speed * dir;
-    b.vy = Math.sin(a) * game.speed;
-    b.x = dir > 0 ? PX + PW : CX - BALL;
-    SFX.paddle();
-    if (dir > 0) {
-      game.cpuAim = rand(-L.aimErr, L.aimErr);
-      buzz(12);
+  function segRect(p, k) {
+    const s = padPos(p) + p.segs[k];
+    return p.axis === "y" ? R(p.at, s, PT, p.len) : R(s, p.at, p.len, PT);
+  }
+
+  // The ball only bounces off a paddle's front face; from behind it passes through
+  function touches(p, k) {
+    const r = segRect(p, k), b = ball;
+    if (b.x + BALL < r.x || b.x > r.x + r.w || b.y + BALL < r.y || b.y > r.y + r.h) return false;
+    if (p.axis === "y") return p.normal > 0 ? b.vx < 0 : b.vx > 0;
+    return p.normal > 0 ? b.vy < 0 : b.vy > 0;
+  }
+
+  function sendFrom(p, a, s) {
+    const b = ball;
+    if (p.axis === "y") {
+      b.vx = p.normal * Math.cos(a) * s;
+      b.vy = Math.sin(a) * s;
+      b.x = p.normal > 0 ? p.at + PT : p.at - BALL;
+    } else {
+      b.vx = Math.sin(a) * s;
+      b.vy = p.normal * Math.cos(a) * s;
+      b.y = p.normal > 0 ? p.at + PT : p.at - BALL;
     }
   }
 
-  function point(who) {
-    game.score[who]++;
-    SFX.score();
-    if (who === 1) buzz([40, 40, 40]);
-    if (game.score[who] >= WIN) {
-      game.mode = "over";
-      keepAwake(false);
+  function hit(p, k) {
+    const b = ball;
+    const start = padPos(p) + p.segs[k];
+    const along = p.axis === "y" ? b.y : b.x;
+    const rel = clamp((along + BALL / 2 - start) / p.len, 0, 0.999);
+    const zones = mode.volley ? VZONES : ZONES;
+    const a = zones[Math.floor(rel * zones.length)];
+    if (mode.volley) {
+      // Three touches a side, then it must go over
+      const t = teamOf(p.owner);
+      game.touches = game.touchTeam === t ? game.touches + 1 : 1;
+      game.touchTeam = t;
+      if (game.touches > 3) return concede(t);
+    }
+    game.hits++;
+    game.sinceHit = 0;
+    if (mode.turns) game.turn = 1 - game.turn;
+    newAims();
+    SFX.paddle();
+    if (isHuman(p.owner)) buzz(12);
+
+    // CATCH: hold the red button as the ball arrives and it sticks to the paddle
+    const human = isHuman(p.owner);
+    if (mode.catch && (human ? pressed[p.owner] : Math.random() < 0.3)) {
+      b.held = { p, k, off: clamp(along - start, -BALL + 1, p.len - 1), t: 0, owner: p.owner, until: human ? 2 : rand(0.3, 0.9) };
+      b.vx = 0;
+      b.vy = 0;
+      game.holdTo[p.owner] = rand(0.15, 0.85);
+      return;
+    }
+    sendFrom(p, a, speed());
+  }
+
+  function follow(dt) {
+    const h = ball.held, b = ball, p = h.p;
+    h.t += dt;
+    game.sinceHit = 0;
+    const start = padPos(p) + p.segs[h.k];
+    if (p.axis === "y") {
+      b.y = start + h.off;
+      b.x = p.normal > 0 ? p.at + PT : p.at - BALL;
     } else {
-      game.mode = "serve";
-      game.serveTimer = 1.0;
-      game.serveDir = who === 0 ? 1 : -1; // serve toward whoever lost the point
+      b.x = start + h.off;
+      b.y = p.normal > 0 ? p.at + PT : p.at - BALL;
+    }
+    const human = isHuman(h.owner);
+    if (human ? pressed[h.owner] && h.t < h.until : h.t < h.until) return;
+
+    // Release: the ball flies off the way the paddle was moving, a step faster
+    let a;
+    if (human) {
+      a = clamp(game.vel[h.owner] / 250, -1, 1) * 55 * DEG;
+      if (Math.abs(a) < 10 * DEG) a = (a < 0 || (a === 0 && Math.random() < 0.5) ? -1 : 1) * 10 * DEG;
+    } else {
+      a = rand(20, 50) * DEG * (Math.random() < 0.5 ? -1 : 1);
+    }
+    b.held = null;
+    sendFrom(p, a, level().speeds[Math.min(2, volleyLevel() + 1)]);
+    SFX.paddle();
+    if (human) buzz(18);
+  }
+
+  // ───────────── Computer players ─────────────
+  // How far the ball is from a paddle's face, if it is in front of it and coming
+  function approach(p) {
+    const b = ball;
+    if (p.axis === "y") {
+      if (p.normal > 0) return b.vx < 0 && b.x >= p.at + PT - 2 ? b.x - (p.at + PT) : Infinity;
+      return b.vx > 0 && b.x + BALL <= p.at + 2 ? p.at - (b.x + BALL) : Infinity;
+    }
+    if (mode.volley) return b.y + BALL <= p.at + 2 ? p.at - b.y : Infinity;
+    if (p.normal > 0) return b.vy < 0 && b.y >= p.at + PT - 2 ? b.y - (p.at + PT) : Infinity;
+    return b.vy > 0 && b.y + BALL <= p.at + 2 ? p.at - (b.y + BALL) : Infinity;
+  }
+
+  // Run the ball forward (walls and gravity, no paddles) to where it meets a paddle's face
+  function simulate(p) {
+    const s = { x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy };
+    const g = mode.volley ? level().gravity : 0;
+    const E = edges();
+    const h = 1 / 120;
+    for (let i = 0; i < 480; i++) {
+      s.vy += g * h;
+      s.x += s.vx * h;
+      s.y += s.vy * h;
+      if (edgeCheck(s, E, false)) return null;
+      for (const r of game.walls) bounceWall(s, r);
+      if (p.axis === "y") {
+        if (p.normal > 0 ? s.x <= p.at + PT : s.x + BALL >= p.at) return s.y + BALL / 2;
+      } else if (p.normal < 0 ? s.vy > 0 && s.y + BALL >= p.at : s.vy < 0 && s.y <= p.at + PT) {
+        const c = s.x + BALL / 2;
+        return c >= p.lo - BALL && c <= p.hi + p.len + p.segs[p.segs.length - 1] + BALL ? c : null;
+      }
+    }
+    return null;
+  }
+
+  function predict(o, p) {
+    const c = game.pred[o];
+    if (c && c.p === p && game.clock - c.t < 0.05) return c.v;
+    const v = simulate(p);
+    game.pred[o] = { p, t: game.clock, v };
+    return v;
+  }
+
+  // Knob position that puts some paddle on the rod centred on c
+  function uFor(p, c, now) {
+    let best = now, score = Infinity;
+    for (const seg of p.segs) {
+      const u = (c - p.len / 2 - seg - p.lo) / Math.max(1, p.hi - p.lo);
+      const cu = clamp(u, 0, 1);
+      const s = Math.abs(cu - u) * 10 + Math.abs(cu - now);
+      if (s < score) { score = s; best = cu; }
+    }
+    return best;
+  }
+
+  function cpu(o, dt, perfect) {
+    const L = level();
+    const mine = game.pads.filter((p) => p.owner === o && active(p));
+    if (!mine.length) return;
+    let target = 0.5, ref = mine[0];
+    if (ball.held && ball.held.owner === o) {
+      target = game.holdTo[o];
+      ref = ball.held.p;
+    } else if (game.state === "play" && !ball.held) {
+      let best = null, bestD = Infinity;
+      for (const p of mine) {
+        const d = approach(p);
+        if (d < bestD) { bestD = d; best = p; }
+      }
+      if (best && (perfect || mode.volley || bestD < L.react)) {
+        const c = predict(o, best);
+        if (c !== null) {
+          ref = best;
+          // In volleyball, meet the ball with the end nearer the net so it goes over
+          const side = mode.volley ? (best.lo > W / 2 ? 1 : -1) : game.aim[o] < 0 ? -1 : 1;
+          const off = !perfect && game.whiff[o]
+            ? side * (best.len / 2 + BALL + 6)
+            : (perfect ? game.aim[o] / 2 : game.aim[o]) + (mode.volley ? side * best.len * 0.3 : 0);
+          target = uFor(best, c + off, game.ctrl[o]);
+        }
+      }
+    }
+    const step = perfect ? 1 : (L.cpuSpeed * dt) / Math.max(1, ref.hi - ref.lo);
+    game.ctrl[o] += clamp(target - game.ctrl[o], -step, step);
+  }
+
+  function controls(dt) {
+    for (let o = 0; o < game.owners; o++) {
+      const before = game.ctrl[o];
+      if (o === hook.perfect) cpu(o, dt, true);
+      else if (isHuman(o)) game.ctrl[o] = knobs[o].u();
+      else cpu(o, dt, false);
+      const p = game.pads.find((q) => q.owner === o);
+      const v = ((game.ctrl[o] - before) / dt) * (p.hi - p.lo);
+      game.vel[o] = game.vel[o] * 0.85 + v * 0.15;
     }
   }
 
   function step(dt) {
-    const L = level();
-    const b = game.ball;
     game.clock += dt;
+    controls(dt);
 
-    // Your paddle follows the knob exactly, like a potentiometer
-    game.py = ((knobAngle + KNOB_MAX) / (2 * KNOB_MAX)) * (H - PH);
-
-    // CPU paddle
-    let target = H / 2;
-    if (game.mode !== "serve" && game.mode !== "over" && b.vx > 0 && b.x > W * L.react) {
-      target = predictY(b, CX) + game.cpuAim;
-    }
-    const d = target - (game.cy + PH / 2);
-    const maxMove = L.cpuSpeed * dt;
-    game.cy = clamp(game.cy + clamp(d, -maxMove, maxMove), 0, H - PH);
-
-    if (game.mode === "serve") {
+    if (game.state === "serve") {
       game.serveTimer -= dt;
       if (game.serveTimer <= 0) launch();
       return;
     }
-    if (game.mode === "over") return;
-
-    b.x += b.vx * dt;
-    b.y += b.vy * dt;
-
-    if (b.y < 0) { b.y = -b.y; b.vy = Math.abs(b.vy); if (game.mode === "play") SFX.wall(); }
-    if (b.y > H - BALL) { b.y = 2 * (H - BALL) - b.y; b.vy = -Math.abs(b.vy); if (game.mode === "play") SFX.wall(); }
-
-    if (game.mode === "attract") {
-      // The ball wanders the screen until someone presses SERVE
-      if (b.x < 0) { b.x = -b.x; b.vx = Math.abs(b.vx); }
-      if (b.x > W - BALL) { b.x = 2 * (W - BALL) - b.x; b.vx = -Math.abs(b.vx); }
+    if (game.state === "over") {
+      game.overT += dt;
+      if (game.demo && game.overT > 2.5) setup(true);
       return;
     }
 
-    if (b.vx < 0 && b.x <= PX + PW && b.x + BALL >= PX && b.y + BALL >= game.py && b.y <= game.py + PH) hit(game.py, 1);
-    if (b.vx > 0 && b.x + BALL >= CX && b.x <= CX + PW && b.y + BALL >= game.cy && b.y <= game.cy + PH) hit(game.cy, -1);
+    const b = ball;
+    if (b.held) return follow(dt);
 
-    if (b.x + BALL < -8) point(1);
-    else if (b.x > W + 8) point(0);
+    if (mode.volley) b.vy += level().gravity * dt;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+
+    if (mode.volley && b.y + BALL >= H - 3) return concede(b.x + BALL / 2 < W / 2 ? 0 : 1);
+
+    const E = edges();
+    const left = edgeCheck(b, E, true);
+    if (left) return concede(E[left] === "turn" ? game.turn : E[left]);
+
+    for (const r of game.walls) if (bounceWall(b, r)) SFX.wall();
+
+    outer: for (const p of game.pads) {
+      if (!active(p)) continue;
+      for (let k = 0; k < p.segs.length; k++) {
+        if (touches(p, k)) { hit(p, k); break outer; }
+      }
+    }
+
+    // A ball that nobody can reach any more is served again
+    game.sinceHit += dt;
+    if (game.sinceHit > 15) nextServe(0.6);
   }
 
   // ───────────── Drawing: low-res phosphor buffer, bloomed onto the CRT ─────────────
@@ -751,6 +1156,14 @@ body {
     }
   }
 
+  function winnerText() {
+    const w = game.winner;
+    if (w === null) return "GAME OVER";
+    if (players === 1) return w === 0 ? "YOU WIN!" : "CPU WINS";
+    if (mode.quad) return w === 0 ? "P1 WINS" : w === 1 ? "P2 WINS" : "CPU WINS";
+    return w === 0 ? "P1 WINS" : "P2 WINS";
+  }
+
   function draw(dt) {
     // Phosphor persistence: the last frame fades rather than vanishing
     g.globalAlpha = 1 - Math.pow(0.4, dt * 60);
@@ -759,57 +1172,72 @@ body {
     g.globalAlpha = 1;
     g.fillStyle = PHOSPHOR;
 
-    // Net
-    for (let y = 2; y < H; y += 8) rect(W / 2 - 1, y, 2, 4);
+    if (mode.net) for (let y = 2; y < H; y += 8) rect(W / 2 - 1, y, 2, 4);
+    for (const r of game.walls) rect(r.x, r.y, r.w, r.h);
+    for (const r of mode.deco || []) rect(r.x, r.y, r.w, r.h);
+
+    for (const p of game.pads) {
+      if (mode.quad && game.out[p.owner]) continue;
+      g.globalAlpha = active(p) ? 1 : 0.35;
+      for (let k = 0; k < p.segs.length; k++) {
+        const r = segRect(p, k);
+        rect(r.x, r.y, r.w, r.h);
+      }
+    }
+    g.globalAlpha = 1;
+
+    if (game.state === "play") rect(ball.x, ball.y, BALL, BALL);
 
     const blink = Math.floor(game.clock * 2.2) % 2 === 0;
 
-    if (game.mode === "attract") {
-      rect(PX, game.py, PW, PH);
-      rect(CX, game.cy, PW, PH);
-      rect(game.ball.x, game.ball.y, BALL, BALL);
-      text("PONG", W / 2, 30, 6);
-      if (blink) text("PRESS SERVE", W / 2, 112, 2);
-      text("TURN THE KNOB TO MOVE", W / 2, 140, 1);
+    if (game.demo) {
+      text("GAME " + (gameNo + 1), W / 2, 26, 2);
+      text(mode.name, W / 2, 46, 4);
+      text(players === 2 ? "2 PLAYERS" : "1 PLAYER", W / 2, 82, 2);
+      if (blink) text("PRESS SERVE", W / 2, 118, 2);
+      text("GAME SWITCH CHANGES GAME", W / 2, 146, 1);
       return;
     }
 
-    text(String(game.score[0]), W / 4, 10, 4);
-    text(String(game.score[1]), (3 * W) / 4, 10, 4);
-    g.fillStyle = PHOSPHOR;
-    rect(PX, game.py, PW, PH);
-    rect(CX, game.cy, PW, PH);
+    if (mode.quad) {
+      const at = [[34, H / 2 - 10], [W - 34, H / 2 - 10], [W / 2, 24], [W / 2, H - 38]];
+      for (let t = 0; t < 4; t++) if (!game.out[t]) text(String(game.lives[t]), at[t][0], at[t][1], 2);
+    } else {
+      const y = game.walls.length && !mode.volley ? 8 : 10;
+      text(String(game.score[0]), W / 4, y, 4);
+      text(String(game.score[1]), (3 * W) / 4, y, 4);
+    }
 
-    if (game.mode === "play") rect(game.ball.x, game.ball.y, BALL, BALL);
-
-    if (game.mode === "over") {
-      text(game.score[0] > game.score[1] ? "YOU WIN!" : "CPU WINS", W / 2, 76, 3);
+    if (game.state === "over") {
+      text(winnerText(), W / 2, 76, 3);
       if (blink) text("PRESS SERVE", W / 2, 116, 2);
     }
   }
 
+  // The picture sits 5% in from the glass so walls at the field's edges stay visible
   function present() {
     const w = crt.width, h = crt.height;
+    const ix = Math.round(w * 0.05), iy = Math.round(h * 0.05), iw = w - 2 * ix, ih = h - 2 * iy;
     out.globalCompositeOperation = "source-over";
     out.globalAlpha = 1;
     out.imageSmoothingEnabled = false;
     out.fillStyle = "#06080a";
     out.fillRect(0, 0, w, h);
-    out.drawImage(fb, 0, 0, w, h);
+    out.drawImage(fb, ix, iy, iw, ih);
     // Bloom
     out.globalCompositeOperation = "lighter";
     out.imageSmoothingEnabled = true;
     if (canBlur) {
       out.filter = `blur(${Math.max(1.5, w / 150)}px)`;
       out.globalAlpha = 0.85;
-      out.drawImage(fb, 0, 0, w, h);
+      out.drawImage(fb, ix, iy, iw, ih);
       out.filter = `blur(${Math.max(4, w / 45)}px)`;
       out.globalAlpha = 0.5;
-      out.drawImage(fb, 0, 0, w, h);
+      out.drawImage(fb, ix, iy, iw, ih);
       out.filter = "none";
     } else {
       out.globalAlpha = 0.3;
-      out.drawImage(fb, 0, 0, w, h);
+      out.drawImage(fb, ix, iy, iw, ih);
     }
     out.globalAlpha = 1;
     out.globalCompositeOperation = "source-over";
@@ -824,39 +1252,30 @@ body {
   new ResizeObserver(fit).observe(crt);
   fit();
 
-  // ───────────── Loop ─────────────
-  const STEP = 1 / 240;
-  let acc = 0, last = performance.now();
-  function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    acc += dt;
-    while (acc >= STEP) { step(STEP); acc -= STEP; }
-    draw(dt);
-    present();
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
   // ───────────── Controller ─────────────
-  const zone = document.getElementById("knobZone");
-  const knob = document.getElementById("knob");
-  const knobRot = document.getElementById("knobRot");
+  // Knob: −135° … +135°. Clockwise moves a paddle down, or right in volleyball.
+  const KNOB_MAX = 135 * DEG;
+  const deck = document.getElementById("deck");
 
-  function setKnob(a) {
-    knobAngle = clamp(a, -KNOB_MAX, KNOB_MAX);
-    knobRot.style.transform = `rotate(${knobAngle}rad)`;
-    zone.setAttribute("aria-valuenow", String(Math.round(((knobAngle + KNOB_MAX) / (2 * KNOB_MAX)) * 100)));
-  }
-  setKnob(0);
+  function makeKnob(i) {
+    const zone = document.getElementById("zone" + i);
+    const knob = zone.querySelector(".knob");
+    const rot = zone.querySelector(".rot");
+    const svg = zone.querySelector(".dial");
+    const k = {
+      angle: 0,
+      set(a) {
+        k.angle = clamp(a, -KNOB_MAX, KNOB_MAX);
+        rot.style.transform = `rotate(${k.angle}rad)`;
+        zone.setAttribute("aria-valuenow", String(Math.round(k.u() * 100)));
+      },
+      u: () => (k.angle + KNOB_MAX) / (2 * KNOB_MAX),
+    };
 
-  // Painted scale around the knob
-  (function dial() {
-    const svg = document.getElementById("dial");
+    // Painted scale around the knob
     const ns = "http://www.w3.org/2000/svg";
-    for (let i = 0; i <= 20; i++) {
-      const a = -135 + i * 13.5;
-      const major = i % 5 === 0;
+    for (let t = 0; t <= 20; t++) {
+      const major = t % 5 === 0;
       const l = document.createElementNS(ns, "line");
       l.setAttribute("x1", "0");
       l.setAttribute("x2", "0");
@@ -866,76 +1285,124 @@ body {
       l.setAttribute("stroke-opacity", major ? "0.85" : "0.45");
       l.setAttribute("stroke-width", major ? "3" : "2");
       l.setAttribute("stroke-linecap", "round");
-      l.setAttribute("transform", `rotate(${a})`);
+      l.setAttribute("transform", `rotate(${-135 + t * 13.5})`);
       svg.appendChild(l);
     }
-  })();
 
-  // Drag around the knob: the change in angle turns it, just like a real dial
-  let grab = null;
-  function angleAt(e) {
-    const r = knob.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2);
-    const dy = e.clientY - (r.top + r.height / 2);
-    return { a: Math.atan2(dy, dx), dist: Math.hypot(dx, dy), radius: r.width / 2 };
+    // Drag around the knob: the change in angle turns it, just like a real dial
+    let grab = null;
+    const angleAt = (e) => {
+      const r = knob.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      return { a: Math.atan2(dy, dx), dist: Math.hypot(dx, dy), radius: r.width / 2 };
+    };
+    zone.addEventListener("pointerdown", (e) => {
+      audio();
+      zone.setPointerCapture(e.pointerId);
+      grab = { id: e.pointerId, last: angleAt(e).a, y: e.clientY };
+      e.preventDefault();
+    });
+    zone.addEventListener("pointermove", (e) => {
+      if (!grab || e.pointerId !== grab.id) return;
+      const p = angleAt(e);
+      if (p.dist < p.radius * 0.18) {
+        // Too close to the hub to read a direction: treat it as a vertical slide
+        k.set(k.angle + ((e.clientY - grab.y) / p.radius) * 1.2);
+      } else {
+        let d = p.a - grab.last;
+        if (d > Math.PI) d -= 2 * Math.PI;
+        if (d < -Math.PI) d += 2 * Math.PI;
+        k.set(k.angle + d);
+      }
+      grab.last = p.a;
+      grab.y = e.clientY;
+    });
+    const release = (e) => { if (grab && e.pointerId === grab.id) grab = null; };
+    zone.addEventListener("pointerup", release);
+    zone.addEventListener("pointercancel", release);
+    zone.addEventListener("wheel", (e) => { e.preventDefault(); k.set(k.angle + Math.sign(e.deltaY) * 0.18); }, { passive: false });
+    zone.addEventListener("keydown", (e) => {
+      const d = { ArrowUp: -0.12, ArrowLeft: -0.12, ArrowDown: 0.12, ArrowRight: 0.12 }[e.key];
+      if (d && players === 2) { e.preventDefault(); e.stopPropagation(); k.set(k.angle + d); }
+    });
+    k.set(0);
+    return k;
   }
-  zone.addEventListener("pointerdown", (e) => {
-    audio();
-    zone.setPointerCapture(e.pointerId);
-    const p = angleAt(e);
-    grab = { id: e.pointerId, last: p.a, y: e.clientY };
-    e.preventDefault();
-  });
-  zone.addEventListener("pointermove", (e) => {
-    if (!grab || e.pointerId !== grab.id) return;
-    const p = angleAt(e);
-    if (p.dist < p.radius * 0.18) {
-      // Too close to the hub to read a direction: treat it as a vertical slide
-      setKnob(knobAngle + ((e.clientY - grab.y) / p.radius) * 1.2);
-    } else {
-      let d = p.a - grab.last;
-      if (d > Math.PI) d -= 2 * Math.PI;
-      if (d < -Math.PI) d += 2 * Math.PI;
-      setKnob(knobAngle + d);
-    }
-    grab.last = p.a;
-    grab.y = e.clientY;
-  });
-  const release = (e) => { if (grab && e.pointerId === grab.id) grab = null; };
-  zone.addEventListener("pointerup", release);
-  zone.addEventListener("pointercancel", release);
-  zone.addEventListener("wheel", (e) => { e.preventDefault(); setKnob(knobAngle + Math.sign(e.deltaY) * 0.18); }, { passive: false });
+  const knobs = [makeKnob(0), makeKnob(1)];
 
-  const fire = document.getElementById("fire");
-  fire.addEventListener("pointerdown", (e) => {
-    e.preventDefault();
-    fire.classList.add("down");
-    serve();
+  // Red buttons: press to serve; in CATCH, hold to catch the ball
+  const fires = [0, 1].map((i) => document.getElementById("fire" + i));
+  function press(i, down) {
+    pressed[i] = down;
+    fires[i].classList.toggle("down", down);
+    if (down) serve();
+  }
+  fires.forEach((f, i) => {
+    f.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      f.setPointerCapture(e.pointerId);
+      press(i, true);
+    });
+    f.addEventListener("pointerup", () => press(i, false));
+    f.addEventListener("pointercancel", () => press(i, false));
+    f.addEventListener("click", (e) => { if (e.detail === 0) serve(); }); // keyboard activation
   });
-  ["pointerup", "pointercancel", "pointerleave"].forEach((t) => fire.addEventListener(t, () => fire.classList.remove("down")));
-  fire.addEventListener("click", (e) => { if (e.detail === 0) serve(); }); // keyboard activation
 
-  // Keyboard for desktop: arrows or W/S turn the knob, Space or Enter serves
+  function updateCaps() {
+    deck.dataset.players = String(players);
+    document.querySelectorAll('[data-cap="knob"]').forEach((c, i) => {
+      c.textContent = players === 1 ? "TURN" : "P" + (i + 1);
+    });
+    document.querySelectorAll('[data-cap="fire"]').forEach((c) => {
+      c.textContent = mode.catch ? (players === 1 ? "SERVE / CATCH" : "CATCH") : "SERVE";
+    });
+  }
+
+  // Keyboard for desktop. One player: arrows or W/S, Space serves.
+  // Two players: W/S and Space for the left, arrows and Enter for the right.
   const keys = new Set();
   addEventListener("keydown", (e) => {
     const k = e.key.toLowerCase();
     if (["arrowup", "arrowdown", "w", "s"].includes(k)) { keys.add(k); e.preventDefault(); }
-    if ((k === " " || k === "enter") && !e.repeat && document.activeElement !== fire) {
-      e.preventDefault();
-      fire.classList.add("down");
-      serve();
-    }
+    if (e.repeat) return;
+    if (k === " " && document.activeElement !== fires[0]) { e.preventDefault(); press(0, true); }
+    if (k === "enter" && !(document.activeElement instanceof HTMLButtonElement)) { e.preventDefault(); press(players === 2 ? 1 : 0, true); }
+    if (k === "g") selectGame();
+    if (k === "p") document.getElementById("plyr").click();
   });
   addEventListener("keyup", (e) => {
-    keys.delete(e.key.toLowerCase());
-    if (e.key === " " || e.key === "Enter") fire.classList.remove("down");
+    const k = e.key.toLowerCase();
+    keys.delete(k);
+    if (k === " ") press(0, false);
+    if (k === "enter") press(players === 2 ? 1 : 0, false);
   });
   (function keyLoop() {
-    const up = keys.has("arrowup") || keys.has("w");
-    const down = keys.has("arrowdown") || keys.has("s");
-    if (up !== down) setKnob(knobAngle + (down ? 0.075 : -0.075));
+    const step = 0.075;
+    const ws = (keys.has("s") ? 1 : 0) - (keys.has("w") ? 1 : 0);
+    const ar = (keys.has("arrowdown") ? 1 : 0) - (keys.has("arrowup") ? 1 : 0);
+    if (players === 2) {
+      if (ws) knobs[0].set(knobs[0].angle + ws * step);
+      if (ar) knobs[1].set(knobs[1].angle + ar * step);
+    } else if (ws || ar) {
+      knobs[0].set(knobs[0].angle + Math.sign(ws + ar) * step);
+    }
     requestAnimationFrame(keyLoop);
   })();
+
+  // GAME SELECT steps through the games and stops any game in progress
+  const gameBtn = document.getElementById("gameBtn");
+  function selectGame() {
+    audio();
+    gameNo = (gameNo + 1) % MODES.length;
+    store.set("game", gameNo);
+    setup(true);
+    keepAwake(false);
+    SFX.click();
+  }
+  gameBtn.addEventListener("pointerdown", () => gameBtn.classList.add("down"));
+  ["pointerup", "pointercancel", "pointerleave"].forEach((t) => gameBtn.addEventListener(t, () => gameBtn.classList.remove("down")));
+  gameBtn.addEventListener("click", selectGame);
 
   // Toggle switches
   function wireSwitch(id, get, set) {
@@ -946,11 +1413,17 @@ body {
       el.setAttribute("aria-checked", String(get()));
       audio();
       buzz(10);
-      beep(1200, 0.006);
+      SFX.click();
     });
   }
   wireSwitch("diff", () => hard, (v) => { hard = v; store.set("hard", v); });
   wireSwitch("snd", () => soundOn, (v) => { soundOn = v; store.set("sound", v); });
+  wireSwitch("plyr", () => players === 1, (v) => {
+    players = v ? 1 : 2;
+    store.set("players", players);
+    setup(true);
+    keepAwake(false);
+  });
 
   // Full screen
   const full = document.getElementById("full");
@@ -976,13 +1449,33 @@ body {
     } catch {}
   }
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && (game.mode === "play" || game.mode === "serve")) keepAwake(true);
+    if (document.visibilityState === "visible" && !game.demo && game.state !== "over") keepAwake(true);
   });
 
   addEventListener("contextmenu", (e) => e.preventDefault());
 
-  // Test hook (harmless in play)
-  window.__pong = { game, setKnob, serve, step, LEVELS, setHard: (v) => { hard = v; } };
+  // ───────────── Loop ─────────────
+  setup(true);
+  const STEP = 1 / 240;
+  let acc = 0, last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    acc += dt;
+    while (acc >= STEP) { step(STEP); acc -= STEP; }
+    draw(dt);
+    present();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // Test hook (harmless in play): `perfect` lets a flawless robot take a side in balance tests
+  Object.assign(hook, {
+    game, ball, step, knobs, MODES, LEVELS, press, newGame,
+    setGame: (n) => { gameNo = n; setup(true); },
+    setPlayers: (n) => { players = n; setup(true); },
+    setHard: (v) => { hard = v; },
+  });
 })();
 </script>
 </body>
