@@ -234,7 +234,7 @@ body {
   opacity: .7;
 }
 
-.switches { flex: none; display: flex; gap: 12px; align-items: flex-end; }
+.switches { flex: none; display: flex; gap: 12px; align-items: flex-start; }
 
 .switch {
   display: grid;
@@ -279,6 +279,8 @@ body {
 .switch.momentary.down .lever { top: 14px; }
 
 .switch .marks { display: flex; gap: 6px; opacity: .85; }
+/* Which player a difficulty switch belongs to, as on the console's LEFT and RIGHT DIFFICULTY */
+.switch .side { margin-top: -1px; font-size: 8px; line-height: 1; letter-spacing: .14em; opacity: .6; }
 .switch .marks span { opacity: .45; }
 .switch.momentary .marks span,
 .switch[aria-checked="true"] .marks span:first-child,
@@ -577,6 +579,12 @@ body {
   .title small { display: none; }
 }
 
+@media (max-width: 380px) {
+  .title { display: none; }
+  .strip { justify-content: center; }
+  .switches { gap: 8px; }
+}
+
 /* Landscape phone: TV on the left, controller on the right */
 @media (orientation: landscape) and (max-height: 700px) {
   .app { flex-direction: row; }
@@ -628,9 +636,15 @@ body {
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>DIAL</span><span>SLIDE</span></span>
         </button>
-        <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
+        <button class="switch" id="diffL" role="switch" aria-checked="false" aria-label="Left difficulty: A makes the left paddle half size">
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>A</span><span>B</span></span>
+          <span class="side">LEFT</span>
+        </button>
+        <button class="switch" id="diffR" role="switch" aria-checked="false" aria-label="Right difficulty: A makes the right paddle half size">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>A</span><span>B</span></span>
+          <span class="side">RIGHT</span>
         </button>
         <button class="switch" id="snd" role="switch" aria-checked="true" aria-label="Sound">
           <span class="slot"><span class="lever"></span></span>
@@ -677,18 +691,16 @@ body {
     get(k, d) { try { const v = localStorage.getItem("pong." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
     set(k, v) { try { localStorage.setItem("pong." + k, JSON.stringify(v)); } catch {} },
   };
-  let hard = !!store.get("hard", false);
+  // The console's two difficulty switches: A gives that side's player a half-size paddle
+  const diffA = [!!store.get("diffL", false), !!store.get("diffR", false)];
   let soundOn = true; // every visit starts with sound on; the switch lasts for this visit only
   let players = store.get("players", 1) === 2 ? 2 : 1;
   let slide = !!store.get("slide", false);
   let gameNo = 0;
 
   // Ball speed steps up after the 4th and 12th return of a volley, as the arcade circuit did
-  const LEVELS = {
-    easy: { speeds: [110, 150, 200], cpuSpeed: 95, aimErr: 12, react: 150, whiff: 0.1, vSpeed: 205, gravity: 160 },
-    hard: { speeds: [130, 185, 250], cpuSpeed: 130, aimErr: 10, react: 200, whiff: 0.05, vSpeed: 220, gravity: 175 },
-  };
-  const level = () => (hard ? LEVELS.hard : LEVELS.easy);
+  const LEVEL = { speeds: [110, 150, 200], cpuSpeed: 95, aimErr: 12, react: 150, whiff: 0.1, vSpeed: 205, gravity: 160 };
+  const level = () => LEVEL;
 
   // ───────────── Sound: square-wave blips like the original ─────────────
   let ac = null;
@@ -830,6 +842,7 @@ body {
     mode = MODES[gameNo];
     game.demo = demo;
     game.pads = mode.pads();
+    sizePads();
     game.owners = Math.max(...game.pads.map((p) => p.owner)) + 1;
     game.teams = mode.teams || 2;
     game.score = Array(game.teams).fill(0);
@@ -857,14 +870,33 @@ body {
     keepAwake(true);
   }
 
+  // The left switch belongs to the left player (and their Doubles partner), the right
+  // switch to the right player; Quadrapong's top and bottom players have none
+  function sideOf(o) {
+    if (mode.quad) return o < 2 ? o : -1;
+    return teamOf(o);
+  }
+  const sizeOf = (o) => (sideOf(o) >= 0 && diffA[sideOf(o)] ? 0.5 : 1);
+
+  // A half-size paddle still reaches both ends of its travel
+  function sizePads() {
+    for (const p of game.pads) {
+      if (p.baseLen === undefined) { p.baseLen = p.len; p.baseHi = p.hi; }
+      p.len = Math.max(4, Math.round(p.baseLen * sizeOf(p.owner)));
+      p.hi = p.baseHi + (p.baseLen - p.len);
+    }
+  }
+
   // Each return, every computer player picks where on its paddle to meet the ball,
-  // and now and then misjudges it altogether, so every game can be won
+  // and now and then misjudges it altogether, so every game can be won.
+  // A computer given a half-size paddle aims within it and misjudges twice as often.
   function newAims() {
     const L = level();
     const e = mode.volley ? 3 : L.aimErr;
     for (let o = 0; o < game.owners; o++) {
-      game.aim[o] = rand(-e, e);
-      game.whiff[o] = Math.random() < L.whiff;
+      const f = sizeOf(o);
+      game.aim[o] = rand(-e, e) * f;
+      game.whiff[o] = Math.random() < L.whiff / f;
     }
   }
 
@@ -1529,7 +1561,8 @@ body {
       SFX.click();
     });
   }
-  wireSwitch("diff", () => hard, (v) => { hard = v; store.set("hard", v); });
+  wireSwitch("diffL", () => diffA[0], (v) => { diffA[0] = v; store.set("diffL", v); sizePads(); });
+  wireSwitch("diffR", () => diffA[1], (v) => { diffA[1] = v; store.set("diffR", v); sizePads(); });
   wireSwitch("snd", () => soundOn, (v) => { soundOn = v; });
   wireSwitch("style", () => !slide, (v) => {
     slide = !v;
@@ -1589,11 +1622,11 @@ body {
 
   // Test hook (harmless in play): `perfect` lets a flawless robot take a side in balance tests
   Object.assign(hook, {
-    game, ball, step, knobs, MODES, LEVELS, press, newGame,
+    game, ball, step, knobs, MODES, LEVEL, press, newGame,
     setGame: (n) => { gameNo = n; setup(true); },
     setPlayers: (n) => { players = n; setup(true); },
     setSlide: (v) => { slide = v; updateCaps(); },
-    setHard: (v) => { hard = v; },
+    setDiff: (side, a) => { diffA[side] = a; sizePads(); },
   });
 })();
 </script>
