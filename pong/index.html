@@ -281,6 +281,7 @@ body {
 .switch .marks { display: flex; gap: 6px; opacity: .85; }
 .switch .marks span { opacity: .45; }
 .switch.momentary .marks span,
+.switch.single .marks span,
 .switch[aria-checked="true"] .marks span:first-child,
 .switch[aria-checked="false"] .marks span:last-child { opacity: 1; }
 
@@ -613,9 +614,9 @@ body {
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>1P</span><span>2P</span></span>
         </button>
-        <button class="switch" id="style" role="switch" aria-checked="true" aria-label="Controls: on turns the knob, off slides it">
+        <button class="switch single" id="style" role="switch" aria-checked="true" aria-label="Controller: up turns the knob, down slides it">
           <span class="slot"><span class="lever"></span></span>
-          <span class="marks"><span>DIAL</span><span>SLIDE</span></span>
+          <span class="marks"><span>CONTROLLER</span></span>
         </button>
         <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
           <span class="slot"><span class="lever"></span></span>
@@ -667,7 +668,7 @@ body {
     set(k, v) { try { localStorage.setItem("pong." + k, JSON.stringify(v)); } catch {} },
   };
   let hard = !!store.get("hard", false);
-  let soundOn = !!store.get("sound", true);
+  let soundOn = true; // every visit starts with sound on; the switch lasts for this visit only
   let players = store.get("players", 1) === 2 ? 2 : 1;
   let slide = !!store.get("slide", false);
   let gameNo = 0;
@@ -1518,7 +1519,7 @@ body {
     });
   }
   wireSwitch("diff", () => hard, (v) => { hard = v; store.set("hard", v); });
-  wireSwitch("snd", () => soundOn, (v) => { soundOn = v; store.set("sound", v); });
+  wireSwitch("snd", () => soundOn, (v) => { soundOn = v; });
   wireSwitch("style", () => !slide, (v) => {
     slide = !v;
     store.set("slide", slide);
