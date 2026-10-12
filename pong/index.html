@@ -281,7 +281,6 @@ body {
 .switch .marks { display: flex; gap: 6px; opacity: .85; }
 .switch .marks span { opacity: .45; }
 .switch.momentary .marks span,
-.switch.single .marks span,
 .switch[aria-checked="true"] .marks span:first-child,
 .switch[aria-checked="false"] .marks span:last-child { opacity: 1; }
 
@@ -614,9 +613,9 @@ body {
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>1P</span><span>2P</span></span>
         </button>
-        <button class="switch single" id="style" role="switch" aria-checked="true" aria-label="Controller: up turns the knob, down slides it">
+        <button class="switch" id="style" role="switch" aria-checked="true" aria-label="Controls: on turns the knob, off slides it">
           <span class="slot"><span class="lever"></span></span>
-          <span class="marks"><span>CONTROLLER</span></span>
+          <span class="marks"><span>DIAL</span><span>SLIDE</span></span>
         </button>
         <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
           <span class="slot"><span class="lever"></span></span>
