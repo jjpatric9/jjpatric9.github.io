@@ -402,6 +402,75 @@ body {
   box-shadow: 0 0 0 2px #050505, 0 2px 3px rgba(0,0,0,.6);
 }
 
+/* SLIDE style: the same knob riding a straight groove, up and down or side to side */
+.slider {
+  --t: min(64px, calc(var(--k) * .36));
+  position: absolute;
+  inset: 4px 0 26px;
+  display: none;
+  place-items: center;
+  pointer-events: none;
+}
+.slider.v { padding: calc(var(--t) / 2) 0; }
+.slider.h { padding: 0 calc(var(--t) / 2 + 6px); }
+
+.track {
+  position: relative;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #050404, #1a1715 50%, #050404);
+  box-shadow: inset 0 2px 4px #000, 0 1px 0 rgba(255,255,255,.07);
+}
+.slider.v .track { width: 14px; height: 100%; }
+.slider.h .track { height: 14px; width: 100%; background: linear-gradient(180deg, #050404, #1a1715 50%, #050404); }
+
+/* Painted scale beside the groove */
+.track::before {
+  content: "";
+  position: absolute;
+  opacity: .5;
+}
+.slider.v .track::before {
+  left: calc(100% + 10px);
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: repeating-linear-gradient(180deg, var(--label) 0 2px, transparent 2px 10%) top / 100% calc(100% + 2px);
+}
+.slider.h .track::before {
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: repeating-linear-gradient(90deg, var(--label) 0 2px, transparent 2px 10%) left / calc(100% + 2px) 100%;
+}
+
+.thumb {
+  position: absolute;
+  width: var(--t);
+  height: var(--t);
+  border-radius: 50%;
+  translate: -50% -50%;
+  background:
+    radial-gradient(circle, #8f8f8b 0 17%, #050505 18% 21%, transparent 22%),
+    radial-gradient(circle at 50% 40%, #2a2826, #0b0a0a 60%) center / 74% 74% no-repeat,
+    repeating-conic-gradient(#2c2a28 0 6deg, #090808 6deg 12deg);
+  box-shadow: 0 0 0 3px #0a0908, 0 8px 12px rgba(0,0,0,.7);
+}
+.thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 26%, rgba(255,255,255,.22), transparent 40%);
+}
+.slider.v .thumb { left: 50%; top: calc(var(--u) * 100%); }
+.slider.h .thumb { top: 50%; left: calc(var(--u) * 100%); }
+
+.deck[data-style="slide"] .slider { display: grid; }
+.deck[data-style="slide"] .knob,
+.deck[data-style="slide"] .dial { display: none; }
+.deck[data-style="slide"] .knob-zone .cap { top: auto; bottom: 2px; }
+
 .knob .shine {
   position: absolute;
   inset: 0;
@@ -489,9 +558,12 @@ body {
 }
 
 @media (max-width: 430px) {
-  .switches { gap: 10px; }
+  .strip { padding-inline: 12px; }
+  .switches { gap: 9px; }
+  .switch { letter-spacing: .06em; }
   .title { font-size: 12px; letter-spacing: .12em; }
-  .title small { font-size: 9px; letter-spacing: .14em; }
+  .title span { display: block; }
+  .title small { display: none; }
 }
 
 /* Landscape phone: TV on the left, controller on the right */
@@ -531,7 +603,7 @@ body {
 
   <section class="pad" aria-label="Controller">
     <div class="strip">
-      <div class="title">VIDEO&nbsp;PONG<small>PADDLE CONTROLLER</small></div>
+      <div class="title"><span>VIDEO</span> <span>PONG</span><small>PADDLE CONTROLLER</small></div>
       <div class="switches">
         <button class="switch momentary" id="gameBtn" aria-label="Game select">
           <span class="slot"><span class="lever"></span></span>
@@ -540,6 +612,10 @@ body {
         <button class="switch" id="plyr" role="switch" aria-checked="true" aria-label="Players: on is one player, off is two">
           <span class="slot"><span class="lever"></span></span>
           <span class="marks"><span>1P</span><span>2P</span></span>
+        </button>
+        <button class="switch" id="style" role="switch" aria-checked="true" aria-label="Controls: on turns the knob, off slides it">
+          <span class="slot"><span class="lever"></span></span>
+          <span class="marks"><span>DIAL</span><span>SLIDE</span></span>
         </button>
         <button class="switch" id="diff" role="switch" aria-checked="false" aria-label="Difficulty: A is hard, B is easy">
           <span class="slot"><span class="lever"></span></span>
@@ -552,11 +628,12 @@ body {
       </div>
     </div>
 
-    <div class="deck" id="deck" data-players="1">
+    <div class="deck" id="deck" data-players="1" data-style="dial">
       <div class="cluster" data-p="0">
         <div class="knob-zone" id="zone0" role="slider" tabindex="0" aria-label="Left player's paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
           <svg class="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
           <div class="knob"><div class="rot"><div class="skirt"></div><div class="face"></div></div><div class="shine"></div></div>
+          <div class="slider v" aria-hidden="true"><div class="track"><div class="thumb"></div></div></div>
           <span class="cap" data-cap="knob">TURN</span>
         </div>
         <div class="fire-zone">
@@ -568,6 +645,7 @@ body {
         <div class="knob-zone" id="zone1" role="slider" tabindex="0" aria-label="Right player's paddle knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
           <svg class="dial" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
           <div class="knob"><div class="rot"><div class="skirt"></div><div class="face"></div></div><div class="shine"></div></div>
+          <div class="slider v" aria-hidden="true"><div class="track"><div class="thumb"></div></div></div>
           <span class="cap" data-cap="knob">P2</span>
         </div>
         <div class="fire-zone">
@@ -591,6 +669,7 @@ body {
   let hard = !!store.get("hard", false);
   let soundOn = !!store.get("sound", true);
   let players = store.get("players", 1) === 2 ? 2 : 1;
+  let slide = !!store.get("slide", false);
   let gameNo = 0;
 
   // Ball speed steps up after the 4th and 12th return of a volley, as the arcade circuit did
@@ -1262,11 +1341,14 @@ body {
     const knob = zone.querySelector(".knob");
     const rot = zone.querySelector(".rot");
     const svg = zone.querySelector(".dial");
+    const slider = zone.querySelector(".slider");
+    const track = zone.querySelector(".track");
     const k = {
       angle: 0,
       set(a) {
         k.angle = clamp(a, -KNOB_MAX, KNOB_MAX);
         rot.style.transform = `rotate(${k.angle}rad)`;
+        slider.style.setProperty("--u", k.u().toFixed(4));
         zone.setAttribute("aria-valuenow", String(Math.round(k.u() * 100)));
       },
       u: () => (k.angle + KNOB_MAX) / (2 * KNOB_MAX),
@@ -1297,14 +1379,22 @@ body {
       const dy = e.clientY - (r.top + r.height / 2);
       return { a: Math.atan2(dy, dx), dist: Math.hypot(dx, dy), radius: r.width / 2 };
     };
+    // SLIDE: the knob goes wherever the finger is along the groove
+    const slideTo = (e) => {
+      const r = track.getBoundingClientRect();
+      const u = slider.classList.contains("h") ? (e.clientX - r.left) / r.width : (e.clientY - r.top) / r.height;
+      k.set(clamp(u, 0, 1) * 2 * KNOB_MAX - KNOB_MAX);
+    };
     zone.addEventListener("pointerdown", (e) => {
       audio();
       zone.setPointerCapture(e.pointerId);
       grab = { id: e.pointerId, last: angleAt(e).a, y: e.clientY };
+      if (slide) slideTo(e);
       e.preventDefault();
     });
     zone.addEventListener("pointermove", (e) => {
       if (!grab || e.pointerId !== grab.id) return;
+      if (slide) return slideTo(e);
       const p = angleAt(e);
       if (p.dist < p.radius * 0.18) {
         // Too close to the hub to read a direction: treat it as a vertical slide
@@ -1351,8 +1441,19 @@ body {
 
   function updateCaps() {
     deck.dataset.players = String(players);
+    deck.dataset.style = slide ? "slide" : "dial";
+    // Volleyball paddles run along the floor, so its groove runs side to side
+    const across = !!mode.volley;
+    document.querySelectorAll(".slider").forEach((el) => {
+      el.classList.toggle("h", across);
+      el.classList.toggle("v", !across);
+    });
+    document.querySelectorAll(".knob-zone").forEach((z) => {
+      if (slide) z.setAttribute("aria-orientation", across ? "horizontal" : "vertical");
+      else z.removeAttribute("aria-orientation");
+    });
     document.querySelectorAll('[data-cap="knob"]').forEach((c, i) => {
-      c.textContent = players === 1 ? "TURN" : "P" + (i + 1);
+      c.textContent = players === 1 ? (slide ? "SLIDE" : "TURN") : "P" + (i + 1);
     });
     document.querySelectorAll('[data-cap="fire"]').forEach((c) => {
       c.textContent = mode.catch ? (players === 1 ? "SERVE / CATCH" : "CATCH") : "SERVE";
@@ -1418,6 +1519,11 @@ body {
   }
   wireSwitch("diff", () => hard, (v) => { hard = v; store.set("hard", v); });
   wireSwitch("snd", () => soundOn, (v) => { soundOn = v; store.set("sound", v); });
+  wireSwitch("style", () => !slide, (v) => {
+    slide = !v;
+    store.set("slide", slide);
+    updateCaps();
+  });
   wireSwitch("plyr", () => players === 1, (v) => {
     players = v ? 1 : 2;
     store.set("players", players);
@@ -1474,6 +1580,7 @@ body {
     game, ball, step, knobs, MODES, LEVELS, press, newGame,
     setGame: (n) => { gameNo = n; setup(true); },
     setPlayers: (n) => { players = n; setup(true); },
+    setSlide: (v) => { slide = v; updateCaps(); },
     setHard: (v) => { hard = v; },
   });
 })();
