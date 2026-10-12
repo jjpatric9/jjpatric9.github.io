@@ -471,6 +471,17 @@ body {
 .deck[data-style="slide"] .dial { display: none; }
 .deck[data-style="slide"] .knob-zone .cap { top: auto; bottom: 2px; }
 
+/* Two players sliding up and down: each groove runs the full height of its half, its button beside it */
+.deck[data-players="2"][data-style="slide"][data-axis="v"] .cluster {
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr;
+}
+.deck[data-players="2"][data-style="slide"][data-axis="v"] .fire-zone {
+  width: calc(var(--fk) + 16px);
+  height: 100%;
+}
+.deck[data-players="2"][data-style="slide"][data-axis="v"] .fire-zone .cap { top: calc(50% + var(--r) + 6px); bottom: auto; }
+
 .knob .shine {
   position: absolute;
   inset: 0;
@@ -1444,6 +1455,7 @@ body {
     deck.dataset.style = slide ? "slide" : "dial";
     // Volleyball paddles run along the floor, so its groove runs side to side
     const across = !!mode.volley;
+    deck.dataset.axis = across ? "h" : "v";
     document.querySelectorAll(".slider").forEach((el) => {
       el.classList.toggle("h", across);
       el.classList.toggle("v", !across);
