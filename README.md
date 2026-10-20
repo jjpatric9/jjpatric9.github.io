@@ -38,9 +38,9 @@ Links between pages are relative, so every page works under both hostnames.
 
 ## The App Store badge
 
-The App Store badges (homepage, Box Stack page twice, Play page) have `href="#"` and `data-soon`, so it shows "Coming soon" instead of
-going anywhere. When the listing is live, put its address in each `href` and delete `data-soon`; the
-Support page's "Is it on iPhone?" answer (and its JSON-LD) changes in the same commit.
+The App Store badges (homepage, Box Stack page twice, Play page) link to the listing,
+https://apps.apple.com/us/app/box-stack-tower-block-puzzle/id6818697355. The Support page's "Is it on iPhone?" answer, its JSON-LD and the game's `sameAs`
+carry the same address; change them together. `data-soon` still makes any link show "Coming soon".
 
 ## Fresh CSS and scripts after a deploy
 
