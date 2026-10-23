@@ -107,17 +107,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtList]);
   initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
   initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
+  initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
   initMetadataForCompanion(Companion_1);
   initMetadataForInterface(RandomAccess, 'RandomAccess');
   initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, Collection, KtList, RandomAccess]);
   initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
-  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+  initMetadataForClass(HashMapKeys, 'HashMapKeys', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
+  initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
   initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
   initMetadataForClass(HashMapKeysDefault$iterator$1);
   initMetadataForClass(HashMapKeysDefault, 'HashMapKeysDefault', VOID, AbstractMutableSet);
-  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
+  initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
   initMetadataForCompanion(Companion_2);
   initMetadataForClass(Itr, 'Itr');
   initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -161,7 +161,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   initMetadataForInterface(InternalMap, 'InternalMap');
   initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
   initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
+  initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
   initMetadataForClass(Exception, 'Exception', Exception_init_$Create$, Error);
   initMetadataForClass(RuntimeException, 'RuntimeException', RuntimeException_init_$Create$, Exception);
   initMetadataForClass(IllegalArgumentException, 'IllegalArgumentException', IllegalArgumentException_init_$Create$, RuntimeException);
@@ -295,6 +295,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function Number_0() {
   }
+  function get_lastIndex(_this__u8e3s4) {
+    return _this__u8e3s4.length - 1 | 0;
+  }
   function indexOf(_this__u8e3s4, element) {
     if (element == null) {
       var inductionVariable = 0;
@@ -333,7 +336,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return destination;
   }
-  function get_lastIndex(_this__u8e3s4) {
+  function get_lastIndex_0(_this__u8e3s4) {
     return _this__u8e3s4.length - 1 | 0;
   }
   function joinToString(_this__u8e3s4, separator, prefix, postfix, limit, truncated, transform) {
@@ -519,7 +522,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function last(_this__u8e3s4) {
     if (_this__u8e3s4.i())
       throw NoSuchElementException_init_$Create$_0('List is empty.');
-    return _this__u8e3s4.j(get_lastIndex_0(_this__u8e3s4));
+    return _this__u8e3s4.j(get_lastIndex_1(_this__u8e3s4));
   }
   function sum(_this__u8e3s4) {
     var sum = 0;
@@ -640,7 +643,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toCollection_0(_this__u8e3s4, ArrayList_init_$Create$());
   }
   function shuffle(_this__u8e3s4, random) {
-    var inductionVariable = get_lastIndex_0(_this__u8e3s4);
+    var inductionVariable = get_lastIndex_1(_this__u8e3s4);
     if (1 <= inductionVariable)
       do {
         var i = inductionVariable;
@@ -1914,7 +1917,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var midPoint = (_this__u8e3s4.k() / 2 | 0) - 1 | 0;
     if (midPoint < 0)
       return Unit_instance;
-    var reverseIndex = get_lastIndex_0(_this__u8e3s4);
+    var reverseIndex = get_lastIndex_1(_this__u8e3s4);
     var inductionVariable = 0;
     if (inductionVariable <= midPoint)
       do {
@@ -2313,7 +2316,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     rangeCheck(this, index);
     this.t1_1 = this.t1_1 + 1 | 0;
     var tmp;
-    if (index === get_lastIndex_0(this)) {
+    if (index === get_lastIndex_1(this)) {
       // Inline function 'kotlin.js.asDynamic' call
       tmp = this.n_1.pop();
     } else {
@@ -2365,7 +2368,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     } else {
       // Inline function 'kotlin.js.unsafeCast' call
       // Inline function 'kotlin.js.asDynamic' call
-      mergeSort(array, 0, get_lastIndex(array), comparator);
+      mergeSort(array, 0, get_lastIndex_0(array), comparator);
     }
   }
   function getStableSortingIsSupported() {
@@ -4030,7 +4033,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function listOf_0(elements) {
     return elements.length > 0 ? asList(elements) : emptyList();
   }
-  function get_lastIndex_0(_this__u8e3s4) {
+  function get_lastIndex_1(_this__u8e3s4) {
     return _this__u8e3s4.k() - 1 | 0;
   }
   function emptyList() {
@@ -5687,7 +5690,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         var cell = _iterator__ex2g4s_0.h();
         var open = lastOrNull(runs);
         if (!(open == null) && open.bc_1 === cell.yb_1 && open.dc_1 === (cell.xb_1 - 1 | 0)) {
-          runs.r(get_lastIndex_0(runs), open.fc(VOID, VOID, cell.xb_1));
+          runs.r(get_lastIndex_1(runs), open.fc(VOID, VOID, cell.xb_1));
         } else {
           // Inline function 'kotlin.collections.plusAssign' call
           var element_0 = new SlabRun(cell.yb_1, cell.xb_1, cell.xb_1);
@@ -8506,23 +8509,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).handColor = function (shapeOrdinal) {
     return this.th_1.xk(shapeOrdinal, TowerBands_getInstance().wk(this.sh_1.xc_1));
   };
-  protoOf(Engine).yk = function () {
-    return this.th_1.zk(TowerBands_getInstance().wk(this.sh_1.xc_1));
+  protoOf(Engine).handFoil = function (shapeOrdinal) {
+    return this.th_1.yk(getOrNull_0(get_entries_0(), shapeOrdinal), TowerBands_getInstance().wk(this.sh_1.xc_1));
   };
-  protoOf(Engine).al = function () {
-    return DockMaterial_instance.zl(this.th_1.fl(this.sh_1.xc_1)).bl_1;
+  protoOf(Engine).zk = function () {
+    return this.th_1.cl(TowerBands_getInstance().wk(this.sh_1.xc_1)).bl_1;
   };
-  protoOf(Engine).am = function () {
-    return DockMaterial_instance.zl(this.th_1.fl(this.sh_1.xc_1)).cl_1;
+  protoOf(Engine).dl = function () {
+    return this.th_1.el(TowerBands_getInstance().wk(this.sh_1.xc_1));
   };
-  protoOf(Engine).bm = function () {
-    return DockMaterial_instance.zl(this.th_1.fl(this.sh_1.xc_1)).dl_1;
+  protoOf(Engine).fl = function () {
+    return DockMaterial_instance.em(this.th_1.kl(this.sh_1.xc_1)).gl_1;
   };
-  protoOf(Engine).cm = function () {
-    return DockMaterial_instance.zl(this.th_1.fl(this.sh_1.xc_1)).el_1;
+  protoOf(Engine).fm = function () {
+    return DockMaterial_instance.em(this.th_1.kl(this.sh_1.xc_1)).hl_1;
+  };
+  protoOf(Engine).gm = function () {
+    return DockMaterial_instance.em(this.th_1.kl(this.sh_1.xc_1)).il_1;
+  };
+  protoOf(Engine).hm = function () {
+    return DockMaterial_instance.em(this.th_1.kl(this.sh_1.xc_1)).jl_1;
   };
   protoOf(Engine).chrome = function (role) {
-    return this.th_1.dm(TowerBands_getInstance().wk(this.sh_1.xc_1)).gm(valueOf(role));
+    return this.th_1.cl(TowerBands_getInstance().wk(this.sh_1.xc_1)).im(valueOf(role));
   };
   protoOf(Engine).usePalette = function (field, crates) {
     // Inline function 'kotlin.collections.copyOf' call
@@ -8542,7 +8551,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         list.d(band);
       }
        while (inductionVariable < size);
-    var worn = new TowerPalette(plus(list, TowerBands_getInstance().hm()));
+    var worn = new TowerPalette(plus(list, TowerBands_getInstance().jm()));
     this.uh_1 = worn;
     this.th_1 = worn;
   };
@@ -8588,7 +8597,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var outcome = tmp_0;
     return toIntArray(outcome.jf_1);
   };
-  protoOf(Engine).im = function () {
+  protoOf(Engine).km = function () {
     return this.sh_1.md_1.n7_1;
   };
   protoOf(Engine).o7 = function () {
@@ -8597,22 +8606,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(Engine).p7 = function () {
     return this.sh_1.qd();
   };
-  protoOf(Engine).jm = function () {
+  protoOf(Engine).lm = function () {
     return this.sh_1.ed_1 - this.wh_1 | 0;
   };
-  protoOf(Engine).km = function () {
+  protoOf(Engine).mm = function () {
     return this.sh_1.fd_1;
   };
-  protoOf(Engine).lm = function () {
+  protoOf(Engine).nm = function () {
     return this.sh_1.gd_1 - this.xh_1 | 0;
   };
-  protoOf(Engine).mm = function () {
+  protoOf(Engine).om = function () {
     return this.sh_1.ed_1;
   };
-  protoOf(Engine).nm = function () {
+  protoOf(Engine).pm = function () {
     return Placement_instance.dh(this.sh_1.xc_1);
   };
-  protoOf(Engine).om = function () {
+  protoOf(Engine).qm = function () {
     return this.sh_1.yc_1.xe_1.k();
   };
   protoOf(Engine).handOrdinal = function (slot) {
@@ -8709,44 +8718,44 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.ai_1 = out.vc_1.oc_1;
     return this.yh_1.length;
   };
-  protoOf(Engine).pm = function () {
+  protoOf(Engine).rm = function () {
     return this.vh_1;
   };
   protoOf(Engine).rowsJustSet = function () {
     return this.yh_1;
   };
-  protoOf(Engine).qm = function () {
+  protoOf(Engine).sm = function () {
     return this.zh_1;
   };
-  protoOf(Engine).rm = function () {
+  protoOf(Engine).tm = function () {
     return this.ai_1;
   };
-  protoOf(Engine).sm = function () {
+  protoOf(Engine).um = function () {
     return deathMs(this) / 1000.0;
   };
   protoOf(Engine).revealing = function (playingRows) {
     return this.revealRows(playingRows) > playingRows + 0.5;
   };
   protoOf(Engine).revealRows = function (playingRows) {
-    return PlayfieldGeometry_instance.tm(this.sh_1.xc_1.d8_1, numberToInt(playingRows)).yi_1;
+    return PlayfieldGeometry_instance.vm(this.sh_1.xc_1.d8_1, numberToInt(playingRows)).yi_1;
   };
   protoOf(Engine).revealPhase = function (progress, revealing) {
-    return ResultsAnim_instance.bn(progress, revealing);
-  };
-  protoOf(Engine).revealDone = function (revealing) {
-    return ResultsAnim_instance.cn(revealing);
-  };
-  protoOf(Engine).topplePhase = function (progress, revealing) {
     return ResultsAnim_instance.dn(progress, revealing);
   };
+  protoOf(Engine).revealDone = function (revealing) {
+    return ResultsAnim_instance.en(revealing);
+  };
+  protoOf(Engine).topplePhase = function (progress, revealing) {
+    return ResultsAnim_instance.fn(progress, revealing);
+  };
   protoOf(Engine).toppleDegrees = function (topple) {
-    return ResultsAnim_instance.en(topple, tilt(this));
+    return ResultsAnim_instance.gn(topple, tilt(this));
   };
   protoOf(Engine).impactPhase = function (topple) {
-    return ResultsAnim_instance.fn(topple);
+    return ResultsAnim_instance.hn(topple);
   };
-  protoOf(Engine).gn = function () {
-    return ResultsAnim_instance.hn(this.sh_1.xc_1);
+  protoOf(Engine).in = function () {
+    return ResultsAnim_instance.jn(this.sh_1.xc_1);
   };
   protoOf(Engine).burst = function (left, zeroY, cellPx, pivotX, pivotY, impact) {
     var board = this.sh_1.xc_1;
@@ -8768,10 +8777,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
             var value = board.b9(x, row);
             if (value === 0 || value === 1)
               continue $l$loop;
-            var piece = ResultsAnim_instance.in(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
-            out.d(piece.jn_1);
-            out.d(piece.kn_1);
+            var piece = ResultsAnim_instance.kn(new FragmentInput(left + x * cellPx, zeroY - (row + 1 | 0) * cellPx, pivotX, pivotY, cell, groundY, x, row, impact, tilt(this)));
             out.d(piece.ln_1);
+            out.d(piece.mn_1);
+            out.d(piece.nn_1);
             out.d(board.x8(row) ? this.setRowColor(row) : this.cellColor(x, row));
             out.d(row);
           }
@@ -8781,15 +8790,15 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return toDoubleArray(out);
   };
   protoOf(Engine).dropRate = function (combo, rows, index) {
-    return SoundLadder_getInstance().on(combo, rows, index);
+    return SoundLadder_getInstance().qn(combo, rows, index);
   };
-  protoOf(Engine).pn = function () {
+  protoOf(Engine).rn = function () {
     return toNumber(new Long(300, 0));
   };
-  protoOf(Engine).qn = function () {
-    return ResultsAnim_instance.rn(true, false);
-  };
   protoOf(Engine).sn = function () {
+    return ResultsAnim_instance.tn(true, false);
+  };
+  protoOf(Engine).un = function () {
     return get_entries_0().k();
   };
   protoOf(Engine).heatFor = function (multiplier) {
@@ -8875,58 +8884,59 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function Celebration() {
     Celebration_instance = this;
-    this.tn_1 = new Long(175, 0);
-    this.un_1 = 0.15;
-    this.vn_1 = 0.45;
-    this.wn_1 = 2;
-    this.xn_1 = 520.0;
-    this.yn_1 = 0.32;
-    this.zn_1 = 0.08;
-    this.ao_1 = 0.11;
-    this.bo_1 = 0.14;
-    this.co_1 = 0.35;
-    this.do_1 = 0.12;
-    this.eo_1 = 0.6;
-    this.fo_1 = 0.1;
-    this.go_1 = 1.6;
-    this.ho_1 = 0.3;
+    this.vn_1 = new Long(175, 0);
+    this.wn_1 = new Long(200, 0);
+    this.xn_1 = 0.15;
+    this.yn_1 = 0.45;
+    this.zn_1 = 2;
+    this.ao_1 = 520.0;
+    this.bo_1 = 0.32;
+    this.co_1 = 0.08;
+    this.do_1 = 0.11;
+    this.eo_1 = 0.14;
+    this.fo_1 = 0.35;
+    this.go_1 = 0.12;
+    this.ho_1 = 0.6;
+    this.io_1 = 0.1;
+    this.jo_1 = 1.6;
+    this.ko_1 = 0.3;
     var tmp = this;
     // Inline function 'kotlin.intArrayOf' call
-    tmp.io_1 = new Int32Array([0, 0, 0, 46, 60, 80]);
-    this.jo_1 = 1.1;
-    this.ko_1 = 3.8;
-    this.lo_1 = 0.85;
-    this.mo_1 = 5;
-    this.no_1 = 1400.0;
-    this.oo_1 = 1.6;
-    this.po_1 = 0.12;
-    this.qo_1 = 0.8;
-    this.ro_1 = 0.15;
-    this.so_1 = 5;
-    this.to_1 = 20.0;
-    this.uo_1 = 0.6;
-    this.vo_1 = 3.0;
-    this.wo_1 = 24.0;
-    this.xo_1 = 4;
-    this.yo_1 = 1900.0;
-    this.zo_1 = 1400.0;
-    this.ap_1 = 2400.0;
-    this.bp_1 = 250.0;
-    this.cp_1 = 900.0;
-    this.dp_1 = 750.0;
-    this.ep_1 = 0.62;
-    this.fp_1 = 0.08;
-    this.gp_1 = 1600.0;
-    this.hp_1 = 3500.0;
-    this.ip_1 = 0.65;
-    this.jp_1 = 1.1;
-    this.kp_1 = 0.22;
-    this.lp_1 = 2.4;
-    this.mp_1 = 1.5;
-    this.np_1 = 540.0;
-    this.op_1 = 0.04;
+    tmp.lo_1 = new Int32Array([0, 0, 0, 46, 60, 80]);
+    this.mo_1 = 1.1;
+    this.no_1 = 3.8;
+    this.oo_1 = 0.85;
+    this.po_1 = 5;
+    this.qo_1 = 1400.0;
+    this.ro_1 = 1.6;
+    this.so_1 = 0.12;
+    this.to_1 = 0.8;
+    this.uo_1 = 0.15;
+    this.vo_1 = 5;
+    this.wo_1 = 20.0;
+    this.xo_1 = 0.6;
+    this.yo_1 = 3.0;
+    this.zo_1 = 24.0;
+    this.ap_1 = 4;
+    this.bp_1 = 1900.0;
+    this.cp_1 = 1400.0;
+    this.dp_1 = 2400.0;
+    this.ep_1 = 250.0;
+    this.fp_1 = 900.0;
+    this.gp_1 = 750.0;
+    this.hp_1 = 0.62;
+    this.ip_1 = 0.08;
+    this.jp_1 = 1600.0;
+    this.kp_1 = 3500.0;
+    this.lp_1 = 0.65;
+    this.mp_1 = 1.1;
+    this.np_1 = 0.22;
+    this.op_1 = 2.4;
+    this.pp_1 = 1.5;
+    this.qp_1 = 540.0;
+    this.rp_1 = 0.04;
   }
-  protoOf(Celebration).pp = function (medal) {
+  protoOf(Celebration).sp = function (medal) {
     var tmp;
     switch (medal.d1_1) {
       case 0:
@@ -9188,10 +9198,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp;
   }
   function Companion_18() {
-    this.qp_1 = 20;
-    this.rp_1 = 1.0E-4;
+    this.tp_1 = 20;
+    this.up_1 = 1.0E-4;
   }
-  protoOf(Companion_18).sp = function (packed) {
+  protoOf(Companion_18).vp = function (packed) {
     var r = linear(this, packed >> 16 & 255);
     var g = linear(this, packed >> 8 & 255);
     var b = linear(this, packed & 255);
@@ -9208,7 +9218,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp$ret$1 = Math.atan2(bb, a);
     return new Lab(l, tmp, tmp$ret$1);
   };
-  protoOf(Companion_18).tp = function (l, chroma, hue) {
+  protoOf(Companion_18).wp = function (l, chroma, hue) {
     var lo = 0.0;
     var hi = chroma;
     if (inGamut(this, l, hi, hue))
@@ -9235,8 +9245,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   function Role(name, ordinal, night, ink) {
     ink = ink === VOID ? false : ink;
     Enum.call(this, name, ordinal);
-    this.wp_1 = night;
-    this.xp_1 = ink;
+    this.zp_1 = night;
+    this.aq_1 = ink;
   }
   function Companion_19() {
     Companion_instance_19 = this;
@@ -9246,31 +9256,31 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_2 = new Int32Array(tmp_1);
     while (tmp_0 < tmp_1) {
       var tmp_3 = tmp_0;
-      tmp_2[tmp_3] = get_entries_1().j(tmp_3).wp_1;
+      tmp_2[tmp_3] = get_entries_1().j(tmp_3).zp_1;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.yp_1 = new ChromePalette(tmp_2, 240.0);
-    this.zp_1 = Companion_instance_18.sp(Role_BACKGROUND_getInstance().wp_1).pq_1;
-    this.aq_1 = 240.0;
-    this.bq_1 = 0.65;
-    this.cq_1 = 0.15;
-    this.dq_1 = 360.0;
-    this.eq_1 = 180.0;
-    this.fq_1 = 0.015;
-    this.gq_1 = 0.6;
-    this.hq_1 = 0.21;
-    this.iq_1 = 0.3;
-    this.jq_1 = 0.145;
-    this.kq_1 = Companion_instance_18.sp(Role_BACKGROUND_getInstance().wp_1).pq_1;
-    this.lq_1 = 0.7;
-    this.mq_1 = 0.05;
-    this.nq_1 = 0.3;
-    this.oq_1 = 0.025;
+    tmp.bq_1 = new ChromePalette(tmp_2, 240.0);
+    this.cq_1 = Companion_instance_18.vp(Role_BACKGROUND_getInstance().zp_1).sq_1;
+    this.dq_1 = 240.0;
+    this.eq_1 = 0.65;
+    this.fq_1 = 0.15;
+    this.gq_1 = 360.0;
+    this.hq_1 = 180.0;
+    this.iq_1 = 0.015;
+    this.jq_1 = 0.6;
+    this.kq_1 = 0.21;
+    this.lq_1 = 0.3;
+    this.mq_1 = 0.145;
+    this.nq_1 = Companion_instance_18.vp(Role_BACKGROUND_getInstance().zp_1).sq_1;
+    this.oq_1 = 0.7;
+    this.pq_1 = 0.05;
+    this.qq_1 = 0.3;
+    this.rq_1 = 0.025;
   }
-  protoOf(Companion_19).sq = function (field, crates) {
-    var f = Companion_instance_18.sp(field);
-    var hue = {_v: f.rq_1};
-    var chroma = f.qq_1;
+  protoOf(Companion_19).vq = function (field, crates) {
+    var f = Companion_instance_18.vp(field);
+    var hue = {_v: f.uq_1};
+    var chroma = f.tq_1;
     if (chroma < 0.015) {
       // Inline function 'kotlin.collections.map' call
       // Inline function 'kotlin.collections.mapTo' call
@@ -9280,7 +9290,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       while (inductionVariable < last) {
         var item = crates[inductionVariable];
         inductionVariable = inductionVariable + 1 | 0;
-        var tmp$ret$0 = Companion_instance_18.sp(item);
+        var tmp$ret$0 = Companion_instance_18.vp(item);
         destination.d(tmp$ret$0);
       }
       var tmp$ret$3;
@@ -9296,10 +9306,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           tmp$ret$3 = maxElem;
           break $l$block_0;
         }
-        var maxValue = maxElem.qq_1;
+        var maxValue = maxElem.tq_1;
         do {
           var e = iterator.h();
-          var v = e.qq_1;
+          var v = e.tq_1;
           if (compareTo(maxValue, v) < 0) {
             maxElem = e;
             maxValue = v;
@@ -9309,14 +9319,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         tmp$ret$3 = maxElem;
       }
       var vivid = tmp$ret$3;
-      if (!(vivid == null) && vivid.qq_1 > 0.015 * 2) {
-        hue._v = vivid.rq_1;
+      if (!(vivid == null) && vivid.tq_1 > 0.015 * 2) {
+        hue._v = vivid.uq_1;
         chroma = 0.015;
       } else {
         chroma = 0.0;
       }
     }
-    var base = f.pq_1 >= 0.6 ? this.zp_1 : coerceIn_1(this.zp_1 + (f.pq_1 - 0.21) * 0.3, 0.145, this.kq_1);
+    var base = f.sq_1 >= 0.6 ? this.cq_1 : coerceIn_1(this.cq_1 + (f.sq_1 - 0.21) * 0.3, 0.145, this.nq_1);
     // Inline function 'kotlin.comparisons.minOf' call
     var a = chroma * 0.7;
     var surfaceChroma = Math.min(a, 0.05);
@@ -9329,19 +9339,43 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     while (tmp < tmp_0) {
       var tmp_2 = tmp;
       var role = get_entries_1().j(tmp_2);
-      var night = Companion_instance_18.sp(role.wp_1);
+      var night = Companion_instance_18.vp(role.zp_1);
       var tmp_3;
-      if (role.xp_1) {
-        tmp_3 = Companion_instance_18.tp(night.pq_1, inkChroma, hue._v);
+      if (role.aq_1) {
+        tmp_3 = Companion_instance_18.wp(night.sq_1, inkChroma, hue._v);
       } else {
-        tmp_3 = Companion_instance_18.tp(base + (night.pq_1 - Companion_getInstance_19().zp_1), surfaceChroma, hue._v);
+        tmp_3 = Companion_instance_18.wp(base + (night.sq_1 - Companion_getInstance_19().cq_1), surfaceChroma, hue._v);
       }
       tmp_1[tmp_2] = tmp_3;
       tmp = tmp + 1 | 0;
     }
     var colours = tmp_1;
-    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_18.tp(0.65, 0.15, hue._v));
+    var glow = chroma <= 0.0 ? 240.0 : wheelHue(this, Companion_instance_18.wp(0.65, 0.15, hue._v));
     return new ChromePalette(colours, glow);
+  };
+  protoOf(Companion_19).wq = function (a, b) {
+    var x = Companion_instance_18.vp(a);
+    var y = Companion_instance_18.vp(b);
+    var dl = x.sq_1 - y.sq_1;
+    // Inline function 'kotlin.math.cos' call
+    var x_0 = x.uq_1;
+    var tmp$ret$0 = Math.cos(x_0);
+    var tmp = x.tq_1 * tmp$ret$0;
+    // Inline function 'kotlin.math.cos' call
+    var x_1 = y.uq_1;
+    var tmp$ret$1 = Math.cos(x_1);
+    var da = tmp - y.tq_1 * tmp$ret$1;
+    // Inline function 'kotlin.math.sin' call
+    var x_2 = x.uq_1;
+    var tmp$ret$2 = Math.sin(x_2);
+    var tmp_0 = x.tq_1 * tmp$ret$2;
+    // Inline function 'kotlin.math.sin' call
+    var x_3 = y.uq_1;
+    var tmp$ret$3 = Math.sin(x_3);
+    var db = tmp_0 - y.tq_1 * tmp$ret$3;
+    // Inline function 'kotlin.math.sqrt' call
+    var x_4 = dl * dl + da * da + db * db;
+    return Math.sqrt(x_4);
   };
   var Companion_instance_19;
   function Companion_getInstance_19() {
@@ -9350,9 +9384,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return Companion_instance_19;
   }
   function Lab(l, chroma, hue) {
-    this.pq_1 = l;
-    this.qq_1 = chroma;
-    this.rq_1 = hue;
+    this.sq_1 = l;
+    this.tq_1 = chroma;
+    this.uq_1 = hue;
   }
   function Role_BACKGROUND_getInstance() {
     Role_initEntries();
@@ -9444,64 +9478,64 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function ChromePalette(colours, glowHue) {
     Companion_getInstance_19();
-    this.em_1 = colours;
-    this.fm_1 = glowHue;
+    this.al_1 = colours;
+    this.bl_1 = glowHue;
   }
-  protoOf(ChromePalette).gm = function (role) {
-    return this.em_1[role.d1_1];
+  protoOf(ChromePalette).im = function (role) {
+    return this.al_1[role.d1_1];
   };
   protoOf(ChromePalette).equals = function (other) {
     var tmp;
     var tmp_0;
     if (other instanceof ChromePalette) {
-      tmp_0 = contentEquals(this.em_1, other.em_1);
+      tmp_0 = contentEquals(this.al_1, other.al_1);
     } else {
       tmp_0 = false;
     }
     if (tmp_0) {
-      tmp = this.fm_1 === other.fm_1;
+      tmp = this.bl_1 === other.bl_1;
     } else {
       tmp = false;
     }
     return tmp;
   };
   protoOf(ChromePalette).hashCode = function () {
-    return imul(31, contentHashCode(this.em_1)) + getNumberHashCode(this.fm_1) | 0;
+    return imul(31, contentHashCode(this.al_1)) + getNumberHashCode(this.bl_1) | 0;
   };
   function Water(surface, top, bottom, line) {
-    this.bl_1 = surface;
-    this.cl_1 = top;
-    this.dl_1 = bottom;
-    this.el_1 = line;
+    this.gl_1 = surface;
+    this.hl_1 = top;
+    this.il_1 = bottom;
+    this.jl_1 = line;
   }
   function DockMaterial() {
-    this.gl_1 = 0.54;
-    this.hl_1 = 0.03;
-    this.il_1 = 14.0;
-    this.jl_1 = 0.07;
-    this.kl_1 = 0.1;
-    this.ll_1 = 0.06;
-    this.ml_1 = 0.2;
-    this.nl_1 = 0.24;
-    this.ol_1 = 0.9;
-    this.pl_1 = 0.14;
-    this.ql_1 = 0.3;
-    this.rl_1 = 0.12;
-    this.sl_1 = 0.3;
-    this.tl_1 = 0.78;
-    this.ul_1 = 0.5;
-    this.vl_1 = 0.51;
-    this.wl_1 = 16777215;
-    this.xl_1 = 0;
-    this.yl_1 = 7400;
+    this.ll_1 = 0.54;
+    this.ml_1 = 0.03;
+    this.nl_1 = 14.0;
+    this.ol_1 = 0.07;
+    this.pl_1 = 0.1;
+    this.ql_1 = 0.06;
+    this.rl_1 = 0.2;
+    this.sl_1 = 0.24;
+    this.tl_1 = 0.9;
+    this.ul_1 = 0.14;
+    this.vl_1 = 0.3;
+    this.wl_1 = 0.12;
+    this.xl_1 = 0.3;
+    this.yl_1 = 0.78;
+    this.zl_1 = 0.5;
+    this.am_1 = 0.51;
+    this.bm_1 = 16777215;
+    this.cm_1 = 0;
+    this.dm_1 = 7400;
   }
-  protoOf(DockMaterial).zl = function (field) {
+  protoOf(DockMaterial).em = function (field) {
     var r = field >> 16 & 255;
     var g = field >> 8 & 255;
     var b = field & 255;
     var light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
     var across = light < 0.3 ? 16777215 : 0;
-    return new Water(TowerBands_getInstance().tq(field, across, 0.12), TowerBands_getInstance().tq(field, 0, 0.3), TowerBands_getInstance().tq(field, 0, 0.78), TowerBands_getInstance().tq(field, 16777215, 0.5));
+    return new Water(TowerBands_getInstance().xq(field, across, 0.12), TowerBands_getInstance().xq(field, 0, 0.3), TowerBands_getInstance().xq(field, 0, 0.78), TowerBands_getInstance().xq(field, 16777215, 0.5));
   };
   var DockMaterial_instance;
   function DockMaterial_getInstance() {
@@ -9565,7 +9599,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return tmp$ret$0;
   }
   function crate($this, slot) {
-    return new Shape($this.uq(slot), listOf(new Cell(0, 0)));
+    return new Shape($this.yq(slot), listOf(new Cell(0, 0)));
   }
   function build$after(moment, lift, w, $width, start) {
     var tmp = moment._v;
@@ -9589,7 +9623,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.ti_1 = 10;
     this.ui_1 = 10;
   }
-  protoOf(PaletteShowcase).vq = function (slots) {
+  protoOf(PaletteShowcase).zq = function (slots) {
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = roundToInt(10 / coerceIn_0(slots, 1, 10));
     return Math.max(1, b);
@@ -9600,7 +9634,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var board = Companion_getInstance_9().u8(width);
     // Inline function 'kotlin.collections.List' call
     // Inline function 'kotlin.collections.MutableList' call
-    var size = imul(n, this.vq(n));
+    var size = imul(n, this.zq(n));
     var list = ArrayList_init_$Create$_0(size);
     // Inline function 'kotlin.repeat' call
     var inductionVariable = 0;
@@ -9625,9 +9659,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
           board = board.q9(crate(this, slot), x, y);
         }
          while (inductionVariable_0 < width);
-      board = board.v9(listOf(y), this.uq(slot));
+      board = board.v9(listOf(y), this.yq(slot));
     }
-    var widths = this.wq(imul(n, 2), capWidthLimit(this, width), random_0);
+    var widths = this.ar(imul(n, 2), capWidthLimit(this, width), random_0);
     var runs = ArrayList_init_$Create$();
     var below = until(0, width);
     var moment = {_v: 0.0};
@@ -9732,7 +9766,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return board;
   };
-  protoOf(PaletteShowcase).wq = function (cells, widest, random) {
+  protoOf(PaletteShowcase).ar = function (cells, widest, random) {
     var rows = ArrayList_init_$Create$();
     var left = cells;
     // Inline function 'kotlin.comparisons.minOf' call
@@ -9752,7 +9786,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return rows;
   };
-  protoOf(PaletteShowcase).uq = function (slot) {
+  protoOf(PaletteShowcase).yq = function (slot) {
     return get_entries_0().j(slot);
   };
   var PaletteShowcase_instance;
@@ -9822,7 +9856,7 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return true;
   };
   function Companion_21() {
-    this.xq_1 = 0.001;
+    this.br_1 = 0.001;
   }
   var Companion_instance_21;
   function Companion_getInstance_21() {
@@ -9849,9 +9883,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   };
   protoOf(TowerViewport).cj = function (rows, summit, minimumBottom) {
     var current = this.bj(summit, minimumBottom).xi_1;
-    return this.yq(current + rows, summit, minimumBottom);
+    return this.cr(current + rows, summit, minimumBottom);
   };
-  protoOf(TowerViewport).yq = function (bottomRow, summit, minimumBottom) {
+  protoOf(TowerViewport).cr = function (bottomRow, summit, minimumBottom) {
     // Inline function 'kotlin.comparisons.minOf' call
     var b = summit.xi_1;
     var minimum = Math.min(minimumBottom, b);
@@ -9891,14 +9925,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.pj_1 = 1;
     this.qj_1 = -1;
   }
-  protoOf(PlayfieldGeometry).zq = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
+  protoOf(PlayfieldGeometry).dr = function (anchorCellX, anchorFingerX, fingerX, cell, gain) {
     return anchorCellX + (fingerX - anchorFingerX) / cell * gain;
   };
   protoOf(PlayfieldGeometry).rj = function (anchorCellX, anchorFingerX, fingerX, cell, gain, $super) {
     gain = gain === VOID ? 1.25 : gain;
-    return $super === VOID ? this.zq(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.zq.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
+    return $super === VOID ? this.dr(anchorCellX, anchorFingerX, fingerX, cell, gain) : $super.dr.call(this, anchorCellX, anchorFingerX, fingerX, cell, gain);
   };
-  protoOf(PlayfieldGeometry).tm = function (stackHeight, playingRows) {
+  protoOf(PlayfieldGeometry).vm = function (stackHeight, playingRows) {
     var tmp = -1;
     // Inline function 'kotlin.comparisons.maxOf' call
     var b = (stackHeight + 2 | 0) + 1 | 0;
@@ -9910,33 +9944,21 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return PlayfieldGeometry_instance;
   }
   function FragmentInput(startX, startY, pivotX, pivotY, cellPx, groundY, cellX, cellY, impact, direction) {
-    this.ar_1 = startX;
-    this.br_1 = startY;
-    this.cr_1 = pivotX;
-    this.dr_1 = pivotY;
-    this.er_1 = cellPx;
-    this.fr_1 = groundY;
-    this.gr_1 = cellX;
-    this.hr_1 = cellY;
-    this.ir_1 = impact;
-    this.jr_1 = direction;
+    this.er_1 = startX;
+    this.fr_1 = startY;
+    this.gr_1 = pivotX;
+    this.hr_1 = pivotY;
+    this.ir_1 = cellPx;
+    this.jr_1 = groundY;
+    this.kr_1 = cellX;
+    this.lr_1 = cellY;
+    this.mr_1 = impact;
+    this.nr_1 = direction;
   }
   protoOf(FragmentInput).i7 = function () {
-    return this.ar_1;
-  };
-  protoOf(FragmentInput).j7 = function () {
-    return this.br_1;
-  };
-  protoOf(FragmentInput).kr = function () {
-    return this.cr_1;
-  };
-  protoOf(FragmentInput).lr = function () {
-    return this.dr_1;
-  };
-  protoOf(FragmentInput).mr = function () {
     return this.er_1;
   };
-  protoOf(FragmentInput).nr = function () {
+  protoOf(FragmentInput).j7 = function () {
     return this.fr_1;
   };
   protoOf(FragmentInput).or = function () {
@@ -9951,20 +9973,32 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   protoOf(FragmentInput).rr = function () {
     return this.jr_1;
   };
+  protoOf(FragmentInput).sr = function () {
+    return this.kr_1;
+  };
+  protoOf(FragmentInput).tr = function () {
+    return this.lr_1;
+  };
+  protoOf(FragmentInput).ur = function () {
+    return this.mr_1;
+  };
+  protoOf(FragmentInput).vr = function () {
+    return this.nr_1;
+  };
   protoOf(FragmentInput).toString = function () {
-    return 'FragmentInput(startX=' + this.ar_1 + ', startY=' + this.br_1 + ', pivotX=' + this.cr_1 + ', pivotY=' + this.dr_1 + ', cellPx=' + this.er_1 + ', groundY=' + this.fr_1 + ', cellX=' + this.gr_1 + ', cellY=' + this.hr_1 + ', impact=' + this.ir_1 + ', direction=' + this.jr_1.toString() + ')';
+    return 'FragmentInput(startX=' + this.er_1 + ', startY=' + this.fr_1 + ', pivotX=' + this.gr_1 + ', pivotY=' + this.hr_1 + ', cellPx=' + this.ir_1 + ', groundY=' + this.jr_1 + ', cellX=' + this.kr_1 + ', cellY=' + this.lr_1 + ', impact=' + this.mr_1 + ', direction=' + this.nr_1.toString() + ')';
   };
   protoOf(FragmentInput).hashCode = function () {
-    var result = getNumberHashCode(this.ar_1);
-    result = imul(result, 31) + getNumberHashCode(this.br_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.cr_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.dr_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.er_1) | 0;
+    var result = getNumberHashCode(this.er_1);
     result = imul(result, 31) + getNumberHashCode(this.fr_1) | 0;
-    result = imul(result, 31) + this.gr_1 | 0;
-    result = imul(result, 31) + this.hr_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.gr_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.hr_1) | 0;
     result = imul(result, 31) + getNumberHashCode(this.ir_1) | 0;
-    result = imul(result, 31) + this.jr_1.hashCode() | 0;
+    result = imul(result, 31) + getNumberHashCode(this.jr_1) | 0;
+    result = imul(result, 31) + this.kr_1 | 0;
+    result = imul(result, 31) + this.lr_1 | 0;
+    result = imul(result, 31) + getNumberHashCode(this.mr_1) | 0;
+    result = imul(result, 31) + this.nr_1.hashCode() | 0;
     return result;
   };
   protoOf(FragmentInput).equals = function (other) {
@@ -9972,40 +10006,40 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof FragmentInput))
       return false;
-    if (!equals(this.ar_1, other.ar_1))
-      return false;
-    if (!equals(this.br_1, other.br_1))
-      return false;
-    if (!equals(this.cr_1, other.cr_1))
-      return false;
-    if (!equals(this.dr_1, other.dr_1))
-      return false;
     if (!equals(this.er_1, other.er_1))
       return false;
     if (!equals(this.fr_1, other.fr_1))
       return false;
-    if (!(this.gr_1 === other.gr_1))
+    if (!equals(this.gr_1, other.gr_1))
       return false;
-    if (!(this.hr_1 === other.hr_1))
+    if (!equals(this.hr_1, other.hr_1))
       return false;
     if (!equals(this.ir_1, other.ir_1))
       return false;
-    if (!this.jr_1.equals(other.jr_1))
+    if (!equals(this.jr_1, other.jr_1))
+      return false;
+    if (!(this.kr_1 === other.kr_1))
+      return false;
+    if (!(this.lr_1 === other.lr_1))
+      return false;
+    if (!equals(this.mr_1, other.mr_1))
+      return false;
+    if (!this.nr_1.equals(other.nr_1))
       return false;
     return true;
   };
   function Fragment(x, y, degrees) {
-    this.jn_1 = x;
-    this.kn_1 = y;
-    this.ln_1 = degrees;
+    this.ln_1 = x;
+    this.mn_1 = y;
+    this.nn_1 = degrees;
   }
   protoOf(Fragment).toString = function () {
-    return 'Fragment(x=' + this.jn_1 + ', y=' + this.kn_1 + ', degrees=' + this.ln_1 + ')';
+    return 'Fragment(x=' + this.ln_1 + ', y=' + this.mn_1 + ', degrees=' + this.nn_1 + ')';
   };
   protoOf(Fragment).hashCode = function () {
-    var result = getNumberHashCode(this.jn_1);
-    result = imul(result, 31) + getNumberHashCode(this.kn_1) | 0;
-    result = imul(result, 31) + getNumberHashCode(this.ln_1) | 0;
+    var result = getNumberHashCode(this.ln_1);
+    result = imul(result, 31) + getNumberHashCode(this.mn_1) | 0;
+    result = imul(result, 31) + getNumberHashCode(this.nn_1) | 0;
     return result;
   };
   protoOf(Fragment).equals = function (other) {
@@ -10013,11 +10047,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       return true;
     if (!(other instanceof Fragment))
       return false;
-    if (!equals(this.jn_1, other.jn_1))
-      return false;
-    if (!equals(this.kn_1, other.kn_1))
-      return false;
     if (!equals(this.ln_1, other.ln_1))
+      return false;
+    if (!equals(this.mn_1, other.mn_1))
+      return false;
+    if (!equals(this.nn_1, other.nn_1))
       return false;
     return true;
   };
@@ -10032,22 +10066,22 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return (h & 65535) / 32767.5 - 1.0;
   }
   function ResultsAnim() {
-    this.um_1 = 1725;
-    this.vm_1 = 0.42;
-    this.wm_1 = 62.0;
-    this.xm_1 = 620;
-    this.ym_1 = 260;
-    this.zm_1 = 271;
-    this.an_1 = 0.35;
+    this.wm_1 = 1725;
+    this.xm_1 = 0.42;
+    this.ym_1 = 62.0;
+    this.zm_1 = 620;
+    this.an_1 = 260;
+    this.bn_1 = 271;
+    this.cn_1 = 0.35;
   }
-  protoOf(ResultsAnim).sr = function (revealing) {
+  protoOf(ResultsAnim).wr = function (revealing) {
     return (revealing ? 880 : 0) + 1725 | 0;
   };
-  protoOf(ResultsAnim).rn = function (revealing, reducedMotion) {
-    var impactAt = this.tr((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
+  protoOf(ResultsAnim).tn = function (revealing, reducedMotion) {
+    var impactAt = this.xr((revealing ? 880 : 0) + numberToInt(0.42 * 1725) | 0, reducedMotion);
     return coerceAtLeast(impactAt - 271 | 0, 0);
   };
-  protoOf(ResultsAnim).tr = function (durationMs, reducedMotion) {
+  protoOf(ResultsAnim).xr = function (durationMs, reducedMotion) {
     var tmp;
     if (reducedMotion) {
       // Inline function 'kotlin.comparisons.maxOf' call
@@ -10058,35 +10092,35 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp;
   };
-  protoOf(ResultsAnim).bn = function (progress, revealing) {
+  protoOf(ResultsAnim).dn = function (progress, revealing) {
     if (!revealing)
       return 0.0;
-    var share = 620 / this.sr(true);
+    var share = 620 / this.wr(true);
     var t = coerceIn(progress / share, 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   };
-  protoOf(ResultsAnim).cn = function (revealing) {
-    return !revealing ? 0.0 : 880 / this.sr(true);
+  protoOf(ResultsAnim).en = function (revealing) {
+    return !revealing ? 0.0 : 880 / this.wr(true);
   };
-  protoOf(ResultsAnim).dn = function (progress, revealing) {
+  protoOf(ResultsAnim).fn = function (progress, revealing) {
     if (!revealing)
       return progress;
-    var start = 880 / this.sr(true);
+    var start = 880 / this.wr(true);
     return coerceIn((progress - start) / (1.0 - start), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).ur = function (progress, direction, maxDegrees) {
+  protoOf(ResultsAnim).yr = function (progress, direction, maxDegrees) {
     var t = coerceIn(progress / 0.42, 0.0, 1.0);
     var eased = t * t * (3.0 - 2.0 * t) * t;
     return fallSign(this, direction) * maxDegrees * eased;
   };
-  protoOf(ResultsAnim).en = function (progress, direction, maxDegrees, $super) {
+  protoOf(ResultsAnim).gn = function (progress, direction, maxDegrees, $super) {
     maxDegrees = maxDegrees === VOID ? 62.0 : maxDegrees;
-    return $super === VOID ? this.ur(progress, direction, maxDegrees) : $super.ur.call(this, progress, direction, maxDegrees);
+    return $super === VOID ? this.yr(progress, direction, maxDegrees) : $super.yr.call(this, progress, direction, maxDegrees);
   };
-  protoOf(ResultsAnim).fn = function (topple) {
+  protoOf(ResultsAnim).hn = function (topple) {
     return coerceIn((topple - 0.42) / (1.0 - 0.42), 0.0, 1.0);
   };
-  protoOf(ResultsAnim).hn = function (board) {
+  protoOf(ResultsAnim).jn = function (board) {
     var lowest = board.s7_1;
     var highest = -1;
     var inductionVariable = 0;
@@ -10109,17 +10143,17 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return ((lowest + highest | 0) + 1 | 0) / 2.0;
   };
-  protoOf(ResultsAnim).in = function (input) {
+  protoOf(ResultsAnim).kn = function (input) {
     var startX = input.i7();
     var startY = input.j7();
-    var pivotX = input.kr();
-    var pivotY = input.lr();
-    var cellPx = input.mr();
-    var groundY = input.nr();
-    var cellX = input.or();
-    var cellY = input.pr();
-    var impact = input.qr();
-    var direction = input.rr();
+    var pivotX = input.or();
+    var pivotY = input.pr();
+    var cellPx = input.qr();
+    var groundY = input.rr();
+    var cellX = input.sr();
+    var cellY = input.tr();
+    var impact = input.ur();
+    var direction = input.vr();
     var sign = fallSign(this, direction);
     var radians = sign * 62.0 * 3.141592653589793 / 180.0;
     // Inline function 'kotlin.math.cos' call
@@ -10151,27 +10185,27 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return ResultsAnim_instance;
   }
   function SecretSet(medal, field, ink) {
-    this.vr_1 = medal;
-    this.wr_1 = field;
-    this.xr_1 = ink;
-    this.yr_1 = Celebration_getInstance().pp(this.vr_1);
+    this.zr_1 = medal;
+    this.as_1 = field;
+    this.bs_1 = ink;
+    this.cs_1 = Celebration_getInstance().sp(this.zr_1);
     var tmp = this;
     var tmp_0 = 0;
     var tmp_1 = new Int32Array(10);
     while (tmp_0 < 10) {
-      tmp_1[tmp_0] = this.xr_1;
+      tmp_1[tmp_0] = this.bs_1;
       tmp_0 = tmp_0 + 1 | 0;
     }
-    tmp.zr_1 = new Band_0(this.wr_1, tmp_1);
+    tmp.ds_1 = new Band_0(this.as_1, tmp_1);
   }
   function SecretSets() {
     SecretSets_instance = this;
-    this.as_1 = new SecretSet(Medal_SUMMIT_getInstance(), 2819864, 16735389);
-    this.bs_1 = new SecretSet(Medal_COMBO_getInstance(), 2757200, 16763197);
-    this.cs_1 = new SecretSet(Medal_SCORE_getInstance(), 737066, 16238660);
-    this.ds_1 = new SecretSet(Medal_NEEDLE_getInstance(), 1837616, 13079295);
-    this.es_1 = new SecretSet(Medal_UNSTABLE_getInstance(), 734518, 16739166);
-    this.fs_1 = listOf_0([this.as_1, this.bs_1, this.cs_1, this.ds_1, this.es_1]);
+    this.es_1 = new SecretSet(Medal_SUMMIT_getInstance(), 2819864, 16735389);
+    this.fs_1 = new SecretSet(Medal_COMBO_getInstance(), 2757200, 16763197);
+    this.gs_1 = new SecretSet(Medal_SCORE_getInstance(), 737066, 16238660);
+    this.hs_1 = new SecretSet(Medal_NEEDLE_getInstance(), 1837616, 13079295);
+    this.is_1 = new SecretSet(Medal_UNSTABLE_getInstance(), 734518, 16739166);
+    this.js_1 = listOf_0([this.es_1, this.fs_1, this.gs_1, this.hs_1, this.is_1]);
   }
   var SecretSets_instance;
   function SecretSets_getInstance() {
@@ -10184,19 +10218,19 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   }
   function SoundLadder() {
     SoundLadder_instance = this;
-    this.mn_1 = 12;
-    this.nn_1 = new Long(300, 0);
+    this.on_1 = 12;
+    this.pn_1 = new Long(300, 0);
   }
-  protoOf(SoundLadder).gs = function (combo) {
+  protoOf(SoundLadder).ks = function (combo) {
     return coerceAtLeast(combo - 1 | 0, 0) % 12 | 0;
   };
-  protoOf(SoundLadder).hs = function (combo) {
+  protoOf(SoundLadder).ls = function (combo) {
     // Inline function 'kotlin.math.pow' call
-    var x = this.gs(combo) / 12.0;
+    var x = this.ks(combo) / 12.0;
     return Math.pow(2.0, x);
   };
-  protoOf(SoundLadder).on = function (combo, rows, index) {
-    return this.hs(rowOf(this, combo, rows, index));
+  protoOf(SoundLadder).qn = function (combo, rows, index) {
+    return this.ls(rowOf(this, combo, rows, index));
   };
   var SoundLadder_instance;
   function SoundLadder_getInstance() {
@@ -10205,8 +10239,8 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return SoundLadder_instance;
   }
   function Band_0(field, crates) {
-    this.is_1 = field;
-    this.js_1 = crates;
+    this.ms_1 = field;
+    this.ns_1 = crates;
   }
   function Stop(at, color) {
     this.tk_1 = at;
@@ -10239,13 +10273,13 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     this.mi_1 = -Infinity;
     this.ni_1 = 1.0E-4;
   }
-  protoOf(TowerBands).hm = function () {
-    return SecretSets_getInstance().as_1.zr_1;
+  protoOf(TowerBands).jm = function () {
+    return SecretSets_getInstance().es_1.ds_1;
   };
   protoOf(TowerBands).oi = function (runSeed) {
-    return this.ms(runSeed, TowerPaletteBank_getInstance().ks_1, equalsLong(runSeed, new Long(672943, 0)) ? this.gi_1 : null);
+    return this.qs(runSeed, TowerPaletteBank_getInstance().os_1, equalsLong(runSeed, new Long(672943, 0)) ? this.gi_1 : null);
   };
-  protoOf(TowerBands).ms = function (runSeed, bank, opening) {
+  protoOf(TowerBands).qs = function (runSeed, bank, opening) {
     var deck = ArrayList_init_$Create$();
     var bands = ArrayList_init_$Create$_0(this.ei_1);
     if (!(opening == null)) {
@@ -10266,16 +10300,16 @@ globalThis['Boxstack:playable-engine'] = function (_) {
         bands.d(deck.u1((convertToInt(shiftRightUnsigned(seed, 33)) & 2147483647) % deck.k() | 0));
       }
        while (inductionVariable < times);
-    bands.d(this.hm());
+    bands.d(this.jm());
     return new TowerPalette(bands);
   };
-  protoOf(TowerBands).ns = function (placedOn, platformRows) {
-    return this.os(placedOn - platformRows | 0);
+  protoOf(TowerBands).rs = function (placedOn, platformRows) {
+    return this.ss(placedOn - platformRows | 0);
   };
   protoOf(TowerBands).wk = function (board) {
-    return this.ns(board.d8_1, board.v7_1);
+    return this.rs(board.d8_1, board.v7_1);
   };
-  protoOf(TowerBands).ps = function (platformRows) {
+  protoOf(TowerBands).ts = function (platformRows) {
     var tmp = 0;
     var tmp_0 = this.di_1.k();
     var tmp_1 = new Int32Array(tmp_0);
@@ -10286,9 +10320,9 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp_1;
   };
-  protoOf(TowerBands).qs = function (board, grown) {
+  protoOf(TowerBands).us = function (board, grown) {
     var reached = this.wk(board);
-    var edges = this.ps(board.v7_1);
+    var edges = this.ts(board.v7_1);
     var tmp = 0;
     var tmp_0 = edges.length;
     var tmp_1 = new Float32Array(tmp_0);
@@ -10309,11 +10343,11 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     }
     return tmp_1;
   };
-  protoOf(TowerBands).tq = function (from, to, t) {
+  protoOf(TowerBands).xq = function (from, to, t) {
     var f = coerceIn(t, 0.0, 1.0);
     return blend$mix(from, to, f, 16) << 16 | blend$mix(from, to, f, 8) << 8 | blend$mix(from, to, f, 0);
   };
-  protoOf(TowerBands).os = function (boxes) {
+  protoOf(TowerBands).ss = function (boxes) {
     var band = 0;
     while (band < this.di_1.k() && boxes >= this.di_1.j(band)) {
       band = band + 1 | 0;
@@ -10327,10 +10361,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     return TowerBands_instance;
   }
   function crateBand(_this__u8e3s4, x, y) {
-    return TowerBands_getInstance().ns(_this__u8e3s4.c9(x, y), _this__u8e3s4.v7_1);
+    return TowerBands_getInstance().rs(_this__u8e3s4.c9(x, y), _this__u8e3s4.v7_1);
   }
   function setRowBand(_this__u8e3s4, row) {
-    return TowerBands_getInstance().ns(_this__u8e3s4.d9(row), _this__u8e3s4.v7_1);
+    return TowerBands_getInstance().rs(_this__u8e3s4.d9(row), _this__u8e3s4.v7_1);
   }
   function shaft$positionOf($camera, row) {
     return 1.0 - (row - $camera.xi_1) / $camera.yi_1;
@@ -10342,14 +10376,14 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var size = TowerBands_getInstance().ei_1;
     tmp.qi_1 = Array(size);
   }
-  protoOf(TowerPalette).rs = function (camera, board, grown) {
-    return this.ss(camera, TowerBands_getInstance().qs(board, grown));
+  protoOf(TowerPalette).vs = function (camera, board, grown) {
+    return this.ws(camera, TowerBands_getInstance().us(board, grown));
   };
   protoOf(TowerPalette).sk = function (camera, board, grown, $super) {
     grown = grown === VOID ? -Infinity : grown;
-    return $super === VOID ? this.rs(camera, board, grown) : $super.rs.call(this, camera, board, grown);
+    return $super === VOID ? this.vs(camera, board, grown) : $super.vs.call(this, camera, board, grown);
   };
-  protoOf(TowerPalette).ss = function (camera, starts) {
+  protoOf(TowerPalette).ws = function (camera, starts) {
     var cuts = mutableListOf([0.0, 1.0]);
     var inductionVariable = 0;
     var last = starts.length;
@@ -10379,53 +10413,90 @@ globalThis['Boxstack:playable-engine'] = function (_) {
       if (tmp)
         continue $l$loop;
       var row_0 = camera.xi_1 + (1.0 - at_0) * camera.yi_1;
-      stops.d(new Stop(at_0, this.ts(row_0, starts)));
+      stops.d(new Stop(at_0, this.xs(row_0, starts)));
     }
     return stops;
   };
-  protoOf(TowerPalette).ts = function (row, starts) {
+  protoOf(TowerPalette).xs = function (row, starts) {
     var band = 0;
     while (band < starts.length && row >= starts[band]) {
       band = band + 1 | 0;
     }
     if (band === starts.length)
-      return this.zk(band);
+      return this.el(band);
     var into = row - (starts[band] - 2.0);
     if (into <= 0.0)
-      return this.zk(band);
-    return TowerBands_getInstance().tq(this.zk(band), this.zk(band + 1 | 0), into / 2.0);
+      return this.el(band);
+    return TowerBands_getInstance().xq(this.el(band), this.el(band + 1 | 0), into / 2.0);
   };
-  protoOf(TowerPalette).us = function (board, grown) {
-    return this.ts(0.0, TowerBands_getInstance().qs(board, grown));
+  protoOf(TowerPalette).ys = function (board, grown) {
+    return this.xs(0.0, TowerBands_getInstance().us(board, grown));
   };
-  protoOf(TowerPalette).fl = function (board, grown, $super) {
+  protoOf(TowerPalette).kl = function (board, grown, $super) {
     grown = grown === VOID ? -Infinity : grown;
-    return $super === VOID ? this.us(board, grown) : $super.us.call(this, board, grown);
+    return $super === VOID ? this.ys(board, grown) : $super.ys.call(this, board, grown);
   };
-  protoOf(TowerPalette).zk = function (band) {
-    return this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).is_1;
+  protoOf(TowerPalette).el = function (band) {
+    return this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).ms_1;
   };
   protoOf(TowerPalette).vk = function (id, band) {
     var tmp1_elvis_lhs = id == null ? null : id.d1_1;
     return this.xk(tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs, band);
   };
+  protoOf(TowerPalette).yk = function (id, band) {
+    var own = this.vk(id, band);
+    var tmp0 = this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).ns_1;
+    var tmp$ret$1;
+    $l$block_0: {
+      // Inline function 'kotlin.collections.maxByOrNull' call
+      // Inline function 'kotlin.collections.isEmpty' call
+      if (tmp0.length === 0) {
+        tmp$ret$1 = null;
+        break $l$block_0;
+      }
+      var maxElem = tmp0[0];
+      var lastIndex = get_lastIndex(tmp0);
+      if (lastIndex === 0) {
+        tmp$ret$1 = maxElem;
+        break $l$block_0;
+      }
+      var it = maxElem;
+      var maxValue = Companion_getInstance_19().wq(own, it);
+      var inductionVariable = 1;
+      if (inductionVariable <= lastIndex)
+        do {
+          var i = inductionVariable;
+          inductionVariable = inductionVariable + 1 | 0;
+          var e = tmp0[i];
+          var v = Companion_getInstance_19().wq(own, e);
+          if (compareTo(maxValue, v) < 0) {
+            maxElem = e;
+            maxValue = v;
+          }
+        }
+         while (!(i === lastIndex));
+      tmp$ret$1 = maxElem;
+    }
+    var tmp0_elvis_lhs = tmp$ret$1;
+    return tmp0_elvis_lhs == null ? own : tmp0_elvis_lhs;
+  };
   protoOf(TowerPalette).xk = function (slot, band) {
     // Inline function 'kotlin.let' call
-    var it = this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).js_1;
+    var it = this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).ns_1;
     return it[slot % it.length | 0];
   };
   protoOf(TowerPalette).ri = function (band) {
     // Inline function 'kotlin.collections.copyOf' call
     // Inline function 'kotlin.js.asDynamic' call
-    return this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).js_1.slice();
+    return this.pi_1.j(coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0)).ns_1.slice();
   };
-  protoOf(TowerPalette).dm = function (band) {
+  protoOf(TowerPalette).cl = function (band) {
     var index = coerceIn_0(band, 0, TowerBands_getInstance().ei_1 - 1 | 0);
     var tmp0_elvis_lhs = this.qi_1[index];
     var tmp;
     if (tmp0_elvis_lhs == null) {
       // Inline function 'kotlin.also' call
-      var this_0 = Companion_getInstance_19().sq(this.pi_1.j(index).is_1, this.pi_1.j(index).js_1);
+      var this_0 = Companion_getInstance_19().vq(this.pi_1.j(index).ms_1, this.pi_1.j(index).ns_1);
       this.qi_1[index] = this_0;
       tmp = this_0;
     } else {
@@ -10477,10 +10548,10 @@ globalThis['Boxstack:playable-engine'] = function (_) {
     var tmp_12 = new Band_0(2951970, tmp$ret$12);
     // Inline function 'kotlin.intArrayOf' call
     var tmp$ret$13 = new Int32Array([6659186, 11431038, 13868457, 6659186, 11431038, 13868457, 6659186, 11431038, 13868457, 6659186]);
-    tmp.ks_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, new Band_0(15784157, tmp$ret$13)]);
+    tmp.os_1 = listOf_0([tmp_0, tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, new Band_0(15784157, tmp$ret$13)]);
     var tmp_13 = this;
     // Inline function 'kotlin.collections.setOf' call
-    tmp_13.ls_1 = emptySet();
+    tmp_13.ps_1 = emptySet();
   }
   var TowerPaletteBank_instance;
   function TowerPaletteBank_getInstance() {
@@ -10503,28 +10574,29 @@ globalThis['Boxstack:playable-engine'] = function (_) {
   defineProp(protoOf(Engine), 'stackHeight', protoOf(Engine).qk);
   defineProp(protoOf(Engine), 'towerHeight', protoOf(Engine).rd);
   defineProp(protoOf(Engine), 'foundation', protoOf(Engine).rk);
-  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).yk);
-  defineProp(protoOf(Engine), 'waterSurface', protoOf(Engine).al);
-  defineProp(protoOf(Engine), 'waterTop', protoOf(Engine).am);
-  defineProp(protoOf(Engine), 'waterBottom', protoOf(Engine).bm);
-  defineProp(protoOf(Engine), 'waterLine', protoOf(Engine).cm);
-  defineProp(protoOf(Engine), 'lean', protoOf(Engine).im);
+  defineProp(protoOf(Engine), 'glowHue', protoOf(Engine).zk);
+  defineProp(protoOf(Engine), 'handBackdrop', protoOf(Engine).dl);
+  defineProp(protoOf(Engine), 'waterSurface', protoOf(Engine).fl);
+  defineProp(protoOf(Engine), 'waterTop', protoOf(Engine).fm);
+  defineProp(protoOf(Engine), 'waterBottom', protoOf(Engine).gm);
+  defineProp(protoOf(Engine), 'waterLine', protoOf(Engine).hm);
+  defineProp(protoOf(Engine), 'lean', protoOf(Engine).km);
   defineProp(protoOf(Engine), 'risk', protoOf(Engine).o7);
   defineProp(protoOf(Engine), 'isToppled', protoOf(Engine).p7);
-  defineProp(protoOf(Engine), 'score', protoOf(Engine).jm);
-  defineProp(protoOf(Engine), 'combo', protoOf(Engine).km);
-  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).lm);
-  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).mm);
-  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).nm);
-  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).om);
-  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).pm);
-  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).qm);
-  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).rm);
-  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).sm);
-  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).gn);
-  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).pn);
-  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).qn);
-  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).sn);
+  defineProp(protoOf(Engine), 'score', protoOf(Engine).lm);
+  defineProp(protoOf(Engine), 'combo', protoOf(Engine).mm);
+  defineProp(protoOf(Engine), 'rowsCompleted', protoOf(Engine).nm);
+  defineProp(protoOf(Engine), 'boardScore', protoOf(Engine).om);
+  defineProp(protoOf(Engine), 'buriedHoles', protoOf(Engine).pm);
+  defineProp(protoOf(Engine), 'handSize', protoOf(Engine).qm);
+  defineProp(protoOf(Engine), 'placedCount', protoOf(Engine).rm);
+  defineProp(protoOf(Engine), 'scoreJustGained', protoOf(Engine).sm);
+  defineProp(protoOf(Engine), 'landingJustUsed', protoOf(Engine).tm);
+  defineProp(protoOf(Engine), 'deathSeconds', protoOf(Engine).um);
+  defineProp(protoOf(Engine), 'pivotColumn', protoOf(Engine).in);
+  defineProp(protoOf(Engine), 'doubleGapMs', protoOf(Engine).rn);
+  defineProp(protoOf(Engine), 'toppleSoundDelayMs', protoOf(Engine).sn);
+  defineProp(protoOf(Engine), 'shapeCount', protoOf(Engine).un);
   //endregion
   //region block: init
   Companion_instance = new Companion();
@@ -10980,7 +11052,8 @@ function handShape(slot) {
   var flat = E.handCells(slot), cells = [];
   for (var i = 0; i < flat.length; i += 2) cells.push([flat[i], flat[i + 1]]);
   hit = { ord: ord, gen: E.placedCount, cells: cells,
-          w: E.handWidth(slot), h: E.handHeight(slot), color: packedRgb(E.handColor(ord)) };
+          w: E.handWidth(slot), h: E.handHeight(slot), color: packedRgb(E.handColor(ord)),
+          foil: packedRgb(E.handFoil(ord)) };
   shapeCache[slot] = hit;
   return hit;
 }
@@ -11441,13 +11514,13 @@ function drawPlacementReward() {
   ctx.globalAlpha = life * strength;
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.font = "700 " + fontSize + "px CP, system-ui, sans-serif";
-  // Kept whole inside the shaft, glow and all: centred on a piece against a
+  // Kept whole inside the shaft, rim and all: centred on a piece against a
   // wall, the figure hung half over the edge. The app's `CaptionFit` rule.
-  var half = ctx.measureText(label).width / 2 + L.cell * 0.24;
+  var half = ctx.measureText(label).width / 2 + RIM_ROOM;
   labelX = Math.max(L.shaft.x + half, Math.min(L.shaft.x + L.shaft.w - half, labelX));
-  ctx.shadowColor = alpha(C.craneLit, 0.85); ctx.shadowBlur = L.cell * 0.24;
-  ctx.fillStyle = r.rows > 0 ? C.ink : C.craneLit;
-  ctx.fillText(label, labelX, labelY);
+  // As the game's: the +N is exactly the colour of the crate that earned it, and
+  // a finished row's word the colour of its band least like that crate.
+  candyWord(label, labelX, labelY, fontSize, r.rows > 0 ? r.shape.foil : r.shape.color);
   ctx.restore();
 }
 /* The boat, built out of the same boxes as everything else on the board: its
@@ -11726,6 +11799,98 @@ function drawGauge() {
   ctx.fillRect(g.x + g.w / 2 - 0.5, g.y, 1, g.h);
 }
 
+/* ----------------------------------------------------------------- candy ---
+   **Lettered in candy, as the game's are** (`CandyText`, `RimmedText`, `drawCandyFoot`): a flat
+   face standing on a solid foot, the foot drawn as the letters again step by step down to its
+   depth, and a shadow down and right, away from the crates' light at the top left. Matte: no
+   glow and nothing lighter than the face. The live score is a white face on a foot of the band's
+   candy; a word over the board is its own colour on a foot a shade darker, the whole block edged
+   in a dark rim so it reads over any crate. Proportions are shares of the line's height. */
+var CANDY_DEPTH = 0.09;            // CandyLetters.DEPTH
+var CANDY_SHADOW = 0.35;           // CandyLetters.SHADOW
+var CANDY_RIM = 0.022;             // CandyLetters.RIM
+var CANDY_WORD_DEPTH = 0.11;       // CandyLetters.WORD_DEPTH
+var CANDY_WORD_FOOT = 0.70;        // 1 - CandyLetters.WORD_FOOT_DARKEN
+var CANDY_STEP = 0.75;             // CandyLetters.STEP_DP
+var CANDY_MAX_STEPS = 12;          // CandyLetters.MAX_STEPS
+var CANDY_SHADOW_REACH = 0.64;     // CandyLight.SHADOW_REACH, toward CargoMaterial's light
+var CANDY_LINE = 1.3;              // Chakra Petch's line box, in ems
+var CAPTION_RIM_SHARE = 0.075;     // CaptionFit.RIM_SHARE
+var CAPTION_RIM_MIN = 1.5;         // CaptionFit.RIM_MIN_DP
+var RIM_ROOM = 8;                  // rimRoom: the foot stays inside it with the rim
+var PRAISE_OUTLINE = "rgba(7,10,18,0.95)";  // BoxstackTheme.praiseOutline
+
+/** `Candy.bandCandy`: the band's hue, saturated, dark enough that the chrome's text holds 8.5:1 on it. */
+var bandCandyCache = { key: null, value: null };
+function bandCandy() {
+  var hue = E.glowHue, key = hue + C.ink;
+  if (bandCandyCache.key === key) return bandCandyCache.value;
+  var light = 0.34, candy = hsl(hue, 0.62, light);
+  while (contrast(C.ink, candy) < 8.5 && light > 0.05) {
+    light -= 0.02;
+    candy = hsl(hue, 0.62, light);
+  }
+  bandCandyCache = { key: key, value: candy };
+  return candy;
+}
+function hsl(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  var c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+  var rgb = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return packedRgb((Math.round((rgb[0] + m) * 255) << 16) | (Math.round((rgb[1] + m) * 255) << 8) | Math.round((rgb[2] + m) * 255));
+}
+function luminance(hex) {
+  var n = parseInt(toHex(hex).slice(1), 16);
+  var ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) {
+    v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+}
+function contrast(a, b) {
+  var la = luminance(a), lb = luminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function candySteps(depth) { return Math.max(1, Math.min(CANDY_MAX_STEPS, Math.ceil(depth / CANDY_STEP))); }
+/** The live score's lettering (`drawCandyLettering`): white face, a foot of the band's candy. */
+function candyFigure(text, x, y, size) {
+  var h = size * CANDY_LINE, depth = h * CANDY_DEPTH, foot = bandCandy(), steps = candySteps(depth);
+  var reach = depth * CANDY_SHADOW_REACH * Math.SQRT1_2;
+  ctx.fillStyle = "rgba(0,0,0," + CANDY_SHADOW + ")";
+  ctx.fillText(text, x + reach, y + depth + reach);
+  ctx.fillStyle = foot;
+  for (var i = steps; i >= 1; i--) ctx.fillText(text, x, y + depth * i / steps);
+  ctx.fillStyle = C.ink;
+  ctx.fillText(text, x, y);
+  ctx.strokeStyle = foot; ctx.lineWidth = h * CANDY_RIM; ctx.lineJoin = "miter";
+  ctx.strokeText(text, x, y);
+}
+/**
+ * A word over the board (`RimmedText` with `candy`): [face] on a foot a shade darker, all rimmed
+ * dark. Centred on ([x], [y]). **Lettered whole, then faded whole**, as the game keeps its candy
+ * offscreen: faded layer by layer, each step of the foot showed through the one over it.
+ */
+var wordCanvas = null;
+function candyWord(text, x, y, size, face) {
+  var rim = Math.max(CAPTION_RIM_MIN, size * CAPTION_RIM_SHARE);
+  var depth = Math.max(0, Math.min(size * CANDY_LINE * CANDY_WORD_DEPTH, RIM_ROOM - rim));
+  var w = ctx.measureText(text).width + RIM_ROOM * 2, h = size * CANDY_LINE + RIM_ROOM * 2;
+  var k = ctx.getTransform().a || 1;
+  wordCanvas = wordCanvas || document.createElement("canvas");
+  wordCanvas.width = Math.ceil(w * k); wordCanvas.height = Math.ceil(h * k);
+  var g = wordCanvas.getContext("2d");
+  g.setTransform(k, 0, 0, k, 0, 0);
+  g.font = ctx.font; g.textAlign = "center"; g.textBaseline = "middle"; g.lineJoin = "round";
+  var cx = w / 2, cy = h / 2, steps = candySteps(depth), i;
+  g.strokeStyle = PRAISE_OUTLINE; g.lineWidth = rim * 2;
+  for (i = steps; i >= 1; i--) g.strokeText(text, cx, cy + depth * i / steps);
+  g.fillStyle = scaled(toHex(face), CANDY_WORD_FOOT);
+  for (i = steps; i >= 1; i--) g.fillText(text, cx, cy + depth * i / steps);
+  g.strokeText(text, cx, cy);
+  g.fillStyle = face;
+  g.fillText(text, cx, cy);
+  ctx.drawImage(wordCanvas, x - cx, y - cy, w, h);
+}
+
 /* Text with tracking, a glyph at a time. `ctx.letterSpacing` is not everywhere
    this has to run, and the wordmark wants a fifth of an em. Kerning goes with
    it, which tracking would have thrown away anyway. */
@@ -11764,8 +11929,7 @@ function drawHead() {
   var big = Math.round(h.h * 0.62 * (1 + punch * (reward && reward.first ? 0.16 : 0.08)));
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.font = "700 " + big + "px CP, system-ui, sans-serif";
-  ctx.fillStyle = punch > 0 ? mix(C.ink, C.craneLit, punch * 0.72) : C.ink;
-  ctx.fillText(String(Math.round(G.shownScore)), h.x + h.w / 2, h.y + h.h * 0.55);
+  candyFigure(String(Math.round(G.shownScore)), h.x + h.w / 2, h.y + h.h * 0.55, big);
   ctx.textAlign = "left";
 }
 
@@ -11780,8 +11944,7 @@ function drawHeadColumn(h) {
   var y = h.y + size;
   ctx.textBaseline = "alphabetic"; ctx.textAlign = "right";
   ctx.font = "700 " + size + "px CP, system-ui, sans-serif";
-  ctx.fillStyle = punch > 0 ? mix(C.ink, C.craneLit, punch * 0.72) : C.ink;
-  ctx.fillText(String(Math.round(G.shownScore)), right, y);
+  candyFigure(String(Math.round(G.shownScore)), right, y, size);
   ctx.textAlign = "left";
 }
 
