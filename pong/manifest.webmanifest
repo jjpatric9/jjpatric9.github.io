@@ -1,7 +1,7 @@
 {
-  "name": "Pong — Tallman Games",
-  "short_name": "Pong",
-  "description": "Classic Pong on a 1970s TV, played with a rotary paddle controller.",
+  "name": "Paddle TV — Tallman Games",
+  "short_name": "Paddle TV",
+  "description": "A 1970s-style ball-and-paddle game on an old TV, played with a rotary paddle controller.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

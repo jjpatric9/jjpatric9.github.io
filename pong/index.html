@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#120e0b">
-<title>Pong — Tallman Games</title>
-<meta name="description" content="Classic Pong on a 1970s TV, played with rotary paddle controllers: eight games, one or two players. Free in your browser, made for Android phones.">
+<title>Paddle TV — Tallman Games</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Paddle TV: a 1970s-style ball-and-paddle game on an old TV, played with rotary paddle controllers: eight games, one or two players. Free in your browser, made for Android phones.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -612,7 +613,7 @@ body {
 <main class="app">
   <section class="tv" aria-label="Television">
     <div class="bezel">
-      <div class="screen"><canvas id="crt" aria-label="Pong game screen"></canvas></div>
+      <div class="screen"><canvas id="crt" aria-label="Paddle TV game screen"></canvas></div>
     </div>
     <div class="tv-foot">
       <span class="brand">TALLMAN</span>
@@ -622,7 +623,7 @@ body {
 
   <section class="pad" aria-label="Controller">
     <div class="strip">
-      <div class="title"><span>VIDEO</span> <span>PONG</span><small>PADDLE CONTROLLER</small></div>
+      <div class="title"><span>PADDLE</span> <span>TV</span><small>PADDLE CONTROLLER</small></div>
       <div class="switches">
         <button class="switch momentary" id="gameBtn" aria-label="Game select">
           <span class="slot"><span class="lever"></span></span>
@@ -785,7 +786,7 @@ body {
   const EDGES = { top: "bounce", bottom: "bounce", left: 0, right: 1 };
 
   const MODES = [
-    { name: "PONG", net: true,
+    { name: "TENNIS", net: true,
       pads: () => [vpad(0, 14, 1), vpad(1, W - 18, -1)] },
     { name: "CATCH", net: true, catch: true,
       pads: () => [vpad(0, 14, 1), vpad(1, W - 18, -1)] },
@@ -804,7 +805,7 @@ body {
     { name: "VOLLEYBALL", volley: true, win: 15, edges: { left: "bounce", right: "bounce" },
       walls: () => [R(W / 2 - 1, 124, 2, H - 124)], deco: [R(0, H - 3, W, 3)],
       pads: () => [hpad(0, H - 16, -1, { len: 28, from: 2, to: W / 2 - 3 }), hpad(1, H - 16, -1, { len: 28, from: W / 2 + 3, to: W - 2 })] },
-    { name: "QUADRAPONG", quad: true, teams: 4, lives: 5, edges: { left: 0, right: 1, top: 2, bottom: 3 },
+    { name: "FOUR WAY", quad: true, teams: 4, lives: 5, edges: { left: 0, right: 1, top: 2, bottom: 3 },
       walls: quadWalls,
       pads: () => [vpad(0, 8, 1, { from: 16, to: H - 16 }), vpad(1, W - 12, -1, { from: 16, to: H - 16 }), hpad(2, 8, 1, { from: 16, to: W - 16 }), hpad(3, H - 12, -1, { from: 16, to: W - 16 })] },
   ];
@@ -871,7 +872,7 @@ body {
   }
 
   // The left switch belongs to the left player (and their Doubles partner), the right
-  // switch to the right player; Quadrapong's top and bottom players have none
+  // switch to the right player; Four Way's top and bottom players have none
   function sideOf(o) {
     if (mode.quad) return o < 2 ? o : -1;
     return teamOf(o);

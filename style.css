@@ -281,19 +281,12 @@ body.home .topbar.clear {
 .hero .actions, .hero .stores { justify-content: center; }
 .hero .btn.try { flex: 1 1 15rem; }
 
-/* The store badges, drawn the way the stores draw theirs: black, a grey rim, the store's mark. */
-.stores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
-.store {
-  display: inline-flex; align-items: center; gap: 0.6rem;
-  min-width: 11rem; min-height: 56px; padding: 0.45rem 1.1rem 0.45rem 0.85rem;
-  background: #000; color: #fff; border: 1px solid #a6a6a6; border-radius: 10px;
-  text-decoration: none; line-height: 1.05; text-align: left; white-space: nowrap; touch-action: manipulation;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-.store:hover { transform: translateY(-1px); border-color: #fff; text-decoration: none; }
-.store svg { width: 26px; height: 30px; flex: none; }
-.store small { display: block; font-size: 0.72rem; letter-spacing: 0.02em; }
-.store b { display: block; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em; }
+/* The store badges are the stores' own artwork, unaltered (Apple's and Google's badge rules), at
+   one height so neither is larger than the other. */
+.stores { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: 0.75rem; }
+.store { display: block; flex: none; line-height: 0; border-radius: 9px; touch-action: manipulation; transition: transform 0.15s ease; }
+.store:hover { transform: translateY(-1px); }
+.store img { display: block; width: auto; height: 52px; }
 
 /* "Coming soon", for a store link that isn't live yet. */
 dialog.soon {
@@ -333,9 +326,7 @@ dialog.soon .btn { min-width: 8rem; }
   .get { display: flex; align-items: stretch; }
   .hero .get { align-self: stretch; }
   .stores { justify-content: center; }
-  .store { flex: 1 1 9rem; min-width: 0; justify-content: center; padding: 0.45rem 0.7rem; gap: 0.5rem; }
-  .store svg { width: 22px; height: 26px; }
-  .store b { font-size: 1.12rem; }
+  .store img { height: 46px; }   /* both on one line at 360px */
 
 }
 
@@ -392,8 +383,6 @@ dialog.soon .btn { min-width: 8rem; }
 .play-after p { margin: 0 0 0.6rem; }
 .play-after p:empty { display: none; }
 .play-after .stores { justify-content: center; margin-top: 0; }
-.play-after .store { flex: 1 1 0; min-width: 0; justify-content: center; gap: 0.5rem; padding-left: 0.6rem; padding-right: 0.6rem; }
-.play-after .store b { font-size: 1.15rem; }
 
 /* On a phone the game is the page: edge to edge, every pixel of height the bar leaves but a strip
    for the badges, which shrink to the stores' own 40px minimum to give it that. The game fits its
@@ -405,10 +394,7 @@ dialog.soon .btn { min-width: 8rem; }
   .phone-screen { aspect-ratio: auto; height: calc(100svh - 61px - 3.5rem); min-height: 420px; border-radius: 0; }
   .play-after { width: auto; margin-top: 0.5rem; padding: 0 1.25rem; }
   .play-after .stores { gap: 0.5rem; }
-  .play-after .store { min-height: 40px; padding-top: 0.2rem; padding-bottom: 0.2rem; border-radius: 8px; gap: 0.4rem; }
-  .play-after .store svg { width: 18px; height: 22px; }
-  .play-after .store small { font-size: 0.6rem; }
-  .play-after .store b { font-size: 0.98rem; }
+  .play-after .store img { height: 40px; }
 }
 
 /* ------------------------------------------------------------------ cards */
