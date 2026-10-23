@@ -40,12 +40,14 @@
   var WAIT_MS = 2500;
   var TALLY_EVERY_MS = 60000;
   /**
-   * **A palette this far under water is not shown.** When its thumbs down outnumber its thumbs up
-   * by this many, the voters have answered it, and it leaves the feed for everyone, the game's own
-   * included. Read off the tally when the feed is built, so nothing vanishes while it is on screen.
-   * The Worker keeps every vote, so `pull.py` still sees it.
+   * **A palette this far under water is not shown.** When it has at least `HIDE_DOWN` thumbs down
+   * and they are three in every four of its votes, the voters have answered it, and it leaves the
+   * feed for everyone, the game's own included. A lead of five used to do it, which a script could
+   * cast in a moment; it takes a crowd now. Read off the tally when the feed is built, so nothing
+   * vanishes while it is on screen. The Worker keeps every vote, so `pull.py` still sees it.
    */
-  var HIDE_AT = 5;
+  var HIDE_DOWN = 12;
+  var HIDE_SHARE = 0.75;
 
   function $(id) { return document.getElementById(id); }
   var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -149,7 +151,10 @@
    */
   var health = null;
   async function workerReady() {
-    if (!health || !health.ok) health = (await getJSON("/health")) || { ok: false };
+    if (!health || !health.ok) {
+      health = (await getJSON("/health")) || { ok: false };
+      if (health.passes) needPass = true;
+    }
     return health.ok === true && health.names >= NAMES;
   }
   function tallies() { return Boolean(health && health.tally); }
@@ -170,6 +175,36 @@
     flush();
   }
 
+  /*
+   * **A pass, once, when the Worker asks for them.** The ID this browser made up is free to make,
+   * so a Worker holding a key signs each one (/hello) and takes votes only with that signature. It
+   * is asked for when /health says passes are on, or when a vote comes back refused for want of
+   * one; it is kept with the ID, and the feed and the maker share it.
+   */
+  var needPass = false;
+  async function passReady() {
+    if (memory.pass || !needPass) return true;
+    var res;
+    try {
+      res = await fetch(API + "/hello", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ visitor: memory.visitor }),
+      });
+    } catch (e) {
+      return false;
+    }
+    if (res.status === 404) { needPass = false; return true; }   // a Worker without passes
+    var got = res.ok ? await res.json().catch(function () { return null; }) : null;
+    if (!got || typeof got.pass !== "string") return false;
+    memory.pass = got.pass;
+    remember();
+    return true;
+  }
+  function withPass(body) {
+    return memory.pass ? Object.assign({}, body, { pass: memory.pass }) : body;
+  }
+
   var flushing = null;
   function flush() {
     if (flushing) return flushing;
@@ -178,6 +213,11 @@
         syncEl.textContent = "The vote box is being updated. Your votes are saved and will be sent soon";
         return;
       }
+      if (memory.outbox.length && !(await passReady())) {
+        syncEl.textContent = "The vote box is busy. Your votes are saved and will be sent soon";
+        return;
+      }
+      var renewed = false;
       while (memory.outbox.length) {
         var next = memory.outbox[0];
         var res;
@@ -186,13 +226,23 @@
             method: "POST",
             // text/plain keeps this a simple request: no preflight, one round trip.
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(next.body),
+            body: JSON.stringify(withPass(next.body)),
           });
         } catch (e) {
           syncEl.textContent = "Can't reach the vote box. Your votes are saved and will be sent later";
           return;
         }
         if (res.status === 429 || res.status >= 500) {
+          syncEl.textContent = "The vote box is busy. Your votes are saved and will be sent soon";
+          return;
+        }
+        // Refused for want of a pass (passes switched on since this page asked, or this one is
+        // stale): kept, and sent again at once with a new one; if that is refused too, later.
+        if (res.status === 401) {
+          memory.pass = null;
+          needPass = true;
+          remember();
+          if (!renewed && (await passReady())) { renewed = true; continue; }
           syncEl.textContent = "The vote box is busy. Your votes are saved and will be sent soon";
           return;
         }
@@ -447,7 +497,7 @@
    * the votes, so a palette nobody has judged yet comes up early for almost everyone. The game's
    * own and the new are dealt together in proportion, so neither waits behind the other. A link to
    * one palette (`#p=`, which the maker gives after adding one) puts that one first, voted down or
-   * not. Any other voted down by `HIDE_AT` is left out.
+   * not. Any other voted out (`HIDE_DOWN`, `HIDE_SHARE`) is left out.
    */
   function order(all) {
     var deal = function (list) {
@@ -476,10 +526,10 @@
     }
     return { pinned: pinned, unseen: unseen, seen: seen };
   }
-  /** Thumbs down ahead of thumbs up by `HIDE_AT` or more, by the Worker's count. */
+  /** At least `HIDE_DOWN` thumbs down, and `HIDE_SHARE` of its votes, by the Worker's count. */
   function votedOut(item) {
     var t = raw(item);
-    return t[1] - t[0] >= HIDE_AT;
+    return t[1] >= HIDE_DOWN && t[1] >= HIDE_SHARE * (t[0] + t[1]);
   }
   function total(item) {
     var t = raw(item);

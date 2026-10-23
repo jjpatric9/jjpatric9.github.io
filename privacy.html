@@ -222,7 +222,10 @@
     choice, the time and a random ID your browser made up, so that each person's vote counts once.
     No name, account or other text is collected. This is stored by <strong>Cloudflare</strong>,
     which runs the vote's server for us. Your IP address is held briefly in that server's memory
-    to limit how fast votes can arrive, and is never written to storage. The number of votes for
+    to limit how fast votes can arrive, and is never written to storage. The first time your
+    browser votes, the server also keeps a code made from your IP address and the date with a
+    secret key, so that one connection cannot create more than a few new voters a day; the code
+    is not your address, and it is deleted after a day. The number of votes for
     each palette is shown publicly, but never who gave them. A picture you open to take colours
     from is read in your browser and is never uploaded or saved.
   </p>

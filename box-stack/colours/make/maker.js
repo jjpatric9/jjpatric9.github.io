@@ -236,6 +236,7 @@
       var h = await getJSON("/health");
       workerTakes = Boolean(h && h.names >= NAMES);
       workerKeeps = Boolean(h && h.keeps);
+      if (h && h.passes) needPass = true;
     }
     return workerTakes;
   }
@@ -258,6 +259,36 @@
     flush();
   }
 
+  /*
+   * **A pass, once, when the Worker asks for them.** The ID this browser made up is free to make,
+   * so a Worker holding a key signs each one (/hello) and takes votes only with that signature. It
+   * is asked for when /health says passes are on, or when a vote comes back refused for want of
+   * one; it is kept with the ID, and the feed and the maker share it.
+   */
+  var needPass = false;
+  async function passReady() {
+    if (memory.pass || !needPass) return true;
+    var res;
+    try {
+      res = await fetch(API + "/hello", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ visitor: memory.visitor }),
+      });
+    } catch (e) {
+      return false;
+    }
+    if (res.status === 404) { needPass = false; return true; }   // a Worker without passes
+    var got = res.ok ? await res.json().catch(function () { return null; }) : null;
+    if (!got || typeof got.pass !== "string") return false;
+    memory.pass = got.pass;
+    remember();
+    return true;
+  }
+  function withPass(body) {
+    return memory.pass ? Object.assign({}, body, { pass: memory.pass }) : body;
+  }
+
   var flushing = null;
   function flush() {
     if (flushing) return flushing;
@@ -266,6 +297,11 @@
         syncEl.textContent = "The vote box is being updated. Your choices are saved and will be sent soon";
         return;
       }
+      if (memory.outbox.length && !(await passReady())) {
+        syncEl.textContent = "The vote box is busy. Your choices are saved and will be sent soon";
+        return;
+      }
+      var renewed = false;
       while (memory.outbox.length) {
         var next = memory.outbox[0];
         var res;
@@ -274,13 +310,23 @@
             method: "POST",
             // text/plain keeps this a simple request: no preflight, one round trip.
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(next.body),
+            body: JSON.stringify(withPass(next.body)),
           });
         } catch (e) {
           syncEl.textContent = "Can't reach the vote box. Your choices are saved and will be sent later";
           return;
         }
         if (res.status === 429 || res.status >= 500) {
+          syncEl.textContent = "The vote box is busy. Your choices are saved and will be sent soon";
+          return;
+        }
+        // Refused for want of a pass (passes switched on since this page asked, or this one is
+        // stale): kept, and sent again at once with a new one; if that is refused too, later.
+        if (res.status === 401) {
+          memory.pass = null;
+          needPass = true;
+          remember();
+          if (!renewed && (await passReady())) { renewed = true; continue; }
           syncEl.textContent = "The vote box is busy. Your choices are saved and will be sent soon";
           return;
         }
