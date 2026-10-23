@@ -10,7 +10,7 @@ fetched from anyone else, fonts included; the one exception is the colour vote,
 |---|---|
 | `index.html` | Landing page, kept to one screen: who makes the games, and the way to Box Stack. Used as the Google Play **Website** field. Its hero is a crane building a tower (`home.js`) until somebody taps it over. An old `#play` link forwards to `play/`. |
 | `box-stack/` | The Box Stack page: a short pitch, three hooks and the tips. The page search engines should send "box stack" searches to. Deliberately light on detail: the game explains itself. |
-| `privacy.html` | Privacy policy for Box Stack. Used as the Play **Privacy policy** field. |
+| `privacy.html` | Privacy policy for Box Stack and, in section 8, for this website. Used as the Play **Privacy policy** field. |
 | `support.html` | Support contact and every FAQ. |
 | `style.css` | Shared styling, light and dark. Headings and buttons use the game's Chakra Petch from `fonts/`. |
 | `site.js` | What every page shares: copy buttons, the footer year, sections rising into view, and the "Coming soon" popup for any link marked `data-soon`. |
@@ -105,9 +105,9 @@ What it sends is the colours, the choice and a random ID the browser made up —
 cookies, no IP address stored — and the page's own "What this page saves" note, in its **?** sheet,
 says so, and that the counts are public but never who gave them. A picture opened in the maker to take colours from is read in the browser and never sent
 or saved; the note says that too, and so does the picker itself, in full before a picture is
-chosen and as a badge on it while it is open. That note
-is this page's privacy statement; `privacy.html` is the app's policy and is not about the website.
-If the page ever sends anything more, the note changes in the same commit.
+chosen and as a badge on it while it is open. That note is the short version; the full one is
+section 8 of `privacy.html` ("Our website", `#website`), which the note links to. If the page ever
+sends anything more, the note and that section change in the same commit.
 
 After the game's palette bank changes, re-run `export.py` there so the new palettes are tagged
 *In the game* in the feed.
