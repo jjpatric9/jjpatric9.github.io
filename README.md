@@ -1,6 +1,6 @@
 # jjpatric9.github.io
 
-The TallmanGames website — served at <https://tallman-games.com/>.
+The Tallman Games website — served at <https://tallman-games.com/>.
 
 Static, no build step, no dependencies (one small script, `tools/stamp.py`, keeps asset links fresh). Plain HTML, one stylesheet and a little script. Nothing is
 fetched from anyone else, fonts included; the one exception is the colour vote,
@@ -69,7 +69,7 @@ Links between pages stay relative so both hostnames work.
 
 Every page names itself in its `<title>` and description, carries a `<link rel="canonical">` to its
 `https://tallman-games.com/` address, and has Open Graph tags for link previews. Structured data
-(JSON-LD) says who's who: the homepage describes TallmanGames (also "Tallman Games"), Joshua and
+(JSON-LD) says who's who: the homepage describes Tallman Games, the registered business name (also "TallmanGames"), Joshua and
 Box Stack; `box-stack/` describes the game; `support.html` its questions. When a
 question changes on the page, change it in that page's JSON-LD too.
 
