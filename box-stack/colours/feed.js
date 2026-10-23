@@ -90,7 +90,7 @@
         var ch = row[i];
         if (ch === ".") { cells.push('<i class="gap"></i>'); continue; }
         var slot = ch === "a" ? 0 : ch === "b" ? 3 : Number(ch);
-        cells.push('<i style="background:#' + p.crates[slot % p.crates.length] + '"></i>');
+        cells.push('<i style="background-color:#' + p.crates[slot % p.crates.length] + '"></i>');
       }
     });
     el.innerHTML = cells.join("");
@@ -222,10 +222,14 @@
 
   // ------------------------------------------------------------------ votes and their counts
 
-  /** This browser's answer on [item]: "up", "down", or null. */
+  /** This browser's answer on the palette called [name] as a [kind]: "up", "down", or null. */
+  function answerAs(kind, name) {
+    if (kind === "game") return name in memory.judged ? (memory.dislikes[name] ? "down" : "up") : null;
+    return name in memory.votes ? (memory.votes[name] ? "up" : "down") : null;
+  }
+  /** This browser's answer on [item]; on a game palette that was a player's, the one given there counts until it has one of its own. */
   function answerOf(item) {
-    if (item.kind === "game") return item.name in memory.judged ? (memory.dislikes[item.name] ? "down" : "up") : null;
-    return item.name in memory.votes ? (memory.votes[item.name] ? "up" : "down") : null;
+    return answerAs(item.kind, item.name) || (item.was ? answerAs("new", item.was) : null);
   }
 
   /*
@@ -244,20 +248,34 @@
       counted = {};
       [["game", memory.judged], ["new", memory.votes]].forEach(function (k) {
         Object.keys(k[1]).forEach(function (name) {
-          if (!pending[name]) counted[k[0] + name] = answerOf({ kind: k[0], name: name });
+          if (!pending[name]) counted[k[0] + name] = answerAs(k[0], name);
         });
       });
       tally = t;
       items.forEach(paintVotes);
     });
   }
+  /**
+   * On a game palette that was a player's, the counts are both names' together, and this browser's
+   * answer is taken out of the player's name and counted once, on the game's.
+   */
   function countsOf(item) {
-    var t = (tally && tally[item.kind][item.name]) || [0, 0];
+    var t = raw(item);
     var up = t[0], down = t[1];
     var was = counted[item.kind + item.name], now = answerOf(item);
     if (was === "up") up--; else if (was === "down") down--;
+    if (item.was) {
+      var wasNew = counted["new" + item.was];
+      if (wasNew === "up") up--; else if (wasNew === "down") down--;
+    }
     if (now === "up") up++; else if (now === "down") down++;
     return [Math.max(0, up), Math.max(0, down)];
+  }
+  /** The Worker's [up, down] on [item], with the player's palette it was, if any. */
+  function raw(item) {
+    var a = (tally && tally[item.kind][item.name]) || [0, 0];
+    var b = (item.was && tally && tally.new[item.was]) || [0, 0];
+    return [a[0] + b[0], a[1] + b[1]];
   }
 
   /** Thumbs [which] on [item]. The thumb already given, tapped again, takes it back. */
@@ -273,6 +291,11 @@
         if (next === "down") memory.dislikes[name] = 1; else delete memory.dislikes[name];
       }
       send("/dislike", { palette: name, dislike: next === null ? null : next === "down", visitor: memory.visitor });
+      // An answer given on the player's palette it was moves here, so it is never counted twice.
+      if (item.was && item.was in memory.votes) {
+        delete memory.votes[item.was];
+        send("/vote", { palette: item.was, keep: null, visitor: memory.visitor });
+      }
     } else {
       if (next === null) delete memory.votes[name]; else memory.votes[name] = next === "up" ? 1 : 0;
       send("/vote", { palette: name, keep: next === null ? null : next === "up", visitor: memory.visitor });
@@ -380,7 +403,11 @@
     b.addEventListener("click", function () { about.showModal(); });
     return b;
   }
-  /** The card between the palettes not yet voted on and the ones that have been, or at the end. */
+  /**
+   * A card in the feed: [more] is the one between the palettes not yet voted on and the ones that
+   * have been; otherwise it is the one at the end, which every feed has, so the last swipe always
+   * says there is nothing further.
+   */
   function caughtUpReel(more, none) {
     var reel = document.createElement("section");
     reel.className = "reel caught-up";
@@ -388,10 +415,11 @@
     var card = document.createElement("div");
     card.className = "screen";
     var h = document.createElement("h2");
-    h.textContent = none ? "There are no palettes to vote on yet" : "You're all caught up";
+    h.textContent = none ? "There are no palettes to vote on yet"
+      : more ? "That's every palette you haven't voted on" : "You're all caught up";
     var p = document.createElement("p");
     p.textContent = more
-      ? "Keep swiping to see the ones you've already voted on, or make one of your own"
+      ? "Keep swiping to go back over the ones you've voted on, or make one of your own"
       : "That's every palette there is. Why not make one of your own?";
     var make = document.createElement("a");
     make.className = "btn primary";
@@ -412,7 +440,7 @@
   /*
    * **The order.** Palettes this browser has not voted on come first, then a card saying so, then
    * the ones it has, so a returning voter starts on something new and can still go back over their
-   * votes. Within each, every palette is there exactly once, so scrolling for ever reaches them
+   * votes; the caught-up card is always last. Within each, every palette is there exactly once, so scrolling for ever reaches them
    * all, in **a shuffle of each visit's own that favours the palettes with fewest votes**
    * (`favouringFew`). Each visitor sees a different order, so people looking at once spread over
    * the whole list instead of all starting on the same few; and the favouring is what spreads
@@ -450,12 +478,12 @@
   }
   /** Thumbs down ahead of thumbs up by `HIDE_AT` or more, by the Worker's count. */
   function votedOut(item) {
-    var t = tally && tally[item.kind][item.name];
-    return Boolean(t) && t[1] - t[0] >= HIDE_AT;
+    var t = raw(item);
+    return t[1] - t[0] >= HIDE_AT;
   }
   function total(item) {
-    var t = tally && tally[item.kind][item.name];
-    return t ? t[0] + t[1] : 0;
+    var t = raw(item);
+    return t[0] + t[1];
   }
   /*
    * A random order, new on every visit, in which a palette with fewer votes tends to come sooner: a
@@ -487,7 +515,7 @@
     first.forEach(function (item, i) { reels.push(reelFor(item, i, count)); });
     if (first.length && o.seen.length) reels.push(caughtUpReel(true));
     o.seen.forEach(function (item, i) { reels.push(reelFor(item, first.length + i, count)); });
-    if (!o.seen.length || !first.length) reels.push(caughtUpReel(false, !count));
+    reels.push(caughtUpReel(false, !count));
     // Ahead of the frames, which stay where they are: an iframe moved in the document reloads.
     reels.forEach(function (r) { feed.insertBefore(r, frames.length ? frames[0].el : null); });
     feed.removeAttribute("aria-busy");
@@ -675,7 +703,23 @@
       var name = nameOf(p);
       if (have[name]) return;
       have[name] = true;
+      var game = kind === "new" && gameFrom(p);
+      // Already in the feed as the game's: that one is shown, with this one's votes.
+      if (game) { game.was = name; return; }
       all.push({ p: p, name: name, kind: kind });
+    };
+    /*
+     * **A player's palette the game took is one palette, not two.** The game deals ten crate
+     * slots, so it gives each colour its share of them, and it may drop one; that makes a
+     * different name for what voters see as the same palette, and the feed showed both, the
+     * game's with no votes and the player's with them. A player's palette is the game's when its
+     * background is the same and it has every colour the game kept.
+     */
+    var gameFrom = function (p) {
+      return all.filter(function (i) {
+        return i.kind === "game" && !i.was && i.p.field === p.field &&
+          distinct(i.p.crates).every(function (c) { return p.crates.indexOf(c) >= 0; });
+      })[0] || null;
     };
     data.game.map(unpack).forEach(function (p) { add(p, "game"); });
     data.candidates.map(unpack).forEach(function (p) { add(p, "new"); });

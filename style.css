@@ -472,13 +472,12 @@ dialog.soon .btn { min-width: 8rem; }
 .fallen { position: relative; width: 150px; height: 104px; margin: 0 auto 1.75rem; }
 .fallen::after { content: ""; position: absolute; left: -20px; right: -20px; bottom: -3px; height: 3px; border-radius: 2px; background: var(--rule); }
 .fallen i {
-  position: absolute; width: 48px; height: 48px; border-radius: 7px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.25), inset 0 -6px 0 rgba(0, 0, 0, 0.22);
+  position: absolute; width: 48px; height: 48px;
 }
-.fallen i:nth-child(1) { left: 2px; bottom: 0; background: #3aa7b8; }
-.fallen i:nth-child(2) { left: 52px; bottom: 0; background: #c08fe3; }
+.fallen i:nth-child(1) { left: 2px; bottom: 0; background-color: #3aa7b8; }
+.fallen i:nth-child(2) { left: 52px; bottom: 0; background-color: #c08fe3; }
 .fallen i:nth-child(3) {
-  left: 52px; bottom: 50px; background: #2fcf91;
+  left: 52px; bottom: 50px; background-color: #2fcf91;
   transform-origin: 100% 100%;
   animation: tumble 3.2s cubic-bezier(0.5, 0, 0.7, 0.3) infinite;
 }
@@ -757,20 +756,33 @@ button.link[hidden] { display: none; }
 }
 .grid[hidden] { display: none; }
 
-/* A small tower: eight columns of crates, square, with the game's bevel. */
+/* A small tower: eight columns of crates, square, each the game's crate (below). */
 .tower {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 1px;
+  gap: 2px;
   padding: 0.4rem;
   border-radius: 8px;
 }
 .tower i {
   display: block;
   aspect-ratio: 1;
-  border-radius: 1px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+/*
+ * The game's crate at a small size (CargoMaterial in the Boxstack repository), where its
+ * corrugation and castings have faded out: a flat face of its colour on a darker foot, the corner
+ * posts and the top and bottom rails in shade, and a shadow down and right. Matte: nothing on it is
+ * lighter than its colour, and the middle of the face is exactly that colour. The colour is the
+ * element's background-color, so these layers go over it.
+ */
+.tower i, .fallen i {
+  border-radius: 7%;
+  background-image:
+    linear-gradient(to top, rgba(0, 0, 0, 0.30) 0 8%, rgba(0, 0, 0, 0.10) 8% 20%, transparent 20% 93%, rgba(0, 0, 0, 0.06) 93%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.14) 0 6.5%, transparent 6.5% 93.5%, rgba(0, 0, 0, 0.05) 93.5%);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+}
+.fallen i { box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35); }
 .tower i.gap { visibility: hidden; }
 
 /* An answered palette, marked with the answer; tapping it changes its mind. */

@@ -156,7 +156,7 @@
         var ch = row[i];
         if (ch === ".") { cells.push('<i class="gap"></i>'); continue; }
         var slot = ch === "a" ? 0 : ch === "b" ? 3 : Number(ch);
-        cells.push('<i style="background:#' + p.crates[slot % p.crates.length] + '"></i>');
+        cells.push('<i style="background-color:#' + p.crates[slot % p.crates.length] + '"></i>');
       }
     });
     el.innerHTML = cells.join("");
