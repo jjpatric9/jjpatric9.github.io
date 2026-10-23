@@ -877,6 +877,8 @@ button.link[hidden] { display: none; }
 }
 .sheet-foot .btn { width: 100%; min-height: 52px; }
 .sheet-foot .status { margin: 0; min-height: 1.4em; font-size: 0.9rem; text-align: center; }
+/* What adding a palette agrees to, read before the tap that agrees to it. */
+.sheet-foot .consent { margin: 0; font-size: 0.85rem; line-height: 1.35; text-align: center; }
 .editor-row { display: flex; gap: 0.5rem; margin: 0.25rem 0 0.1rem; }
 .swatch-picker input {
   display: block; width: 3.4rem; height: 48px; padding: 0;

@@ -109,6 +109,10 @@ chosen and as a badge on it while it is open. That note is the short version; th
 section 8 of `privacy.html` ("Our website", `#website`), which the note links to. If the page ever
 sends anything more, the note and that section change in the same commit.
 
+The maker's **Add it to the vote** carries its consent under it: adding a palette lets everyone see
+and vote on it, and lets Box Stack use it in the game, with no credit or payment. Players' palettes
+do go into the game, so that line stays wherever the button goes.
+
 After the game's palette bank changes, re-run `export.py` there so the new palettes are tagged
 *In the game* in the feed.
 
