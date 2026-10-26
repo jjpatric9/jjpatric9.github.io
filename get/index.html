@@ -8,20 +8,24 @@
 <link rel="canonical" href="https://tallman-games.com/box-stack/">
 <meta name="theme-color" content="#230d30">
 <link rel="icon" href="../img/favicon-32.png" sizes="32x32" type="image/png">
-<!-- The one address the posters' QR codes print. A phone goes straight to its own store; anything
-     else to the Box Stack page, which has both badges and a round in the browser. ?from= names the
-     poster and rides into Google Play's install referrer, so Play Console can count each one. -->
+<!-- The one address the posters' QR codes and the social bios print. A phone goes straight to its own
+     store; anything else to the Box Stack page, which has both badges and a round in the browser.
+     ?from= names the poster, or the app whose bio it is (`tiktok`, or `tiktok-<post>` for one post),
+     and rides into Google Play's install referrer, so Play Console counts installs by each. -->
 <script>
   (function () {
     var from = (new URLSearchParams(location.search).get("from") || "").toLowerCase();
     if (!/^[a-z0-9-]{1,32}$/.test(from)) from = "web";
+    // A bio's link is social traffic from that app; everything else is a poster's QR code.
+    var social = /^(tiktok|instagram|youtube)(-|$)/.exec(from);
+    var source = social ? "utm_source=" + social[1] + "&utm_medium=social" : "utm_source=poster&utm_medium=qr";
     var ua = navigator.userAgent;
     var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     if (ios) {
       location.replace("https://apps.apple.com/us/app/box-stack-tower-puzzle/id6818697355");
     } else if (/Android/i.test(ua)) {
       location.replace("https://play.google.com/store/apps/details?id=com.boxstacker.app&referrer=" +
-        encodeURIComponent("utm_source=poster&utm_medium=qr&utm_campaign=" + from));
+        encodeURIComponent(source + "&utm_campaign=" + from));
     } else {
       location.replace("../box-stack/");
     }
