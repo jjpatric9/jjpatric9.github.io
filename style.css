@@ -451,7 +451,7 @@ dialog.soon .btn { min-width: 8rem; }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq details p { color: var(--ink-dim); }
 
-.callout { border-left: 3px solid var(--crane); padding: 0.2rem 0 0.2rem 1rem; margin: 1.25rem 0; }
+.callout { border-inline-start: 3px solid var(--crane); padding-block: 0.2rem; padding-inline: 1rem 0; margin: 1.25rem 0; }
 
 /* 404: a little tower whose top box keeps tipping off. */
 .lost { text-align: center; padding: clamp(3rem, 10vw, 6rem) 0; }

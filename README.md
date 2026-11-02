@@ -11,6 +11,7 @@ fetched from anyone else, fonts included; the one exception is the colour vote,
 | `index.html` | Landing page, kept to one screen: who makes the games, and the way to Box Stack. Used as the Google Play **Website** field. Its hero is a crane building a tower (`home.js`) until somebody taps it over. An old `#play` link forwards to `play/`. |
 | `box-stack/` | The Box Stack page: a short pitch, three hooks and the tips. The page search engines should send "box stack" searches to. Deliberately light on detail: the game explains itself. |
 | `privacy.html` | Privacy policy for Box Stack and, in section 8, for this website. Used as the Play **Privacy policy** field. |
+| `privacy.<tag>.html` | The privacy policy in each language the game is played in, built by `python3 tools/privacy.py ../Boxstack/docs` from the game's own translations (`docs/privacy-policy.<tag>.md` in the Boxstack repository), which the app shows in its About sheet. The App Store asks for a policy per language; these are those addresses. Never edit them by hand: change the translation and run the script again, which also refreshes the list of languages at the top of `privacy.html`. |
 | `terms.html` | Terms of use for the game and this website: the licence, adverts, purchases and refunds (none yet), the colour vote's terms for added palettes, no warranties, governing law. Written here, not in the Boxstack repository. |
 | `support.html` | Support contact and every FAQ. |
 | `style.css` | Shared styling, light and dark. Headings and buttons use the game's Chakra Petch from `fonts/`. |
