@@ -7,18 +7,34 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://tallman-games.com/box-stack/">
 <meta name="theme-color" content="#230d30">
+<!-- What a chat app shows for a shared link: the Box Stack page's own card. A crawler runs no script,
+     so it reads these rather than following the redirect. -->
+<meta name="description" content="A little stacking game about balance, free on Android, iPhone and iPad. Fill rows, keep it level, and see how many boxes high you can go.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tallman Games">
+<meta property="og:title" content="Box Stack · build, balance, repeat">
+<meta property="og:description" content="A little stacking game about balance, free on Android, iPhone and iPad. Fill rows, keep it level, and see how many boxes high you can go.">
+<meta property="og:url" content="https://tallman-games.com/box-stack/">
+<meta property="og:image" content="https://tallman-games.com/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Box Stack: a crane lowering a box onto a tower of colourful boxes">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../img/favicon-32.png" sizes="32x32" type="image/png">
-<!-- The one address the posters' QR codes and the social bios print. A phone goes straight to its own
-     store; anything else to the Box Stack page, which has both badges and a round in the browser.
-     ?from= names the poster, or the app whose bio it is (`tiktok`, or `tiktok-<post>` for one post),
+<!-- The one address the posters' QR codes, the social bios and the game's own Share with a friend
+     print. A phone goes straight to its own store; anything else to the Box Stack page, which has both
+     badges and a round in the browser. ?from= names the poster, the app whose bio it is (`tiktok`, or
+     `tiktok-<post>` for one post), or `share` for a player passing the game on from its About sheet,
      and rides into Google Play's install referrer, so Play Console counts installs by each. -->
 <script>
   (function () {
     var from = (new URLSearchParams(location.search).get("from") || "").toLowerCase();
     if (!/^[a-z0-9-]{1,32}$/.test(from)) from = "web";
-    // A bio's link is social traffic from that app; everything else is a poster's QR code.
+    // A bio's link is social traffic from that app, the game's share is a player telling a friend;
+    // everything else is a poster's QR code.
     var social = /^(tiktok|instagram|youtube)(-|$)/.exec(from);
-    var source = social ? "utm_source=" + social[1] + "&utm_medium=social" : "utm_source=poster&utm_medium=qr";
+    var source = from === "share" ? "utm_source=app&utm_medium=share"
+      : social ? "utm_source=" + social[1] + "&utm_medium=social" : "utm_source=poster&utm_medium=qr";
     var ua = navigator.userAgent;
     var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     if (ios) {
